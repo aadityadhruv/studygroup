@@ -5,6 +5,9 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import HomeScreen from './screens/HomeScreen.js';
 import Groups from './screens/Groups.js';
 import Profile from './screens/Profile';
+import Chats from './screens/Chats';
+import CreateGroup from './screens/CreateGroup.js';
+
 import useCachedResources from './hooks/useCachedResources';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
@@ -19,6 +22,9 @@ function App (){
         <Stack.Screen name="Home" component={HomeScreen}/>
         <Stack.Screen name="Groups" component={Groups} />
         <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="Chats" component={Chats} />
+        <Stack.Screen name="CreateGroup" component={CreateGroup} />
+
         </Stack.Navigator>
     </NavigationContainer>
   );
