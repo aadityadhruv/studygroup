@@ -1,12 +1,16 @@
 {
   "expo": {
-    "name": "Study_Group",
-    "slug": "Study_Group",
+    "name": "Vocab_Up",
+    "slug": "Vocab_Up",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
