@@ -6,6 +6,7 @@ import { SearchBar } from 'react-native-elements'
 
 
 export default function Chats({navigation, route}) {
+  console.log(route.params.word)
     return (
             <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
@@ -15,7 +16,6 @@ export default function Chats({navigation, route}) {
           <Text style={styles.connectOptionsText}>Home</Text>
         </TouchableOpacity>
       </View>
-    
     )
 }
 

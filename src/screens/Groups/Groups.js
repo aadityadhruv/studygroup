@@ -23,11 +23,11 @@ export default function Groups({ navigation, route }) {
     }
 
     const load = () => {
-        console.log("Load function started")
+  //      console.log("Load function started")
         create_database();
         groupss.map((val, key) => ({ id: key, ...val })) // keys added
         groupss.sort((a, b) => a.word > b.word); //sorted data base alphabetically
-        console.log(groupss);
+  //      console.log(groupss);
     }
 
     const people = [];
@@ -44,11 +44,11 @@ export default function Groups({ navigation, route }) {
     }
 
     const load2 = () => {
-        console.log("Load function started")
+    //    console.log("Load function started")
         create_database2();
         people.map((val, key) => ({ id: key, ...val })) // keys added
         people.sort((a, b) => a.word > b.word); //sorted data base alphabetically
-        console.log(people);
+      //  console.log(people);
     }
 
 
@@ -91,7 +91,7 @@ export default function Groups({ navigation, route }) {
     useEffect(() => {
         load();
         load2();
-        console.log("New Render Cycle");
+    //    console.log("New Render Cycle");
         setDisplayedList(groupss);
         setMemory(groupss)
         setLoading(false);
@@ -105,7 +105,7 @@ export default function Groups({ navigation, route }) {
 
     const renderItem = ({ item }) => (
         <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.word })}>
+            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item })}>
                 <Text style={styles.connectOptionsText}>{item.word}</Text>
             </TouchableOpacity>
 
@@ -114,13 +114,11 @@ export default function Groups({ navigation, route }) {
 
     const renderItem2 = ({ item }) => (
         <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.word })}>
+            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item })}>
                 <Text style={styles.connectOptionsText}>{item.word}</Text>
             </TouchableOpacity>
-
         </View>
     );
-
     return (
         <View style={{
             flex: 1,
@@ -132,7 +130,7 @@ export default function Groups({ navigation, route }) {
             </View>
             <SearchBar
                 placeholder="Search"
-                onChangeText={(value) => updateSearch(value)}
+                onChangeText={(value) => {updateSearch(value); updateSearch2(value)}}
                 value={search.toString()}
                 lightTheme={true}
                 round={true}
@@ -156,7 +154,7 @@ export default function Groups({ navigation, route }) {
                         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
                             {
                                 isLoading ? null : (
-                                    <Text style={{ fontSize: 15 }} >No such word found... try something else</Text>
+                                    <Text style={{ fontSize: 15 }} >No such Group found... try something else</Text>
                                 )
                             }
                         </View>
@@ -181,7 +179,7 @@ export default function Groups({ navigation, route }) {
                         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
                             {
                                 isLoading2 ? null : (
-                                    <Text style={{ fontSize: 15 }} >No such word found... try something else</Text>
+                                    <Text style={{ fontSize: 15 }} >No such person found... try something else</Text>
                                 )
                             }
                         </View>
