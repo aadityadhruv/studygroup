@@ -5,9 +5,6 @@ import { SearchBar } from 'react-native-elements'
 
 
 
-
-
-
 export default function Chats({navigation, route}) {
     return (
             <View style={styles.buttonContainer}>
