@@ -35,6 +35,7 @@ function App() {
             <>
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Registration" component={RegistrationScreen} />
+              <Stack.Screen name="HomeScreen" component={HomeScreen} />
               <Stack.Screen name="Groups" component={Groups} />
               <Stack.Screen name="Profile" component={Profile} />
               <Stack.Screen name="Chats" component={Chats} />
