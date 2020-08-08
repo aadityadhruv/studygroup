@@ -6,7 +6,6 @@ import { SearchBar } from 'react-native-elements'
 
 
 
-import SAT1 from './Data/SAT_list_1.json';
 
 
 export default function Chats({navigation, route}) {
