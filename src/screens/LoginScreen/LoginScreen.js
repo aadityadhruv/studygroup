@@ -3,6 +3,9 @@ import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from './styles';
 
+
+import { firebase } from '../../firebase/config'
+
 export default function LoginScreen({navigation}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -12,7 +15,11 @@ export default function LoginScreen({navigation}) {
     }
 
     const onLoginPress = () => {
-        navigation.navigate("HomeScreen")
+        firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => navigation.navigate('HomeScreen'))
+        .catch((error) => {alert(error)} )
     }
 
     return (
