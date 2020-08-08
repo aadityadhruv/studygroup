@@ -22,7 +22,7 @@ export default function Groups({ navigation, route }) {
             })
     }
 
-    load = () => {
+    const load = () => {
         console.log("Load function started")
         create_database();
         groupss.map((val, key) => ({ id: key, ...val })) // keys added
@@ -43,7 +43,7 @@ export default function Groups({ navigation, route }) {
             })
     }
 
-    load2 = () => {
+    const load2 = () => {
         console.log("Load function started")
         create_database2();
         people.map((val, key) => ({ id: key, ...val })) // keys added
@@ -103,7 +103,7 @@ export default function Groups({ navigation, route }) {
 
     }, [])
 
-    renderItem = ({ item }) => (
+    const renderItem = ({ item }) => (
         <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
             <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.word })}>
                 <Text style={styles.connectOptionsText}>{item.word}</Text>
@@ -112,7 +112,7 @@ export default function Groups({ navigation, route }) {
         </View>
     );
 
-    renderItem2 = ({ item }) => (
+    const renderItem2 = ({ item }) => (
         <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
             <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.word })}>
                 <Text style={styles.connectOptionsText}>{item.word}</Text>
