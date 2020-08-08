@@ -60,7 +60,7 @@ export default function HomeScreen({navigation, route}) {
     
     renderItem = ({item}) => (
         <View style={{minHeight:70, padding:3, borderBottomWidth:1, borderBottomColor:'grey'}}>
-            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {console.log(item)}}>
+            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {navigation.navigate("JoinGroup",{group:item})}}>
               <Text style={styles.connectOptionsText}>{item.word}</Text>
             </TouchableOpacity>
         
