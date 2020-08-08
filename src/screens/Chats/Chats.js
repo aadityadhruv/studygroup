@@ -14,7 +14,7 @@ export default function Chats({navigation, route}) {
             <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
           <Text style={styles.connectOptionsText}>Back</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('HomeScreen')}>
           <Text style={styles.connectOptionsText}>Home</Text>
         </TouchableOpacity>
       </View>

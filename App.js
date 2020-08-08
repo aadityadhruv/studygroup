@@ -28,7 +28,7 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {user ? (
-          <Stack.Screen name="Home">
+          <Stack.Screen name="HomeScreen">
             {props => <HomeScreen {...props} extraData={user} />}
           </Stack.Screen>
         ) : (

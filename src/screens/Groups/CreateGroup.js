@@ -4,7 +4,7 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button, Sett
 
 function CreateGroup({ navigation, route }) {
     function login_new() {
-        navigation.navigate('Home')
+        navigation.navigate('HomeScreen')
     }
     var txt2=''
     const [text, setText] = React.useState(txt2)
