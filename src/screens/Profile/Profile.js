@@ -12,7 +12,9 @@ import firebase from 'firebase'
 
 function Profile({ navigation, route }) {
   function entered() {
-    setclasses(...classes,itm4)
+    if(!itm4 == "") {
+    setclasses([...classes, itm4])
+  }
   }
   const txt2 = ""
   const [text2, setText2] = React.useState(txt2)
@@ -20,8 +22,8 @@ function Profile({ navigation, route }) {
   const [itm2, setitm2] = React.useState("")
   const [itm3, setitm3] = React.useState("")
   const [itm4, setitm4] = React.useState("")
-  
-  const [classes,setclasses] = React.useState([])
+
+  const [classes, setclasses] = React.useState([])
   var liss = []
   for (var i = 0; i < 190; i++) {
     liss.push({ label: Classes['SUBJECT CODE'][i], value: Classes['SUBJECT'][i] })
@@ -29,8 +31,8 @@ function Profile({ navigation, route }) {
 
   var liss2 = []
   if (!(itm == "")) {
-    var aa = Object.values(data[itm3+'.json']['COURSE NUMBER'])
-    var ab = Object.values(data[itm3+'.json']['COURSE TITLE'])
+    var aa = Object.values(data[itm3 + '.json']['COURSE NUMBER'])
+    var ab = Object.values(data[itm3 + '.json']['COURSE TITLE'])
     console.log(aa)
     console.log(ab)
     for (var i = 0; i < aa.length; i++) {
@@ -55,8 +57,8 @@ function Profile({ navigation, route }) {
     <View>
       <Text style={styles.connectOptions2}>
         Classes = {classes}
-          </Text>
-      
+      </Text>
+
       <Text style={styles.connectOptions2}>
         Add classes
           </Text>
@@ -86,7 +88,8 @@ function Profile({ navigation, route }) {
           justifyContent: 'flex-start'
         }}
         dropDownStyle={{ backgroundColor: '#fafafa' }}
-        onChangeItem={item =>{ setitm2(item.value)
+        onChangeItem={item => {
+          setitm2(item.value)
           setitm4(item.label)
 
         }}
@@ -113,16 +116,16 @@ function Profile({ navigation, route }) {
         </TouchableOpacity>
 
       </View>
-      </View>
+    </View>
   )
 }
 Profile.navigationOptions = {
-        header: null,
+  header: null,
 };
 
 const styles = StyleSheet.create({
-        inputBox: {
-        alignItems: 'center',
+  inputBox: {
+    alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 20,
@@ -130,7 +133,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonContainer: {
-        alignItems: 'center',
+    alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
     height: 30,
@@ -139,7 +142,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   connectOptions: {
-        width: 150,
+    width: 150,
     marginTop: 200,
     alignContent: "center",
     padding: 15,
@@ -152,12 +155,12 @@ const styles = StyleSheet.create({
     borderColor: '#fff'
   },
   connectOptionsText: {
-        fontSize: 30,
+    fontSize: 30,
     color: '#FFFFFF',
     textAlign: 'center'
   },
   connectOptions2: {
-        marginTop: 50,
+    marginTop: 50,
     alignContent: "center",
     padding: 15,
     paddingBottom: 15,
@@ -169,7 +172,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff'
   },
   connectOptions3: {
-        marginTop: 10,
+    marginTop: 10,
     height: 90,
     alignContent: "center",
     padding: 15,
@@ -182,7 +185,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff'
   },
   connectOptions4: {
-        marginTop: 10,
+    marginTop: 10,
     height: 50,
     alignContent: "center",
     padding: 15,
@@ -196,7 +199,7 @@ const styles = StyleSheet.create({
   },
 
   container: {
-        flex: 1,
+    flex: 1,
     backgroundColor: '#f5fcfc',
   },
 });
