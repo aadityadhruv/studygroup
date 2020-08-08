@@ -1,41 +1,87 @@
 import * as React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button,TextInput } from 'react-native';
+import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button, TextInput } from 'react-native';
 import { Dimensions } from "react-native";
-
+import DropDownPicker from 'react-native-dropdown-picker';
+import Classes from './Data/Classes.json'
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
+
+
 function Profile({ navigation, route }) {
-  const txt2=""
+  const txt2 = ""
   const [text2, setText2] = React.useState(txt2)
-const classes = ["PHYS 212", "CS 125"]
-    return (
-        <View>
-                    <Text style = {styles.connectOptions3}>
-        Guest : 
+  const [itm, setitm] = React.useState("")
+  const [itm2, setitm2] = React.useState("")
+  const [itm3, setitm3] = React.useState("")
+  async function loadd(val) {
+    var valu = './Data/' + val + '.json'
+    console.log(valu)
+    var file = await import('./Data/AAS.json');
+    for (var i = 0; i < 10; i++) {
+      liss2.push({ label: file['COURSE NUMBER'][i], value: file['COURSE TITLE'][i] })
+    }
+  }
+  const classes = ["PHYS 212", "CS 125"]
+  var liss = []
+  for (var i = 0; i < 190; i++) {
+    liss.push({ label: Classes['SUBJECT CODE'][i], value: Classes['SUBJECT'][i] })
+  }
+  var liss2 = []
+  if (!(itm == "")) {
+
+    loadd(itm3)
+
+  }
+  return (
+    <View>
+      <Text style={styles.connectOptions3}>
+        Guest :
           </Text>
-          <Text style = {styles.connectOptions3}>
-        Classes : {classes} 
+      <Text style={styles.connectOptions3}>
+        Classes : {classes}
+      </Text>
+      <Text style={styles.connectOptions2}>
+        Add classes
           </Text>
 
+      <DropDownPicker
+        items={liss}
+        defaultValue={itm}
+        containerStyle={{ height: 40 }}
+        style={{ backgroundColor: '#fafafa' }}
+        itemStyle={{
+          justifyContent: 'flex-start'
+        }}
+        dropDownStyle={{ backgroundColor: '#fafafa' }}
+        onChangeItem={item => {
+          setitm(
+            item.value
+          )
+          setitm3(item.label)
+        }
+        }
+      />
+      <DropDownPicker
+        items={liss2}
+        defaultValue={itm2}
+        containerStyle={{ height: 40 }}
+        style={{ backgroundColor: '#fafafa' }}
+        itemStyle={{
+          justifyContent: 'flex-start'
+        }}
+        dropDownStyle={{ backgroundColor: '#fafafa' }}
+        onChangeItem={item => setitm2(
+          item.value
+        )}
+      />
 
-          <Text style = {styles.connectOptions2}>
-            Add classes
-          </Text>
-          <View style={styles.inputBox}>
-          <TextInput
-            style={{ height: 40 }}
-            placeholder="Type here!"
-            onChangeText={text2 => setText2(text2)}
-            defaultValue={text2}
-          />
-        </View>
-        <TouchableOpacity style={styles.connectOptions4} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
-          <Text style={styles.connectOptionsText}>Enter</Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.connectOptions4} activeOpacity={0.8} onPress={() => navigation.navigate('Profile')}>
+        <Text style={styles.connectOptionsText}>Enter</Text>
+      </TouchableOpacity>
 
-        <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
           <Text style={styles.connectOptionsText}>Our Groups</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('HomeScreen')}>
@@ -44,13 +90,13 @@ const classes = ["PHYS 212", "CS 125"]
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Profile')}>
           <Text style={styles.connectOptionsText}>Profile</Text>
         </TouchableOpacity>
-      
+
       </View>
-                </View>
-    )
+    </View>
+  )
 }
 Profile.navigationOptions = {
-    header: null,
+  header: null,
 };
 
 const styles = StyleSheet.create({
@@ -66,13 +112,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
-    height:  30,
-    marginTop:50,
+    height: 30,
+    marginTop: 50,
     flex: 1,
     flexDirection: 'row',
   },
   connectOptions: {
-    width:150,
+    width: 150,
     marginTop: 200,
     alignContent: "center",
     padding: 15,
@@ -103,7 +149,7 @@ const styles = StyleSheet.create({
   },
   connectOptions3: {
     marginTop: 10,
-    height:90,
+    height: 90,
     alignContent: "center",
     padding: 15,
     paddingBottom: 15,
@@ -116,7 +162,7 @@ const styles = StyleSheet.create({
   },
   connectOptions4: {
     marginTop: 10,
-    height:50,
+    height: 50,
     alignContent: "center",
     padding: 15,
     paddingBottom: 15,
@@ -129,12 +175,12 @@ const styles = StyleSheet.create({
   },
 
 
-container: {
-      flex: 1,
-      backgroundColor: '#f5fcfc',
-    },
-  });
-  
+  container: {
+    flex: 1,
+    backgroundColor: '#f5fcfc',
+  },
+});
+
 export default Profile
 
 
