@@ -11,7 +11,7 @@ import Groups from './src/screens/Groups/Groups.js';
 import Profile from './src/screens/Profile/Profile';
 import Chats from './src/screens/Chats/Chats';
 import CreateGroup from './src/screens/Groups/CreateGroup.js';
-
+import JoinGroup from './src/screens/Groups/JoinGroup.js';
 
 if (!global.btoa) { global.btoa = encode }
 if (!global.atob) { global.atob = decode }
@@ -40,7 +40,7 @@ function App() {
               <Stack.Screen name="Profile" component={Profile} />
               <Stack.Screen name="Chats" component={Chats} />
               <Stack.Screen name="CreateGroup" component={CreateGroup} />
-
+              <Stack.Screen name="JoinGroup" component={JoinGroup} />
             </>
           )}
       </Stack.Navigator>
