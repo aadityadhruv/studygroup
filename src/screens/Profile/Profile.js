@@ -6,6 +6,7 @@ import Classes from './Data/Classes.json'
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
+import firebase from 'firebase'
 
 
 function Profile({ navigation, route }) {
@@ -33,18 +34,23 @@ function Profile({ navigation, route }) {
     loadd(itm3)
 
   }
+  const [name, setName] = React.useState("")
+  var user = firebase.auth().currentUser;
+
+  var databaseRef = firebase.database().ref("Users/" + user.uid + "/data/fullName");
+
+  databaseRef.once('value').then(snapshot => {
+    if (snapshot.val() != undefined) {
+      setName(snapshot.val());
+    }
+  });
+
+
   return (
     <View>
-      <Text style={styles.connectOptions3}>
-        Guest :
-          </Text>
-      <Text style={styles.connectOptions3}>
-        Classes : {classes}
-      </Text>
       <Text style={styles.connectOptions2}>
         Add classes
           </Text>
-
       <DropDownPicker
         items={liss}
         defaultValue={itm}
@@ -80,6 +86,11 @@ function Profile({ navigation, route }) {
         <Text style={styles.connectOptionsText}>Enter</Text>
       </TouchableOpacity>
 
+      <Text style={styles.connectOptions2}>
+        Your user info:
+
+          Name : {name}
+      </Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
           <Text style={styles.connectOptionsText}>Our Groups</Text>
@@ -92,16 +103,16 @@ function Profile({ navigation, route }) {
         </TouchableOpacity>
 
       </View>
-    </View>
+      </View>
   )
 }
 Profile.navigationOptions = {
-  header: null,
+        header: null,
 };
 
 const styles = StyleSheet.create({
-  inputBox: {
-    alignItems: 'center',
+        inputBox: {
+        alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 20,
@@ -109,7 +120,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonContainer: {
-    alignItems: 'center',
+        alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
     height: 30,
@@ -118,7 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   connectOptions: {
-    width: 150,
+        width: 150,
     marginTop: 200,
     alignContent: "center",
     padding: 15,
@@ -131,12 +142,12 @@ const styles = StyleSheet.create({
     borderColor: '#fff'
   },
   connectOptionsText: {
-    fontSize: 30,
+        fontSize: 30,
     color: '#FFFFFF',
     textAlign: 'center'
   },
   connectOptions2: {
-    marginTop: 50,
+        marginTop: 50,
     alignContent: "center",
     padding: 15,
     paddingBottom: 15,
@@ -148,7 +159,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff'
   },
   connectOptions3: {
-    marginTop: 10,
+        marginTop: 10,
     height: 90,
     alignContent: "center",
     padding: 15,
@@ -161,7 +172,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff'
   },
   connectOptions4: {
-    marginTop: 10,
+        marginTop: 10,
     height: 50,
     alignContent: "center",
     padding: 15,
@@ -174,13 +185,11 @@ const styles = StyleSheet.create({
     borderColor: '#fff'
   },
 
-
   container: {
-    flex: 1,
+        flex: 1,
     backgroundColor: '#f5fcfc',
   },
 });
 
 export default Profile
-
 
