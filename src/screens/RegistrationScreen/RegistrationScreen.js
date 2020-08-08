@@ -14,6 +14,7 @@ export default function RegistrationScreen({navigation}) {
     }
 
     const onRegisterPress = () => {
+        navigation.navigate("Login")
     }
 
     return (

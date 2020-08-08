@@ -12,6 +12,7 @@ export default function LoginScreen({navigation}) {
     }
 
     const onLoginPress = () => {
+        navigation.navigate("HomeScreen")
     }
 
     return (
