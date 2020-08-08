@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Component } from 'react'
 import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator,TouchableOpacity,Component } from "react-native";
 import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
-
-
-
-
+import {GiftedChat} from 'react-native-gifted-chat';
+import Chat from 'components/Chat.js';
 
 
 export default function Chats({navigation, route}) {
+  const name = route.params.word;
+  console.log(name);
     return (
+      <View>
+        <Chat>
+        </Chat>
             <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
           <Text style={styles.connectOptionsText}>Back</Text>
@@ -17,6 +20,7 @@ export default function Chats({navigation, route}) {
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('HomeScreen')}>
           <Text style={styles.connectOptionsText}>Home</Text>
         </TouchableOpacity>
+      </View>
       </View>
     
     )

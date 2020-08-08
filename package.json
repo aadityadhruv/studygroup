@@ -42,7 +42,8 @@
     "react-native-vector-icons": "^6.7.0",
     "react-native-web": "~0.11.7",
     "react-router-dom": "^5.2.0",
-    "rn-slider-switch": "0.0.3"
+    "rn-slider-switch": "0.0.3",
+    "react-native-gifted-chat" : "0.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
