@@ -2,11 +2,11 @@ import { NavigationContainer, Link } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import HomeScreen from './screens/HomeScreen.js';
-import Groups from './screens/Groups.js';
-import Profile from './screens/Profile';
-import Chats from './screens/Chats';
-import CreateGroup from './screens/CreateGroup.js';
+import HomeScreen from './src/screens/HomeScreen/HomeScreen.js';
+import Groups from './src/screens/Groups/Groups.js';
+import Profile from './src/screens/Profile/Profile';
+import Chats from './src/screens/Chats/Chats';
+import CreateGroup from './src/screens/Groups/CreateGroup.js';
 
 import useCachedResources from './hooks/useCachedResources';
 import BottomTabNavigator from './navigation/BottomTabNavigator';

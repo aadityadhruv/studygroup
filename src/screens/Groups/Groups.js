@@ -6,38 +6,74 @@ import { SearchBar } from 'react-native-elements'
 
 
 
-import SAT1 from './Data/SAT_list_1.json';
 
 
-export default function HomeScreen({navigation, route}) {
-    const datab = [];
+export default function Groups({navigation, route}) {
+    const groupss = [];
     function create_database() {
-        add("Bella","Zwaldos Group","Join")
-        add("Bella","Zwaldos Group2","Join")
-    }
+        add_group("CS","Shaayari and Anime")
+      }
     
-    function add(a, w,jo) {
-    datab.push(
+    function add_group(a, w) {
+    groupss.push(
         {
             word:w,
-            adj:a,
-            status:jo
+            adj:a
         })
     }
         
     load = () => {
         console.log("Load function started")
         create_database();
-        datab.map((val, key) => ({id: key, ...val})) // keys added
-        datab.sort((a,b) => a.word>b.word); //sorted data base alphabetically
-      //  console.log(datab);
+        groupss.map((val, key) => ({id: key, ...val})) // keys added
+        groupss.sort((a,b) => a.word>b.word); //sorted data base alphabetically
+        console.log(groupss);
     }
+
+    const people = [];
+    function create_database2() {
+        add_group2("CS","Shyari and Anime")
+      }
+    
+    function add_group2(a, w) {
+    people.push(
+        {
+            word:w,
+            adj:a
+        })
+    }
+        
+    load2 = () => {
+        console.log("Load function started")
+        create_database2();
+        people.map((val, key) => ({id: key, ...val})) // keys added
+        people.sort((a,b) => a.word>b.word); //sorted data base alphabetically
+        console.log(people);
+    }
+
 
     const [search, setSearch] = useState('');
     const [displayedList, setDisplayedList] = useState([]);
     const [memory, setMemory] = useState([])
     const [isLoading, setLoading] = useState(true);
+
+    const [displayedList2, setDisplayedList2] = useState([]);
+    const [memory2, setMemory2] = useState([])
+    const [isLoading2, setLoading2] = useState(true);
     
+    const updateSearch2 = (event) => {
+      const filteredList = memory2.filter(
+          (item) => {
+              let word = item.word.toLowerCase();
+              let lowerSearch = event.toLowerCase();
+              return word.indexOf(lowerSearch) > -1;
+          }
+      )
+      setSearch(event);
+      setDisplayedList2(filteredList);
+  }
+
+
 
     const updateSearch = (event) => {
         const filteredList = memory.filter(
@@ -54,21 +90,37 @@ export default function HomeScreen({navigation, route}) {
     //load db once at first render
     useEffect(() => {
         load();
+        load2();
         console.log("New Render Cycle");
-        setDisplayedList(datab);
-        setMemory(datab)
+        setDisplayedList(groupss);
+        setMemory(groupss)
         setLoading(false);
+
+        setDisplayedList2(people);
+        setMemory2(people)
+        setLoading2(false);
+
         
     }, [])
-    
+
     renderItem = ({item}) => (
-        <View style={{minHeight:70, padding:3, borderBottomWidth:1, borderBottomColor:'grey'}}>
-            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {console.log(item)}}>
-              <Text style={styles.connectOptionsText}>{item.word}</Text>
-            </TouchableOpacity>
-        
-        </View>
-        );
+    <View style={{minHeight:70, padding:3, borderBottomWidth:1, borderBottomColor:'grey'}}>
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats',{'word':item.word})}>
+          <Text style={styles.connectOptionsText}>{item.word}</Text>
+        </TouchableOpacity>
+    
+    </View>
+    );
+
+    renderItem2 = ({item}) => (
+      <View style={{minHeight:70, padding:3, borderBottomWidth:1, borderBottomColor:'grey'}}>
+          <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats',{'word':item.word})}>
+            <Text style={styles.connectOptionsText}>{item.word}</Text>
+          </TouchableOpacity>
+      
+      </View>
+      );
+
     return (
         <View style={{
             flex: 1,
@@ -76,8 +128,8 @@ export default function HomeScreen({navigation, route}) {
             backgroundColor: '#fff',
           }}>
 
-            <View style = {styles.head}>
-       
+            <View style={styles.head}>
+            </View>
             <SearchBar 
             placeholder="Search" 
             onChangeText={(value) => updateSearch(value)} 
@@ -85,13 +137,9 @@ export default function HomeScreen({navigation, route}) {
             lightTheme={true} 
             round={true} 
             containerStyle={{backgroundColor:'white', borderTopWidth:0}}
-            inputContainerStyle={{backgroundColor:'#EBEBEB', height: 40, width: '597%', marginLeft:'1%',}}/>
-                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CreateGroup')}>
-                <Text>Add </Text>
+            inputContainerStyle={{backgroundColor:'#EBEBEB', height: 40, width: '97%', marginLeft:'1%',}}/>
+            <Text >Groups</Text>
 
-        </TouchableOpacity>
-        
-</View>            
             <View style={{flex:1}}>
                 {
                     isLoading?(
@@ -108,13 +156,40 @@ export default function HomeScreen({navigation, route}) {
                         <View style={{flex:1, alignItems:'center', justifyContent:'center', marginVertical:20}}>
                             {
                                 isLoading?null:(
-                                    <Text style={{fontSize:15}} >No such Group found... try something else</Text>
+                                    <Text style={{fontSize:15}} >No such word found... try something else</Text>
                                 )
                             }
                         </View>
                     )}
                 />
+                </View>
+                <Text >People</Text>
+
+<View style={{flex:1}}>
+    {
+        isLoading2?(
+            <View style={{...StyleSheet.absoluteFill, alignItems:'center', justifyContent:'center'}}>
+                <ActivityIndicator size="large" />
             </View>
+        ):null
+    }
+    <FlatList
+        data={displayedList2}
+        renderItem={renderItem2}
+        keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent={()=> (
+            <View style={{flex:1, alignItems:'center', justifyContent:'center', marginVertical:20}}>
+                {
+                    isLoading2?null:(
+                        <Text style={{fontSize:15}} >No such word found... try something else</Text>
+                    )
+                }
+            </View>
+        )}
+    />
+
+            </View>
+
             <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
           <Text style={styles.connectOptionsText}>Our Groups</Text>
@@ -137,16 +212,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'center',
-        height:  10,
-        marginBottom:0,
+        height:  50,
+        marginTop:  20,
         flex: 1,
         flexDirection: 'row',
+      
       },
       connectOptions: {
-        marginTop: 0,
+        marginTop: 10,
         alignContent: "center",
         padding: 15,
-        paddingBottom: 0,
+        paddingBottom: 15,
         marginLeft: 0,
         marginRight: 0,
         backgroundColor: '#0099FF',
@@ -155,7 +231,7 @@ const styles = StyleSheet.create({
         borderColor: '#fff'
       },
       connectOptionsText: {
-        fontSize: 30,
+        fontSize: 24,
         color: '#FFFFFF',
         textAlign: 'center'
       },
@@ -163,7 +239,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f5fcfc',
       },
-      
+      container2: {
+        alignItems: 'center',
+        justifyContent: 'center',      },
     header: {
         padding: 20,
         marginVertical: 10,
