@@ -1,14 +1,34 @@
 import * as React from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button, Settings,TextInput } from 'react-native';
 //import firebase from 'firebase';
-
+import { firebase } from '../../firebase/config'
+import { database } from 'firebase';
 function CreateGroup({ navigation, route }) {
-    function login_new() {
+    function makeGroup() {
+        //TODO: double name error
+
+        var db = firebase.firestore();
+        
+        var dataBaseRef = db.collection("Groups").doc(groupName);
+        var user = firebase.auth().currentUser;
+        var memberList = [];
+        memberList.push(user.uid);
+        var data = {owner : user.displayName, members : memberList, label : hashTag}
+
+        dataBaseRef.set(data);
+        var userRef = db.collection("Users").doc(user.uid);
+        userRef.update({
+            //TODO: double name error
+            "groupIDs" : firebase.firestore.FieldValue.arrayUnion(groupName)
+        })
+
+
+
         navigation.navigate('HomeScreen')
     }
     var txt2=''
-    const [text, setText] = React.useState(txt2)
-    const [text2, setText2] = React.useState(txt2)
+    const [groupName, setText] = React.useState(txt2)
+    const [hashTag, setText2] = React.useState(txt2)
     const [text3, setText3] = React.useState(txt2)
     return (
         <View>
@@ -18,7 +38,7 @@ function CreateGroup({ navigation, route }) {
             style={{ height: 40 }}
             placeholder="Name"
             onChangeText={text => setText(text)}
-            defaultValue={text}
+            defaultValue={groupName}
           />
         
          <TextInput
@@ -26,9 +46,9 @@ function CreateGroup({ navigation, route }) {
             style={{ height: 40 }}
             placeholder="HashTag"
             onChangeText={text2 => setText2(text2)}
-            defaultValue={text2}
+            defaultValue={hashTag}
           />
-            <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { login_new() }}>
+            <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { makeGroup() }}>
         <Text style={styles.LoginText}>Enter</Text>
       </TouchableOpacity>      
         </View>

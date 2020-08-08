@@ -10,8 +10,13 @@ import { SearchBar } from 'react-native-elements'
 
 export default function Groups({ navigation, route }) {
     const groupss = [];
+
+
+
     function create_database() {
-        add_group("CS", "Shaayari and Anime")
+        var db = firebase.firestore();
+        var userRef = db.collection("Users");
+
     }
 
     function add_group(a, w) {

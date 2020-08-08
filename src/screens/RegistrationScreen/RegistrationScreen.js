@@ -16,6 +16,7 @@ export default function RegistrationScreen({navigation}) {
     }
 
     const onRegisterPress = () => {
+        
         if (password !== confirmPassword) {
             alert("Passwords don't match.")
             return
@@ -28,15 +29,15 @@ export default function RegistrationScreen({navigation}) {
                 const data = {
                     id: uid,
                     email,
-                    fullName,   
+                    fullName,
+                    groupIDs : []   
                 };
                 
-                const usersRef = firebase.database().ref('Users/' + uid)
+                const usersRef = firebase.firestore().collection('Users')
                 
-                usersRef.set({
-                    uid,
-                    data
-                })
+                usersRef
+                    .doc(uid)
+                    .set(data)
                     .then(() => {
                         navigation.navigate('HomeScreen', {user: data})
                     })
