@@ -8,11 +8,19 @@ const screenHeight = Math.round(Dimensions.get('window').height);
 function Profile({ navigation, route }) {
   const txt2=""
   const [text2, setText2] = React.useState(txt2)
-
+const classes = ["PHYS 212", "CS 125"]
     return (
         <View>
+                    <Text style = {styles.connectOptions3}>
+        Guest : 
+          </Text>
+          <Text style = {styles.connectOptions3}>
+        Classes : {classes} 
+          </Text>
+
+
           <Text style = {styles.connectOptions2}>
-            Enter your classes
+            Add classes
           </Text>
           <View style={styles.inputBox}>
           <TextInput
@@ -22,6 +30,9 @@ function Profile({ navigation, route }) {
             defaultValue={text2}
           />
         </View>
+        <TouchableOpacity style={styles.connectOptions4} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
+          <Text style={styles.connectOptionsText}>Enter</Text>
+        </TouchableOpacity>
 
         <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
@@ -56,7 +67,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     height:  30,
-    marginTop:500,
+    marginTop:50,
     flex: 1,
     flexDirection: 'row',
   },
@@ -90,6 +101,33 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff'
   },
+  connectOptions3: {
+    marginTop: 10,
+    height:90,
+    alignContent: "center",
+    padding: 15,
+    paddingBottom: 15,
+    marginLeft: 0,
+    marginRight: 0,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  connectOptions4: {
+    marginTop: 10,
+    height:50,
+    alignContent: "center",
+    padding: 15,
+    paddingBottom: 15,
+    marginLeft: 0,
+    marginRight: 0,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+
 
 container: {
       flex: 1,
