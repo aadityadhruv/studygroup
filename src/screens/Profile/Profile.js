@@ -3,6 +3,7 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button, Text
 import { Dimensions } from "react-native";
 import DropDownPicker from 'react-native-dropdown-picker';
 import Classes from './Data/Classes.json'
+import data from './Data/data.json'
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
@@ -10,28 +11,32 @@ import firebase from 'firebase'
 
 
 function Profile({ navigation, route }) {
+  function entered() {
+    setclasses(...classes,itm4)
+  }
   const txt2 = ""
   const [text2, setText2] = React.useState(txt2)
   const [itm, setitm] = React.useState("")
   const [itm2, setitm2] = React.useState("")
   const [itm3, setitm3] = React.useState("")
-  async function loadd(val) {
-    var valu = './Data/' + val + '.json'
-    console.log(valu)
-    var file = await import('./Data/AAS.json');
-    for (var i = 0; i < 10; i++) {
-      liss2.push({ label: file['COURSE NUMBER'][i], value: file['COURSE TITLE'][i] })
-    }
-  }
-  const classes = ["PHYS 212", "CS 125"]
+  const [itm4, setitm4] = React.useState("")
+  
+  const [classes,setclasses] = React.useState([])
   var liss = []
   for (var i = 0; i < 190; i++) {
     liss.push({ label: Classes['SUBJECT CODE'][i], value: Classes['SUBJECT'][i] })
   }
+
   var liss2 = []
   if (!(itm == "")) {
+    var aa = Object.values(data[itm3+'.json']['COURSE NUMBER'])
+    var ab = Object.values(data[itm3+'.json']['COURSE TITLE'])
+    console.log(aa)
+    console.log(ab)
+    for (var i = 0; i < aa.length; i++) {
+      liss2.push({ label: aa[i], value: ab[i] })
+    }
 
-    loadd(itm3)
 
   }
   const [name, setName] = React.useState("")
@@ -48,6 +53,10 @@ function Profile({ navigation, route }) {
 
   return (
     <View>
+      <Text style={styles.connectOptions2}>
+        Classes = {classes}
+          </Text>
+      
       <Text style={styles.connectOptions2}>
         Add classes
           </Text>
@@ -77,12 +86,13 @@ function Profile({ navigation, route }) {
           justifyContent: 'flex-start'
         }}
         dropDownStyle={{ backgroundColor: '#fafafa' }}
-        onChangeItem={item => setitm2(
-          item.value
-        )}
+        onChangeItem={item =>{ setitm2(item.value)
+          setitm4(item.label)
+
+        }}
       />
 
-      <TouchableOpacity style={styles.connectOptions4} activeOpacity={0.8} onPress={() => navigation.navigate('Profile')}>
+      <TouchableOpacity style={styles.connectOptions4} activeOpacity={0.8} onPress={() => entered()}>
         <Text style={styles.connectOptionsText}>Enter</Text>
       </TouchableOpacity>
 
