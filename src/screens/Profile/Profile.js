@@ -14,6 +14,18 @@ function Profile({ navigation, route }) {
   function entered() {
     if(!itm4 == "") {
     setclasses([...classes, itm4])
+    setliss3([...liss3,{ label: itm4, value: itm2 }])
+  }
+  }
+  function arrayRemove(arr, value) {
+     return arr.filter(
+       function(ele){ return ele != value; }
+       );
+      }
+  function entered2() {
+    if(!itm5 == "") {
+      setliss3([...arrayRemove(liss3,itm6)])
+      setclasses([...arrayRemove(classes,itm6)])
   }
   }
   const txt2 = ""
@@ -22,7 +34,10 @@ function Profile({ navigation, route }) {
   const [itm2, setitm2] = React.useState("")
   const [itm3, setitm3] = React.useState("")
   const [itm4, setitm4] = React.useState("")
-
+  const [itm5, setitm5] = React.useState("")
+  const [itm6, setitm6] = React.useState("")
+  
+  const [liss3, setliss3] = React.useState([])
   const [classes, setclasses] = React.useState([])
   var liss = []
   for (var i = 0; i < 190; i++) {
@@ -30,11 +45,18 @@ function Profile({ navigation, route }) {
   }
 
   var liss2 = []
+  
+  if (!(itm5 == "")) {
+    for (var i = 0; i < classes.length; i++) {
+      liss3.push(classes[i])
+    }
+  }
+  
   if (!(itm == "")) {
     var aa = Object.values(data[itm3 + '.json']['COURSE NUMBER'])
     var ab = Object.values(data[itm3 + '.json']['COURSE TITLE'])
-    console.log(aa)
-    console.log(ab)
+  //  console.log(aa)
+  //  console.log(ab)
     for (var i = 0; i < aa.length; i++) {
       liss2.push({ label: aa[i], value: ab[i] })
     }
@@ -52,7 +74,7 @@ function Profile({ navigation, route }) {
     }
   });
 
-
+console.log(classes)
   return (
     <View>
       <Text style={styles.connectOptions2}>
@@ -98,6 +120,30 @@ function Profile({ navigation, route }) {
       <TouchableOpacity style={styles.connectOptions4} activeOpacity={0.8} onPress={() => entered()}>
         <Text style={styles.connectOptionsText}>Enter</Text>
       </TouchableOpacity>
+      <Text style={styles.connectOptions2}>
+        Remove classes
+          </Text>
+      
+      <DropDownPicker
+        items={liss3}
+        defaultValue={itm5}
+        containerStyle={{ height: 40 }}
+        style={{ backgroundColor: '#fafafa' }}
+        itemStyle={{
+          justifyContent: 'flex-start'
+        }}
+        dropDownStyle={{ backgroundColor: '#fafafa' }}
+        onChangeItem={item => {
+          setitm5(item.value)
+          setitm6(item.label)
+
+        }}
+      />
+
+      <TouchableOpacity style={styles.connectOptions4} activeOpacity={0.8} onPress={() => entered2()}>
+        <Text style={styles.connectOptionsText}>Enter</Text>
+      </TouchableOpacity>
+
 
       <Text style={styles.connectOptions2}>
         Your user info:
@@ -160,7 +206,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   connectOptions2: {
-    marginTop: 50,
+    marginTop: 20,
     alignContent: "center",
     padding: 15,
     paddingBottom: 15,
