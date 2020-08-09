@@ -7,6 +7,7 @@ import { SearchBar } from 'react-native-elements'
 import firebase from 'firebase'
 
 
+
 export default function HomeScreen({ navigation, route }) {
 
 
@@ -74,6 +75,7 @@ export default function HomeScreen({ navigation, route }) {
                     />
                 </View>);
         }
+
 
     }
 

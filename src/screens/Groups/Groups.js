@@ -16,7 +16,7 @@ export default function Groups({ navigation, route }) {
 
 
     class FirebaseInfo extends React.Component {
-        state = { groupIDs: [], loading: true, displayedList: [] };
+        state = { groupIDs: [], loading: true, displayedList: [],search:"" };
 
         componentDidMount() {
             var user = firebase.auth().currentUser;
@@ -25,11 +25,13 @@ export default function Groups({ navigation, route }) {
             var userInfoRef = db.collection("Users").doc(user.uid);
             unsubscribe = userInfoRef.onSnapshot((doc) => {
                 
+
                 this.setState({ groupIDs: doc.data().groupsList, loading : false, displayedList: doc.data().groupsList});
                 console.log(this.state.groupIDs);
+
             });
 
-            console.log(this.state.groupIDs);
+         //   console.log(this.state.groupIDs);
         }
         render() {
             const renderItem = ({ item }) => (
@@ -40,9 +42,30 @@ export default function Groups({ navigation, route }) {
             
                 </View>
             );
+            const updateSearch = (event) => {
+                const filteredList = this.state.groupIDs.filter(
+                    (item) => {
+                    //    console.log(item)
+                        let word = item.toLowerCase();
+                        let lowerSearch = event.toLowerCase();
+                        return word.indexOf(lowerSearch) > -1;
+                    }
+                )
+                this.setState({search:event,displayedList:filteredList})
+            }
+        
         return (
         
         <View style={{ flex: 1 }}>
+            <SearchBar 
+            placeholder="Search" 
+            onChangeText={(value) => updateSearch(value)} 
+            value={this.state.search.toString()} 
+            lightTheme={true} 
+            round={true} 
+            containerStyle={{backgroundColor:'white', borderTopWidth:0}}
+            inputContainerStyle={{backgroundColor:'#EBEBEB', height: 40, width: '597%', marginLeft:'1%',}}/>
+            
             
             {
                 this.state.loading ? (
@@ -71,31 +94,6 @@ export default function Groups({ navigation, route }) {
 
     }   
 
-
-/*
-//load db once at first render
-useEffect(() => {
-    //setLoading(true);
-
-    console.log("New cycle");
-
-
-
-});
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
 return (
     <View style={{
         flex: 1,
@@ -104,6 +102,18 @@ return (
     }}>
     <FirebaseInfo>
     </FirebaseInfo>
+            <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
+          <Text style={styles.connectOptionsText}>Our Groups</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('HomeScreen')}>
+          <Text style={styles.connectOptionsText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Profile')}>
+          <Text style={styles.connectOptionsText}>Profile</Text>
+        </TouchableOpacity>
+      
+      </View>
     </View>
 )
 
