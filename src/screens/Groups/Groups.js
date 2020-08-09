@@ -26,10 +26,10 @@ export default function Groups({ navigation, route }) {
             unsubscribe = userInfoRef.onSnapshot((doc) => {
                 
                 this.setState({ groupIDs: doc.data().groupIDs, loading : false, displayedList: doc.data().groupIDs});
-                console.log(this.state.groupIDs);
+          //      console.log(this.state.groupIDs);
             });
 
-            console.log(this.state.groupIDs);
+         //   console.log(this.state.groupIDs);
         }
         render() {
             const renderItem = ({ item }) => (
@@ -91,44 +91,6 @@ export default function Groups({ navigation, route }) {
         }
 
     }   
-
-async function getFirebaseData() {
-    var user = firebase.auth().currentUser;
-    var db = firebase.firestore();
-
-    var userInfoRef = db.collection("Users").doc(user.uid);
-    unsubscribe = userInfoRef.onSnapshot((doc) => {
-        setLoading(false);
-
-        setGroupsIDs(doc.data().groupIDs);
-    });
-
-    console.log(groupIDs);
-}
-/*
-//load db once at first render
-useEffect(() => {
-    //setLoading(true);
-
-    console.log("New cycle");
-
-
-
-});
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
 return (
     <View style={{
         flex: 1,

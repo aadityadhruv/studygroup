@@ -20,8 +20,7 @@ export default function HomeScreen({navigation, route}) {
             adj:a,
             status:jo
         })
-    }
-        
+    }        
     const load = () => {
       //  console.log("Load function started")
         create_database();
@@ -29,7 +28,6 @@ export default function HomeScreen({navigation, route}) {
         datab.sort((a,b) => a.word>b.word); //sorted data base alphabetically
       //  console.log(datab);
     }
-
     const [search, setSearch] = useState('');
     const [displayedList, setDisplayedList] = useState([]);
     const [memory, setMemory] = useState([])
