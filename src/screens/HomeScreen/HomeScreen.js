@@ -13,22 +13,24 @@ export default function HomeScreen({ navigation, route }) {
     class FirebaseInfo extends React.Component {
         
         state = { groupIDs: [], loading: true, displayedList: []};
+
+        
+        
         componentDidMount() {
             var user = firebase.auth().currentUser;
             var db = firebase.firestore();
             var groupsRef = db.collection("Groups");
-            groupsRef.get().then(function(querySnapshot) {
-            
-                querySnapshot.forEach(function(doc) {
-                  
-                   
-                     
-                    
-
-                });
-
-                   
-            });
+            groupsRef
+    .onSnapshot(function namae(querySnapshot) {
+        
+        var cities = [];
+        querySnapshot.forEach(function(doc) {
+            cities.push(doc.data().name);
+        });
+        console.log("Current cities in CA: ", cities.join(", "));
+        console.log(this);
+        this.setState({ groupIDs: cities, loading : false, displayedList: cities});
+    }.bind(this));
 
        
          
