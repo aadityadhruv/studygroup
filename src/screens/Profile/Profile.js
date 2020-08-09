@@ -72,10 +72,7 @@ function Profile({ navigation, route }) {
   databaseRef.once('value').then(snapshot => {
     if (snapshot.val() != undefined) {
       setName(snapshot.val());
-    }
-    var liss2 = []
-    if (!(itm == "")) {
-
+    }});
 
 console.log(classes)
   return (
