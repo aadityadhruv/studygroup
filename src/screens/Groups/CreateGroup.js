@@ -8,18 +8,19 @@ function CreateGroup({ navigation, route }) {
         //TODO: double name error
 
         var db = firebase.firestore();
-        
-        var dataBaseRef = db.collection("Groups").doc(groupName);
+        var hashString = (+new Date).toString(36);
+        var dataBaseRef = db.collection("Groups").doc(hashString);
         var user = firebase.auth().currentUser;
         var memberList = [];
         memberList.push(user.uid);
-        var data = {owner : user.displayName, members : memberList, label : hashTag}
-
+        var data = {name : groupName, owner : user.displayName, members : memberList, label : hashTag};
         dataBaseRef.set(data);
+        
         var userRef = db.collection("Users").doc(user.uid);
         userRef.update({
             //TODO: double name error
-            "groupIDs" : firebase.firestore.FieldValue.arrayUnion(groupName)
+            "groupsList" : firebase.firestore.FieldValue.arrayUnion({"id" : hashString, "name" : groupName})
+
         })
 
 

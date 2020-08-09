@@ -25,7 +25,7 @@ export default function Groups({ navigation, route }) {
             var userInfoRef = db.collection("Users").doc(user.uid);
             unsubscribe = userInfoRef.onSnapshot((doc) => {
                 
-                this.setState({ groupIDs: doc.data().groupIDs, loading : false, displayedList: doc.data().groupIDs});
+                this.setState({ groupIDs: doc.data().groupsList, loading : false, displayedList: doc.data().groupsList});
                 console.log(this.state.groupIDs);
             });
 
@@ -35,7 +35,7 @@ export default function Groups({ navigation, route }) {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.groupName})}>
-                        <Text style={styles.connectOptionsText}>{item}</Text>
+                        <Text style={styles.connectOptionsText}>{item.name}</Text>
                     </TouchableOpacity>
             
                 </View>
@@ -71,19 +71,7 @@ export default function Groups({ navigation, route }) {
 
     }   
 
-async function getFirebaseData() {
-    var user = firebase.auth().currentUser;
-    var db = firebase.firestore();
 
-    var userInfoRef = db.collection("Users").doc(user.uid);
-    unsubscribe = userInfoRef.onSnapshot((doc) => {
-        setLoading(false);
-
-        setGroupsIDs(doc.data().groupIDs);
-    });
-
-    console.log(groupIDs);
-}
 /*
 //load db once at first render
 useEffect(() => {
