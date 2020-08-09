@@ -43,18 +43,39 @@ function CreateGroup({ navigation, route }) {
                     navigation.navigate('HomeScreen')
                 }
             }
+            const removeItemOnce = (arr, value) => {
+                var index = arr.indexOf(value);
+                if (index > -1) {
+                    arr.splice(index, 1);
+                }
+                return arr;
+            }
 
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
+                        if(!this.state.classes.includes(item)) {
 
                         this.setState({ classes: [...this.state.classes, item] })
+                        }
 
                     }}>
                         <Text style={styles.connectOptionsText}>{item}</Text>
                     </TouchableOpacity>
                 </View>
             );
+            const renderItem2 = ({ item }) => (
+                <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
+                        this.setState({ classes: removeItemOnce(this.state.classes, item) })
+
+
+                    }}>
+                        <Text style={styles.connectOptionsText}>{item}</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+
             const updateSearch = (event) => {
                 const filteredList = this.state.groupIDs.filter(
                     (item) => {
@@ -79,10 +100,21 @@ function CreateGroup({ navigation, route }) {
                         onChangeText={text => this.setState({ groupname: text })}
                         defaultValue={this.state.groupname}
                     />
-                    <Text style={styles.connectOptions2}>
-                        Classes = {this.state.classes}
-                    </Text>
                     <View style={styles.liss}>
+                    <FlatList
+                        data={this.state.classes}
+                        renderItem={renderItem2}
+
+                        ListEmptyComponent={() => (
+                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
+                                {
+                                    this.state.loading ? null : (
+                                        <Text style={{ fontSize: 15 }} ></Text>
+                                    )
+                                }
+                            </View>
+                        )}
+                    />
                         <SearchBar
                             placeholder="Search"
                             onChangeText={(value) => updateSearch(value)}
@@ -167,7 +199,7 @@ CreateGroup.navigationOptions = {
 
 const styles = StyleSheet.create({
     liss: {
-        flex:0,
+        flex: 0,
         marginBottom: 20
     },
     AnswerText: {
