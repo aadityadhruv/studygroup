@@ -67,12 +67,24 @@ function Profile({ navigation, route }) {
   const [name, setName] = React.useState("")
   var user = firebase.auth().currentUser;
 
-  var databaseRef = firebase.database().ref("Users/" + user.uid + "/data/fullName");
+  var user = firebase.auth().currentUser;
 
-  databaseRef.once('value').then(snapshot => {
-    if (snapshot.val() != undefined) {
-      setName(snapshot.val());
-    }});
+
+
+  var db = firebase.firestore();
+  var userInfoRef = db.collection("Users").doc(user.uid);
+console.log("New frame");
+userInfoRef.get().then(function (doc) {
+    if (doc.exists) {
+        var person = doc.data();
+        setName(person.fullName);
+
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+    }
+})
+  
 
 console.log(classes)
   return (
