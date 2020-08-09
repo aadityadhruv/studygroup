@@ -34,7 +34,7 @@ export default function Groups({ navigation, route }) {
         render() {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.groupName})}>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item})}>
                         <Text style={styles.connectOptionsText}>{item}</Text>
                     </TouchableOpacity>
             
