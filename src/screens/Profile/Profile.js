@@ -11,6 +11,7 @@ import firebase from 'firebase'
 
 
 function Profile({ navigation, route }) {
+
   function entered() {
     if(!itm4 == "") {
     setclasses([...classes, itm4])
@@ -72,7 +73,9 @@ function Profile({ navigation, route }) {
     if (snapshot.val() != undefined) {
       setName(snapshot.val());
     }
-  });
+    var liss2 = []
+    if (!(itm == "")) {
+
 
 console.log(classes)
   return (

@@ -15,11 +15,31 @@ export default function LoginScreen({navigation}) {
     }
 
     const onLoginPress = () => {
+
         firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(() => navigation.navigate('HomeScreen'))
-        .catch((error) => {alert(error)} )
+        .then((response) => {
+            const uid = response.user.uid
+            const usersRef = firebase.firestore().collection('Users')
+            usersRef
+                .doc(uid)
+                .get()
+                .then(firestoreDocument => {
+                    if (!firestoreDocument.exists) {
+                        alert("User does not exist anymore.")
+                        return;
+                    }
+                    const user = firestoreDocument.data()
+                    navigation.navigate('HomeScreen', {user})
+                })
+                .catch(error => {
+                    alert(error)
+                });
+        })
+        .catch(error => {
+            alert(error)
+        })
     }
 
     return (

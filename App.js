@@ -12,16 +12,26 @@ import Profile from './src/screens/Profile/Profile';
 import Chats from './src/screens/Chats/Chats';
 import CreateGroup from './src/screens/Groups/CreateGroup.js';
 import JoinGroup from './src/screens/Groups/JoinGroup.js';
-
+import { YellowBox } from 'react-native';
+import _ from 'lodash';
 if (!global.btoa) { global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
 
 const Stack = createStackNavigator();
 function App() {
-
+  console.disableYellowBox = true;
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
+  
+
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+  if (message.indexOf('Setting a timer') <= -1) {
+    _console.warn(message);
+  }
+};
 
 
   return (
