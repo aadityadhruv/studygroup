@@ -19,7 +19,7 @@ function CreateGroup({ navigation, route }) {
         var userRef = db.collection("Users").doc(user.uid);
         userRef.update({
             //TODO: double name error
-            "groupIDs" : firebase.firestore.FieldValue.arrayUnion(groupName)
+            "groupIDs" : firebase.firestore.FieldValue.arrayUnion({user : user,groudName : groupName})
         })
 
 

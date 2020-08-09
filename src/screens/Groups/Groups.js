@@ -5,122 +5,52 @@ import { SearchBar } from 'react-native-elements'
 
 
 
+import firebase from 'firebase'
 
 
 
 export default function Groups({ navigation, route }) {
-    const groupss = [];
-
-
-
-    function create_database() {
-        var db = firebase.firestore();
-        var userRef = db.collection("Users");
-
-    }
-
-    function add_group(a, w) {
-        groupss.push(
-            {
-                word: w,
-                adj: a
-            })
-    }
-
-    const load = () => {
-        console.log("Load function started")
-        create_database();
-        groupss.map((val, key) => ({ id: key, ...val })) // keys added
-        groupss.sort((a, b) => a.word > b.word); //sorted data base alphabetically
-        console.log(groupss);
-    }
-
-    const people = [];
-    function create_database2() {
-        add_group2("CS", "Shyari and Anime")
-    }
-
-    function add_group2(a, w) {
-        people.push(
-            {
-                word: w,
-                adj: a
-            })
-    }
-
-    const load2 = () => {
-        console.log("Load function started")
-        create_database2();
-        people.map((val, key) => ({ id: key, ...val })) // keys added
-        people.sort((a, b) => a.word > b.word); //sorted data base alphabetically
-        console.log(people);
-    }
-
-
-    const [search, setSearch] = useState('');
+    const [groupIDs, setGroupsIDs] = useState([]);
     const [displayedList, setDisplayedList] = useState([]);
-    const [memory, setMemory] = useState([])
     const [isLoading, setLoading] = useState(true);
-
-    const [displayedList2, setDisplayedList2] = useState([]);
-    const [memory2, setMemory2] = useState([])
-    const [isLoading2, setLoading2] = useState(true);
-
-    const updateSearch2 = (event) => {
-        const filteredList = memory2.filter(
-            (item) => {
-                let word = item.word.toLowerCase();
-                let lowerSearch = event.toLowerCase();
-                return word.indexOf(lowerSearch) > -1;
-            }
-        )
-        setSearch(event);
-        setDisplayedList2(filteredList);
-    }
-
-
-
-    const updateSearch = (event) => {
-        const filteredList = memory.filter(
-            (item) => {
-                let word = item.word.toLowerCase();
-                let lowerSearch = event.toLowerCase();
-                return word.indexOf(lowerSearch) > -1;
-            }
-        )
-        setSearch(event);
-        setDisplayedList(filteredList);
-    }
 
     //load db once at first render
     useEffect(() => {
-        load();
-        load2();
-        console.log("New Render Cycle");
-        setDisplayedList(groupss);
-        setMemory(groupss)
-        setLoading(false);
+        //setLoading(true);
+        console.log("New cycle");
+        var user = firebase.auth().currentUser;
+        var db = firebase.firestore();
+        var userInfoRef = db.collection("Users").doc(user.uid);
+        const unsubscribe = userInfoRef.get().then(function(doc) {
+            if (doc.exists) {
+                setLoading(false);
+                setGroupsIDs(doc.data().groupIDs);
+            }
+            
+        });
+        
+        setDisplayedList(groupIDs);  
+        return () => {
+            unsubscribe()
+          }
+        
+    }, [groupIDs, setGroupsIDs])
 
-        setDisplayedList2(people);
-        setMemory2(people)
-        setLoading2(false);
 
 
-    }, [])
+
+
+
+
+
+
+
+
 
     const renderItem = ({ item }) => (
         <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.word })}>
-                <Text style={styles.connectOptionsText}>{item.word}</Text>
-            </TouchableOpacity>
-
-        </View>
-    );
-
-    const renderItem2 = ({ item }) => (
-        <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.word })}>
-                <Text style={styles.connectOptionsText}>{item.word}</Text>
+            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.groupName })}>
+                <Text style={styles.connectOptionsText}>{item}</Text>
             </TouchableOpacity>
 
         </View>
@@ -133,17 +63,8 @@ export default function Groups({ navigation, route }) {
             backgroundColor: '#fff',
         }}>
 
-            <View style={styles.head}>
-            </View>
-            <SearchBar
-                placeholder="Search"
-                onChangeText={(value) => updateSearch(value)}
-                value={search.toString()}
-                lightTheme={true}
-                round={true}
-                containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
-                inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '97%', marginLeft: '1%', }} />
-            <Text >Groups</Text>
+            
+            
 
             <View style={{ flex: 1 }}>
                 {
@@ -167,45 +88,6 @@ export default function Groups({ navigation, route }) {
                         </View>
                     )}
                 />
-            </View>
-            
-            <Text >People</Text>
-            <View style={{ flex: 1 }}>
-                {
-                    isLoading2 ? (
-                        <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
-                            <ActivityIndicator size="large" />
-                        </View>
-                    ) : null
-                }
-                <FlatList
-                    data={displayedList2}
-                    renderItem={renderItem2}
-                    keyExtractor={(item, index) => index.toString()}
-                    ListEmptyComponent={() => (
-                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
-                            {
-                                isLoading2 ? null : (
-                                    <Text style={{ fontSize: 15 }} >No such word found... try something else</Text>
-                                )
-                            }
-                        </View>
-                    )}
-                />
-
-            </View>
-
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
-                    <Text style={styles.connectOptionsText}>Our Groups</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('HomeScreen')}>
-                    <Text style={styles.connectOptionsText}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Profile')}>
-                    <Text style={styles.connectOptionsText}>Profile</Text>
-                </TouchableOpacity>
-
             </View>
 
         </View>
