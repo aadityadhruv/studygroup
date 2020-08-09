@@ -85,11 +85,14 @@ export default function Chats({ navigation, route }) {
   }   
 
   return (
-    <View style={styles.buttonContainer}>
+    <View style={styles.buttonContainer2}>
+     <View styles = {styles.buttonContainer}>
       <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
-        <Text style={styles.connectOptionsText}>Back</Text>
+        <Text style={styles.connectOptionsText}>Back</Text>     
       </TouchableOpacity>
-    
+      <Text style={styles.connectOptionsText2}>{route.params.word}</Text>
+        
+    </View>
       <FirebaseInfo></FirebaseInfo>
     </View>
   )
@@ -103,9 +106,19 @@ const styles = StyleSheet.create({
       height: 50,
       marginTop: 20,
       flex: 1,
-      flexDirection: 'column',
+      flexDirection: 'row',
 
   },
+  buttonContainer2: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    height: 50,
+    marginTop: 20,
+    flex: 1,
+    flexDirection: 'column',
+
+},
   connectOptions: {
       marginTop: 10,
       alignContent: "center",
@@ -123,6 +136,12 @@ const styles = StyleSheet.create({
       color: '#FFFFFF',
       textAlign: 'center'
   },
+  connectOptionsText2: {
+    fontSize: 24,
+    color: 'black',
+    textAlign: 'center'
+},
+
   container: {
       flex: 1,
       backgroundColor: '#f5fcfc',
