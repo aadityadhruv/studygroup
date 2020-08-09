@@ -8,7 +8,8 @@ function JoinGroup({ navigation, route }) {
         setText(" ")
    //     navigation.navigate('HomeScreen')
     }
-    var group = route.params.group
+    var group = route.params.word
+    // get name , classes , optional description , status of the group from database
     var txt2=''
     const [text, setText] = React.useState(txt2)
     const [text2, setText2] = React.useState(txt2)
@@ -16,7 +17,7 @@ function JoinGroup({ navigation, route }) {
     console.log(group)
     return (
         <View>
-            <Text style = {styles.AnswerText}>{group.word}</Text>
+            <Text style = {styles.AnswerText}>{group}</Text>
             <Text style = {styles.AnswerText}>Class = {group.adj}</Text>
             <Text style = {styles.AnswerText}>Description = {group.desc}</Text>
 

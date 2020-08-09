@@ -27,7 +27,7 @@ export default function Groups({ navigation, route }) {
                 
 
                 this.setState({ groupIDs: doc.data().groupsList, loading : false, displayedList: doc.data().groupsList});
-                console.log(this.state.groupIDs);
+      //          console.log(this.state.groupIDs);
 
             });
 
@@ -36,7 +36,7 @@ export default function Groups({ navigation, route }) {
         render() {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.groupName})}>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.name})}>
                         <Text style={styles.connectOptionsText}>{item.name}</Text>
                     </TouchableOpacity>
             
