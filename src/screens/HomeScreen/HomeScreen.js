@@ -12,31 +12,56 @@ export default function HomeScreen({ navigation, route }) {
 
 
     class FirebaseInfo extends React.Component {
-        
-        state = { groupIDs: [], loading: true, displayedList: [],search:""};
 
-        
-        
+        state = { groupIDs: [], loading: true, displayedList: [], search: ""};
+
+
+
         componentDidMount() {
+            var user = firebase.auth().currentUser;
+            var db = firebase.firestore();
+
+            var userInfoRef = db.collection("Users").doc(user.uid);
+            userInfoRef.onSnapshot((doc) => {
+            var a = doc.data().groupsList;
+            var userGroupsArray = [];
+            a.forEach(element => {
+                console.log(element.id);
+                userGroupsArray.push(element.id);
+            });
             var user = firebase.auth().currentUser;
             var db = firebase.firestore();
             var groupsRef = db.collection("Groups");
             groupsRef
-    .onSnapshot(function namae(querySnapshot) {
-        
-        var cities = [];
-        querySnapshot.forEach(function(doc) {
-            cities.push(doc.data().name);
-        });
- //     console.log("Current cities in CA: ", cities.join(", "));
-   //     console.log(this);
-        this.setState({ groupIDs: cities, loading : false, displayedList: cities});
-    }.bind(this));
+                .onSnapshot(function namae(querySnapshot) {
 
-       
-         
-        
+                    var cities = [];
+
+
+
+                    querySnapshot.forEach(function (doc) {
+                        if (!userGroupsArray.includes(doc.data().id)) {
+
+                            cities.push(doc.data().name);
+                        }
+
+                    });
+                    //     console.log("Current cities in CA: ", cities.join(", "));
+                    //     console.log(this);
+                    this.setState({ groupIDs: cities, loading: false, displayedList: cities });
+                }.bind(this));
+
+
+            });
             
+
+
+            
+
+
+
+
+
         }
         render() {
             const renderItem = ({ item }) => (
@@ -50,27 +75,27 @@ export default function HomeScreen({ navigation, route }) {
             const updateSearch = (event) => {
                 const filteredList = this.state.groupIDs.filter(
                     (item) => {
-                        
+
                         console.log(item)
-                      let word = item.toLowerCase();
+                        let word = item.toLowerCase();
                         let lowerSearch = event.toLowerCase();
                         return word.indexOf(lowerSearch) > -1;
                     }
                 )
-                this.setState({search:event,displayedList:filteredList})
+                this.setState({ search: event, displayedList: filteredList })
             }
             return (
 
                 <View style={{ flex: 1 }}>
-  <SearchBar 
-            placeholder="Search" 
-            onChangeText={(value) => updateSearch(value)} 
-            value={this.state.search.toString()} 
-            lightTheme={true} 
-            round={true} 
-            containerStyle={{backgroundColor:'white', borderTopWidth:0}}
-            inputContainerStyle={{backgroundColor:'#EBEBEB', height: 40, width: '597%', marginLeft:'1%',}}/>
-          
+                    <SearchBar
+                        placeholder="Search"
+                        onChangeText={(value) => updateSearch(value)}
+                        value={this.state.search.toString()}
+                        lightTheme={true}
+                        round={true}
+                        containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
+                        inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
+
                     {
                         this.state.loading ? (
                             <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
@@ -82,7 +107,7 @@ export default function HomeScreen({ navigation, route }) {
                     <FlatList
                         data={this.state.displayedList}
                         renderItem={renderItem}
-                       
+
                         ListEmptyComponent={() => (
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
                                 {
