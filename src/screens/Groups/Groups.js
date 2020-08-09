@@ -45,8 +45,9 @@ export default function Groups({ navigation, route }) {
             const updateSearch = (event) => {
                 const filteredList = this.state.groupIDs.filter(
                     (item) => {
-                    //    console.log(item)
-                        let word = item.toLowerCase();
+                        
+                        console.log(item)
+                      let word = item.name.toLowerCase();
                         let lowerSearch = event.toLowerCase();
                         return word.indexOf(lowerSearch) > -1;
                     }
