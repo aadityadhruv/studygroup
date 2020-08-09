@@ -13,7 +13,7 @@ export default function HomeScreen({ navigation, route }) {
 
     class FirebaseInfo extends React.Component {
         
-        state = { groupIDs: [], loading: true, displayedList: []};
+        state = { groupIDs: [], loading: true, displayedList: [],search:""};
 
         
         
@@ -28,8 +28,8 @@ export default function HomeScreen({ navigation, route }) {
         querySnapshot.forEach(function(doc) {
             cities.push(doc.data().name);
         });
-        console.log("Current cities in CA: ", cities.join(", "));
-        console.log(this);
+ //     console.log("Current cities in CA: ", cities.join(", "));
+   //     console.log(this);
         this.setState({ groupIDs: cities, loading : false, displayedList: cities});
     }.bind(this));
 
@@ -41,16 +41,36 @@ export default function HomeScreen({ navigation, route }) {
         render() {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.groupName })}>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('JoinGroup', { 'word': item })}>
                         <Text style={styles.connectOptionsText}>{item}</Text>
                     </TouchableOpacity>
 
                 </View>
             );
+            const updateSearch = (event) => {
+                const filteredList = this.state.groupIDs.filter(
+                    (item) => {
+                        
+                        console.log(item)
+                      let word = item.toLowerCase();
+                        let lowerSearch = event.toLowerCase();
+                        return word.indexOf(lowerSearch) > -1;
+                    }
+                )
+                this.setState({search:event,displayedList:filteredList})
+            }
             return (
 
                 <View style={{ flex: 1 }}>
-
+  <SearchBar 
+            placeholder="Search" 
+            onChangeText={(value) => updateSearch(value)} 
+            value={this.state.search.toString()} 
+            lightTheme={true} 
+            round={true} 
+            containerStyle={{backgroundColor:'white', borderTopWidth:0}}
+            inputContainerStyle={{backgroundColor:'#EBEBEB', height: 40, width: '597%', marginLeft:'1%',}}/>
+          
                     {
                         this.state.loading ? (
                             <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
