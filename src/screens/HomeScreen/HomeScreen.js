@@ -23,7 +23,7 @@ export default function HomeScreen({navigation, route}) {
     }
         
     const load = () => {
-        console.log("Load function started")
+      //  console.log("Load function started")
         create_database();
         datab.map((val, key) => ({id: key, ...val})) // keys added
         datab.sort((a,b) => a.word>b.word); //sorted data base alphabetically
