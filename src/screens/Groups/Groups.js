@@ -15,7 +15,7 @@ export default function Groups({ navigation, route }) {
 
 
     class FirebaseInfo extends React.Component {
-        state = { groupIDs: [], loading: false, displayedList: [] };
+        state = { groupIDs: [], loading: true, displayedList: [] };
 
         componentDidMount() {
             var user = firebase.auth().currentUser;
@@ -23,17 +23,51 @@ export default function Groups({ navigation, route }) {
 
             var userInfoRef = db.collection("Users").doc(user.uid);
             unsubscribe = userInfoRef.onSnapshot((doc) => {
-                this.setState({ groupIDs: doc.data().groupIDs, displayedList: groupIDs });
-
+                
+                this.setState({ groupIDs: doc.data().groupIDs, loading : false, displayedList: doc.data().groupIDs});
+                console.log(this.state.groupIDs);
             });
 
-            console.log(groupIDs);
+            console.log(this.state.groupIDs);
         }
         render() {
-        return (<Text>{displayedList}</Text>);
+            const renderItem = ({ item }) => (
+                <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.groupName})}>
+                        <Text style={styles.connectOptionsText}>{item}</Text>
+                    </TouchableOpacity>
+            
+                </View>
+            );
+        return (
+        
+        <View style={{ flex: 1 }}>
+            
+            {
+                this.state.loading ? (
+                    <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
+                        <ActivityIndicator size="large" />
+                    </View>
+                ) : null
+            }
+            <FlatList
+                data={this.state.displayedList}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+                ListEmptyComponent={() => (
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
+                        {
+                            this.state.loading ? null : (
+                                <Text style={{ fontSize: 15 }} >No such word found... try something else</Text>
+                            )
+                        }
+                    </View>
+                )}
+            />
+        </View>);
         }
 
-    }
+    }   
 
 async function getFirebaseData() {
     var user = firebase.auth().currentUser;
@@ -48,7 +82,7 @@ async function getFirebaseData() {
 
     console.log(groupIDs);
 }
-
+/*
 //load db once at first render
 useEffect(() => {
     //setLoading(true);
@@ -59,6 +93,7 @@ useEffect(() => {
 
 });
 
+*/
 
 
 
@@ -70,14 +105,6 @@ useEffect(() => {
 
 
 
-const renderItem = ({ item }) => (
-    <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { 'word': item.groupName })}>
-            <Text style={styles.connectOptionsText}>{item}</Text>
-        </TouchableOpacity>
-
-    </View>
-);
 
 return (
     <View style={{
@@ -86,37 +113,7 @@ return (
         backgroundColor: '#fff',
     }}>
     <FirebaseInfo>
-
-
     </FirebaseInfo>
-
-
-
-        <View style={{ flex: 1 }}>
-            
-            {
-                true ? (
-                    <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
-                        <ActivityIndicator size="large" />
-                    </View>
-                ) : null
-            }
-            <FlatList
-                data={displayedList}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
-                ListEmptyComponent={() => (
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
-                        {
-                            true ? null : (
-                                <Text style={{ fontSize: 15 }} >No such word found... try something else</Text>
-                            )
-                        }
-                    </View>
-                )}
-            />
-        </View>
-
     </View>
 )
 }
