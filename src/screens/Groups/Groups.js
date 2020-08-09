@@ -16,7 +16,7 @@ export default function Groups({ navigation, route }) {
 
 
     class FirebaseInfo extends React.Component {
-        state = { groupIDs: [], loading: true, displayedList: [] };
+        state = { groupIDs: [], loading: true, displayedList: [],search:"" };
 
         componentDidMount() {
             var user = firebase.auth().currentUser;
@@ -40,9 +40,30 @@ export default function Groups({ navigation, route }) {
             
                 </View>
             );
+            const updateSearch = (event) => {
+                const filteredList = this.state.groupIDs.filter(
+                    (item) => {
+                    //    console.log(item)
+                        let word = item.toLowerCase();
+                        let lowerSearch = event.toLowerCase();
+                        return word.indexOf(lowerSearch) > -1;
+                    }
+                )
+                this.setState({search:event,displayedList:filteredList})
+            }
+        
         return (
         
         <View style={{ flex: 1 }}>
+            <SearchBar 
+            placeholder="Search" 
+            onChangeText={(value) => updateSearch(value)} 
+            value={this.state.search.toString()} 
+            lightTheme={true} 
+            round={true} 
+            containerStyle={{backgroundColor:'white', borderTopWidth:0}}
+            inputContainerStyle={{backgroundColor:'#EBEBEB', height: 40, width: '597%', marginLeft:'1%',}}/>
+            
             
             {
                 this.state.loading ? (
