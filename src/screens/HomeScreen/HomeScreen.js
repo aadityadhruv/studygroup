@@ -58,6 +58,7 @@ export default function HomeScreen({ navigation, route }) {
                     }
                 )
                 this.setState({search:event,displayedList:filteredList})
+                console.log(this.state.displayedList)
             }
             return (
 

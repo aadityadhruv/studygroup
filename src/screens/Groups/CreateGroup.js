@@ -1,43 +1,131 @@
 import * as React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button, Settings, TextInput, Dimensions } from 'react-native';
+import { Image, Platform, StyleSheet, Text, TouchableOpacity, ActivityIndicator, View, Button, Settings, TextInput, Dimensions, FlatList } from 'react-native';
 //import firebase from 'firebase';
 import { firebase } from '../../firebase/config'
 import { database } from 'firebase';
 import Classes from './Data/Classes.json'
 import data from './Data/data.json'
 import DropDownPicker from 'react-native-dropdown-picker';
+import data2 from './Data/data2.json'
+import { SearchBar } from 'react-native-elements'
+
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
 
 function CreateGroup({ navigation, route }) {
-    function makeGroup() {
-        //TODO: double name error
-if (classes.length>0 && groupName.length >0){
-        var db = firebase.firestore();
-        var hashString = (+new Date).toString(36);
-        var dataBaseRef = db.collection("Groups").doc(hashString);
-        var user = firebase.auth().currentUser;
-        var memberList = [];
-        memberList.push(user.uid);
-        var data = {name : groupName, owner : user.displayName, members : memberList, label : hashTag};
-        dataBaseRef.set(data);
-        
-        var userRef = db.collection("Users").doc(user.uid);
-        userRef.update({
-            //TODO: double name error
+    class FirebaseInfo extends React.Component {
 
-            "groupsList" : firebase.firestore.FieldValue.arrayUnion({"id" : hashString, "name" : groupName})
+        state = { groupIDs: data2, loading: false, displayedList: data2, search: "", classes: [], groupname: "" };
+        render() {
+            //            console.log(this.state.groupIDs)
+            const makeGroup = () => {
+                //TODO: double name error
+                if (this.state.classes.length > 0 && this.state.groupname.length > 0) {
+                    var db = firebase.firestore();
+                    var hashString = (+new Date).toString(36);
+                    var dataBaseRef = db.collection("Groups").doc(hashString);
+                    var user = firebase.auth().currentUser;
+                    var memberList = [];
+                    memberList.push(user.uid);
+                    var data = { name: this.state.groupname, owner: user.displayName, members: memberList, label: this.state.classes };
+                    dataBaseRef.set(data);
+
+                    var userRef = db.collection("Users").doc(user.uid);
+                    userRef.update({
+                        //TODO: double name error
+
+                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": this.state.groupname })
 
 
-        })
+                    })
+                    navigation.navigate('HomeScreen')
+                }
+            }
+
+            const renderItem = ({ item }) => (
+                <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
+
+                        this.setState({ classes: [...this.state.classes, item] })
+
+                    }}>
+                        <Text style={styles.connectOptionsText}>{item}</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+            const updateSearch = (event) => {
+                const filteredList = this.state.groupIDs.filter(
+                    (item) => {
+
+                        //      console.log(item)
+                        let word = item.toLowerCase();
+                        let lowerSearch = event.toLowerCase();
+                        return word.startsWith(lowerSearch);
+                    }
+                )
+                this.setState({ search: event, displayedList: filteredList })
+                //        console.log(this.state.displayedList[0])
+            }
+            return (
+
+                <View>
+                    <Text style={styles.AnswerText}>Create New Group</Text>
+                    <TextInput
+                        paddingTop={10}
+                        style={{ height: 40 }}
+                        placeholder="Name"
+                        onChangeText={text => this.setState({ groupname: text })}
+                        defaultValue={this.state.groupname}
+                    />
+                    <Text style={styles.connectOptions2}>
+                        Classes = {this.state.classes}
+                    </Text>
+                    <View style={styles.liss}>
+                        <SearchBar
+                            placeholder="Search"
+                            onChangeText={(value) => updateSearch(value)}
+                            value={this.state.search.toString()}
+                            lightTheme={true}
+                            round={true}
+                            containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
+                            inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
+
+                        {
+                            this.state.loading ? (
+                                <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
+                                    <ActivityIndicator size="large" />
+                                </View>
+                            ) : null
+                        }
+
+                        <FlatList
+                            data={this.state.displayedList}
+                            renderItem={renderItem}
+
+                            ListEmptyComponent={() => (
+                                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
+                                    {
+                                        this.state.loading ? null : (
+                                            <Text style={{ fontSize: 15 }} >No such word found... try something else</Text>
+                                        )
+                                    }
+                                </View>
+                            )}
+                        />
+                    </View>
+                    <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { makeGroup() }}>
+                        <Text style={styles.LoginText}>Enter</Text>
+                    </TouchableOpacity>
+                </View>);
+        }
 
 
-
-        navigation.navigate('HomeScreen')
     }
-    }
+
+
+    /*
     function entered() {
         if (!itm4 == "") {
             setclasses([...classes, itm4])
@@ -55,127 +143,22 @@ if (classes.length>0 && groupName.length >0){
             setclasses([...arrayRemove(classes, itm6)])
         }
     }
-    const txt2 = ""
-    const [text2, setText2] = React.useState(txt2)
-    const [itm, setitm] = React.useState("")
-    const [itm2, setitm2] = React.useState("")
-    const [itm3, setitm3] = React.useState("")
-    const [itm4, setitm4] = React.useState("")
-    const [itm5, setitm5] = React.useState("")
-    const [itm6, setitm6] = React.useState("")
+    */
 
-    const [liss3, setliss3] = React.useState([])
+    const [loading, setloading] = React.useState(false)
+    const [memory, setmemory] = React.useState([...data2])
+    const [search, setsearch] = React.useState("")
+    const [displayedlist, setdisplayedlist] = React.useState([...data2])
     const [classes, setclasses] = React.useState([])
-    var liss = []
-    for (var i = 0; i < 190; i++) {
-        liss.push({ label: Classes['SUBJECT CODE'][i], value: Classes['SUBJECT'][i] })
-    }
-
-    var liss2 = []
-
-    if (!(itm5 == "")) {
-        for (var i = 0; i < classes.length; i++) {
-            liss3.push(classes[i])
-        }
-    }
-
-    if (!(itm == "")) {
-        var aa = Object.values(data[itm3 + '.json']['COURSE NUMBER'])
-        var ab = Object.values(data[itm3 + '.json']['COURSE TITLE'])
-        //  console.log(aa)
-        //  console.log(ab)
-        for (var i = 0; i < aa.length; i++) {
-            liss2.push({ label: aa[i], value: ab[i] })
-        }
-
-
-    }
-
-
-    var txt3 = ''
-    const [groupName, setgroupname] = React.useState(txt3)
-    const [hashTag, sethashtag] = React.useState(txt3)
-    const [text3, setText3] = React.useState(txt3)
+    const [groupname, setgroupname] = React.useState('')
+    console.log(displayedlist)
     return (
         <View>
-            <Text style={styles.AnswerText}>Create New Group</Text>
-            <TextInput
-                paddingTop={10}
-                style={{ height: 40 }}
-                placeholder="Name"
-                onChangeText={text => setgroupname(text)}
-                defaultValue={groupName}
-            />
-            <Text style={styles.connectOptions2}>
-                Classes = {classes}
-            </Text>
+            <FirebaseInfo></FirebaseInfo>
 
-            <Text style={styles.connectOptions2}>
-                Add classes
-          </Text>
-            <DropDownPicker
-                items={liss}
-                defaultValue={itm}
-                containerStyle={{ height: 40 }}
-                style={{ backgroundColor: '#fafafa' }}
-                itemStyle={{
-                    justifyContent: 'flex-start'
-                }}
-                dropDownStyle={{ backgroundColor: '#fafafa' }}
-                onChangeItem={item => {
-                    setitm(
-                        item.value
-                    )
-                    setitm3(item.label)
-                }
-                }
-            />
-            <DropDownPicker
-                items={liss2}
-                defaultValue={itm2}
-                containerStyle={{ height: 40 }}
-                style={{ backgroundColor: '#fafafa' }}
-                itemStyle={{
-                    justifyContent: 'flex-start'
-                }}
-                dropDownStyle={{ backgroundColor: '#fafafa' }}
-                onChangeItem={item => {
-                    setitm2(item.value)
-                    setitm4(item.label)
 
-                }}
-            />
 
-            <TouchableOpacity style={styles.connectOptions4} activeOpacity={0.8} onPress={() => entered()}>
-                <Text style={styles.connectOptionsText}>Enter</Text>
-            </TouchableOpacity>
-            <Text style={styles.connectOptions2}>
-                Remove classes
-          </Text>
-
-            <DropDownPicker
-                items={liss3}
-                defaultValue={itm5}
-                containerStyle={{ height: 40 }}
-                style={{ backgroundColor: '#fafafa' }}
-                itemStyle={{
-                    justifyContent: 'flex-start'
-                }}
-                dropDownStyle={{ backgroundColor: '#fafafa' }}
-                onChangeItem={item => {
-                    setitm5(item.value)
-                    setitm6(item.label)
-
-                }}
-            />
-            <TouchableOpacity style={styles.connectOptions4} activeOpacity={0.8} onPress={() => entered2()}>
-                <Text style={styles.connectOptionsText}>Enter</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { makeGroup() }}>
-                <Text style={styles.LoginText}>Enter</Text>
-            </TouchableOpacity>
-        </View>
+        </View >
     )
 }
 CreateGroup.navigationOptions = {
@@ -183,6 +166,10 @@ CreateGroup.navigationOptions = {
 };
 
 const styles = StyleSheet.create({
+    liss: {
+        flex:0,
+        marginBottom: 20
+    },
     AnswerText: {
         fontWeight: 'bold',
         fontSize: 24,
@@ -205,7 +192,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 40,
         backgroundColor: 'white',
-
     },
     AnswerButtonBlue: {
         width: 250,
@@ -222,7 +208,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 20,
+        marginTop: 5,
         borderRadius: 30,
     },
     settings: {
@@ -270,8 +256,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     connectOptions: {
-        width: 150,
-        marginTop: 200,
+        width: 200,
+        height: 50,
+        marginTop: 1,
         alignContent: "center",
         padding: 15,
         paddingBottom: 0,
