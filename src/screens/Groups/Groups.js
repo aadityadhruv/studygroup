@@ -11,6 +11,7 @@ import firebase from 'firebase'
 
 export default function Groups({ navigation, route }) {
 
+
     let unsubscribe;
 
 
@@ -50,6 +51,7 @@ export default function Groups({ navigation, route }) {
                     </View>
                 ) : null
             }
+
             <FlatList
                 data={this.state.displayedList}
                 renderItem={renderItem}
@@ -116,6 +118,7 @@ return (
     </FirebaseInfo>
     </View>
 )
+
 }
 
 const styles = StyleSheet.create({
