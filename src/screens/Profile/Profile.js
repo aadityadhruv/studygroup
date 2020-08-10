@@ -20,11 +20,12 @@ class FirebaseInfo extends React.Component {
 
     var userInfoRef = db.collection("Users").doc(user.uid);
     userInfoRef.onSnapshot((doc) => {
-    var a = doc.data().classes;
-    this.setState({classes:a});
+      var a = doc.data().classes;
+      console.log(a)
+      this.setState({ classes: a });
     });
-}
-componentWillMount() {
+  }
+  componentWillMount() {
     return unsubscribe;
   }
   render() {
@@ -41,10 +42,15 @@ componentWillMount() {
       <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
           if (!this.state.classes.includes(item)) {
-
+            console.log("hi")
             this.setState({ classes: [...this.state.classes, item] })
+            var db = firebase.firestore();
+            var user = firebase.auth().currentUser;
+            var userRef = db.collection("Users").doc(user.uid);
+            userRef.update({
+              "classes": [...this.state.classes, item]
+            })
           }
-
         }}>
           <Text style={styles.connectOptionsText}>{item}</Text>
         </TouchableOpacity>
@@ -54,8 +60,13 @@ componentWillMount() {
       <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
           this.setState({ classes: removeItemOnce(this.state.classes, item) })
-
-
+          var db = firebase.firestore();
+          var user = firebase.auth().currentUser;
+          var userRef = db.collection("Users").doc(user.uid);
+          userRef.update({
+            //TODO: double name error
+            "classes": removeItemOnce(this.state.classes, item)
+          })
         }}>
           <Text style={styles.connectOptionsText}>{item}</Text>
         </TouchableOpacity>
@@ -77,54 +88,43 @@ componentWillMount() {
     }
     return (
 
-      <View>
-        <View style={styles.liss}>
-          <FlatList
-            data={this.state.classes}
-            renderItem={renderItem2}
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={this.state.classes}
+          renderItem={renderItem2}
+          keyExtractor={(item, index) => index.toString()}
+        />
+        <SearchBar
+          placeholder="Search"
+          onChangeText={(value) => updateSearch(value)}
+          value={this.state.search.toString()}
+          lightTheme={true}
+          round={true}
+          containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
+          inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
 
-            ListEmptyComponent={() => (
-              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
-                {
-                  this.state.loading ? null : (
-                    <Text style={{ fontSize: 15 }} ></Text>
-                  )
-                }
-              </View>
-            )}
-          />
-          <SearchBar
-            placeholder="Search"
-            onChangeText={(value) => updateSearch(value)}
-            value={this.state.search.toString()}
-            lightTheme={true}
-            round={true}
-            containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
-            inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
+        {
+          this.state.loading ? (
+            <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : null
+        }
 
-          {
-            this.state.loading ? (
-              <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
-                <ActivityIndicator size="large" />
-              </View>
-            ) : null
-          }
-
-          <FlatList
-            data={this.state.displayedList}
-            renderItem={renderItem}
-
-            ListEmptyComponent={() => (
-              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
-                {
-                  this.state.loading ? null : (
-                    <Text style={{ fontSize: 15 }} >No such word found... try something else</Text>
-                  )
-                }
-              </View>
-            )}
-          />
-        </View>
+        <FlatList
+          data={this.state.displayedList}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={() => (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
+              {
+                this.state.loading ? null : (
+                  <Text style={{ fontSize: 15 }} >No such Group found... try something else</Text>
+                )
+              }
+            </View>
+          )}
+        />
       </View>);
   }
 }
@@ -145,12 +145,22 @@ function Profile({ navigation, route }) {
     }
   })
   return (
-    <View styles = {styles.hi}>
-      <FirebaseInfo></FirebaseInfo>
-      <Text style={styles.connectOptions2}>
-        Your user info:
+    <View style={{
+      flex: 1,
+      flexDirection: 'column',
+      backgroundColor: '#fff',
+    }}>
+
+
+
+      <View style={styles.head}>
+        <Text style={styles.connectOptions2}>
+          Your user info:
           Name : {name}
-      </Text>
+        </Text>
+      </View>
+      <FirebaseInfo></FirebaseInfo>
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
           <Text style={styles.connectOptionsText}>Our Groups</Text>
@@ -171,8 +181,15 @@ Profile.navigationOptions = {
 };
 
 const styles = StyleSheet.create({
-  hi:{
-flex:1
+  liss: {
+    flex: 1
+  },
+  hi: {
+    width: '95%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 50,
+    flexDirection: 'row'
   },
   inputBox: {
     alignItems: 'center',
@@ -186,8 +203,8 @@ flex:1
     alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
-    height: 30,
-    marginTop: 50,
+    height: 10,
+    marginBottom: 0,
     flex: 1,
     flexDirection: 'row',
   },
