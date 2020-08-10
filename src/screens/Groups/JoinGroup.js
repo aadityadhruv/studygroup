@@ -7,40 +7,7 @@ function JoinGroup({ navigation, route }) {
 
 
 
-    let unsubscribe;
-
-
-    class FirebaseInfo extends React.Component {
-        state = { groupsList: [], loading: true, isJoined : false ,search:"" };
-
-        componentDidMount() {
-            var user = firebase.auth().currentUser;
-            var db = firebase.firestore();
-
-            var userInfoRef = db.collection("Users").doc(user.uid);
-            unsubscribe = userInfoRef.onSnapshot((doc) => {
-                
-
-                this.setState({ groupsList: doc.data().groupsList, loading : false, displayedList: doc.data().groupsList});
-      //          console.log(this.state.groupIDs);
-
-            });
-
-            if (this.state.groupsList.includes(route.params.id))  {
-                this.setState({isJoined : true});
-            }
-            console.log(this.state.isJoined);
-            setRequest(this.state.isJoined);
-         // 
-        }
-        componentWillMount() {
-            return unsubscribe;
-          }
-        render() {
-        return (<View></View>);
-        }
-
-    }   
+       
 
 
 
@@ -53,8 +20,10 @@ function addGroup() {
             userInfoRef.update({
                 "groupsList" : firebase.firestore.FieldValue.arrayUnion({id : route.params.id, name : route.params.name})
             })
+            console.log("add" + request);
 }
 function removeGroup() {
+    console.log(request);
     var user = firebase.auth().currentUser;
             var db = firebase.firestore();
 
@@ -65,11 +34,28 @@ function removeGroup() {
 }
 
     function login_new() {
-        //groupID.status = "Requested"
+        var user = firebase.auth().currentUser;
+            var db = firebase.firestore();
+            setRequest(false);
+            var userInfoRef = db.collection("Users").doc(user.uid);
+            userInfoRef.get().then(function(doc) {
+                if (doc.exists) {
+                    console.log();
+                    console.log(route.params.id);
+                    doc.data().groupsList.forEach(element => {
+                        if (element.id == route.params.id) {
+                            setRequest(true);
+                        }
+                    });
+                   
+                }
+            })
         
+        console.log(request);
         !request ? setText("Leave") : setText("Join " + groupName);
         !request ? addGroup() : removeGroup();
-        setRequest(!request);
+        
+        
         
 
         
@@ -77,20 +63,20 @@ function removeGroup() {
     }
     var groupID = route.params.id;
     var groupName = route.params.name;
-    console.log("ID: " + groupID);
+    //console.log("ID: " + groupID);
     // get name , classes , optional description , status of the group from database
     var txt2=''
     const [text, setText] = React.useState("Join " + groupName)
     const [text2, setText2] = React.useState(txt2)
     const [text3, setText3] = React.useState(txt2)
     const [request, setRequest] = React.useState(false)
-    console.log(groupID);
+    //console.log(groupID);
     return (
         <View>
             <Text style = {styles.AnswerText}>{groupName}</Text>
             <Text style = {styles.AnswerText}>Class = {route.params.label}</Text>
             <Text style = {styles.AnswerText}>Description = {route.params.desc}</Text>
-            <FirebaseInfo>  </FirebaseInfo>
+            
 
             <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { login_new() }}>
         <Text style={styles.LoginText}>{text}</Text>
