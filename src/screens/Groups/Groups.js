@@ -39,7 +39,7 @@ export default function Groups({ navigation, route }) {
         render() {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { id :item.id})}>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { id :item.id,name:item.name})}>
                         <Text style={styles.connectOptionsText}>{item.name}</Text>
                     </TouchableOpacity>
             
