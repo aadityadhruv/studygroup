@@ -22,11 +22,19 @@ class FirebaseInfo extends React.Component {
       }
       return arr;
     }
-
     const renderItem = ({ item }) => (
       <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
           if (!this.state.classes.includes(item)) {
+
+            this.setState({ classes: [...this.state.classes, item] })
+          }
+
+        }}>
+          <Text style={styles.connectOptionsText}>{item}</Text>
+        </TouchableOpacity>
+      </View>
+    );
 
 
   let unsubscribe;
@@ -56,8 +64,6 @@ class FirebaseInfo extends React.Component {
           
           return (<View></View>);
       }
-
-
   }
 
 
@@ -114,12 +120,6 @@ class FirebaseInfo extends React.Component {
     liss.push({ label: Classes['SUBJECT CODE'][i], value: Classes['SUBJECT'][i] })
   }
 
-
-        }}>
-          <Text style={styles.connectOptionsText}>{item}</Text>
-        </TouchableOpacity>
-      </View>
-    );
     const renderItem2 = ({ item }) => (
       <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
