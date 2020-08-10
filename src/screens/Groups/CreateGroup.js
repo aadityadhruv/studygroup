@@ -21,7 +21,7 @@ if (classes.length>0 && groupName.length >0){
         var user = firebase.auth().currentUser;
         var memberList = [];
         memberList.push(user.uid);
-        var data = {name : groupName, id : hashString, owner : user.displayName, members : memberList, label : classes};
+        var data = {name : groupName, id : hashString, owner : user.displayName, members : memberList, label : classes, desc : "sampleDescription"};
         dataBaseRef.set(data);
         
         var userRef = db.collection("Users").doc(user.uid);

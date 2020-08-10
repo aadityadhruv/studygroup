@@ -4,25 +4,27 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button, Sett
 
 function JoinGroup({ navigation, route }) {
     function login_new() {
-        group.status = "Requested"
+        //groupID.status = "Requested"
         setText(" ")
    //     navigation.navigate('HomeScreen')
     }
-    var group = route.params.word
+    var groupID = route.params.id;
+    var groupName = route.params.name;
+    console.log("ID: " + groupID);
     // get name , classes , optional description , status of the group from database
     var txt2=''
     const [text, setText] = React.useState(txt2)
     const [text2, setText2] = React.useState(txt2)
     const [text3, setText3] = React.useState(txt2)
-    console.log(group)
+    console.log(groupID)
     return (
         <View>
-            <Text style = {styles.AnswerText}>{group}</Text>
-            <Text style = {styles.AnswerText}>Class = {group.adj}</Text>
-            <Text style = {styles.AnswerText}>Description = {group.desc}</Text>
+            <Text style = {styles.AnswerText}>{groupName}</Text>
+            <Text style = {styles.AnswerText}>Class = {route.params.label}</Text>
+            <Text style = {styles.AnswerText}>Description = {route.params.desc}</Text>
 
             <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { login_new() }}>
-        <Text style={styles.LoginText}>{group.status}</Text>
+        <Text style={styles.LoginText}>{"Join " + groupName}</Text>
       </TouchableOpacity>     
       <Text style={styles.LoginText}>{text}</Text>
        

@@ -42,13 +42,14 @@ let unsubscribe;
                     querySnapshot.forEach(function (doc) {
                         if (!userGroupsArray.includes(doc.data().id)) {
 
-                            cities.push(doc.data().name);
+                            cities.push({id : doc.data().id, name : doc.data().name, label : doc.data().label, desc : doc.data().desc});
+                            console.log(doc.data().labels);
                         }
 
                     });
                     //     console.log("Current cities in CA: ", cities.join(", "));
                     //     console.log(this);
-                    this.setState({ groupIDs: cities, loading: false, displayedList: cities });
+                    this.setState({ groupIDs: cities, loading: false, displayedList: cities});
                 }.bind(this));
 
 
@@ -61,8 +62,8 @@ let unsubscribe;
         render() {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('JoinGroup', { 'word': item })}>
-                        <Text style={styles.connectOptionsText}>{item}</Text>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('JoinGroup', { id : item.id, name : item.name, label : item.label, desc : item.desc})}>
+                        <Text style={styles.connectOptionsText}>{item.name}</Text>
                     </TouchableOpacity>
 
                 </View>
@@ -72,7 +73,7 @@ let unsubscribe;
                     (item) => {
 
                         console.log(item)
-                        let word = item.toLowerCase();
+                        let word = item.name.toLowerCase();
                         let lowerSearch = event.toLowerCase();
                         return word.indexOf(lowerSearch) > -1;
                     }
@@ -102,7 +103,7 @@ let unsubscribe;
                     <FlatList
                         data={this.state.displayedList}
                         renderItem={renderItem}
-
+                        keyExtractor={(item, index) => index.toString()}
                         ListEmptyComponent={() => (
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
                                 {
