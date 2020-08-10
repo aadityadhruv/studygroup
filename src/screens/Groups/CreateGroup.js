@@ -15,7 +15,9 @@ const screenHeight = Math.round(Dimensions.get('window').height);
 
 
 function CreateGroup({ navigation, route }) {
+
     class FirebaseInfo extends React.Component {
+
 
         state = { groupIDs: data2, loading: false, displayedList: data2, search: "", classes: [], groupname: "" };
         render() {
@@ -29,7 +31,8 @@ function CreateGroup({ navigation, route }) {
                     var user = firebase.auth().currentUser;
                     var memberList = [];
                     memberList.push(user.uid);
-                    var data = { name: this.state.groupname, owner: user.displayName, members: memberList, label: this.state.classes };
+									var data = {name : this.state.groupname, id : hashString, owner : user.displayName, members : memberList, label : this.state.classes, desc : "sampleDescription"};
+                    
                     dataBaseRef.set(data);
 
                     var userRef = db.collection("Users").doc(user.uid);

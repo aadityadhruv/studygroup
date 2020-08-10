@@ -10,39 +10,60 @@ import firebase from 'firebase'
 
 export default function HomeScreen({ navigation, route }) {
 
-
+let unsubscribe;
     class FirebaseInfo extends React.Component {
-        
-        state = { groupIDs: [], loading: true, displayedList: [],search:""};
 
+        state = { groupIDs: [], loading: true, displayedList: [], search: ""};
         
-        
+
+
         componentDidMount() {
             var user = firebase.auth().currentUser;
             var db = firebase.firestore();
-            var groupsRef = db.collection("Groups");
-            groupsRef
-    .onSnapshot(function namae(querySnapshot) {
-        
-        var cities = [];
-        querySnapshot.forEach(function(doc) {
-            cities.push(doc.data().name);
-        });
- //     console.log("Current cities in CA: ", cities.join(", "));
-   //     console.log(this);
-        this.setState({ groupIDs: cities, loading : false, displayedList: cities});
-    }.bind(this));
 
-       
+            var userInfoRef = db.collection("Users").doc(user.uid);
+            userInfoRef.onSnapshot((doc) => {
+            var a = doc.data().groupsList;
+            var userGroupsArray = [];
+            a.forEach(element => {
+                console.log(element.id);
+                userGroupsArray.push(element.id);
+            });
+            var user = firebase.auth().currentUser;
+            var db = firebase.firestore();
+            var groupsRef = db.collection("Groups");
+            unsubscribe = groupsRef
+                .onSnapshot(function namae(querySnapshot) {
+
+                    var cities = [];
+
+
+
+                    querySnapshot.forEach(function (doc) {
+                        if (!userGroupsArray.includes(doc.data().id)) {
+
+                            cities.push({id : doc.data().id, name : doc.data().name, label : doc.data().label, desc : doc.data().desc});
+                            console.log(doc.data().labels);
+                        }
+
+                    });
+                    //     console.log("Current cities in CA: ", cities.join(", "));
+                    //     console.log(this);
+                    this.setState({ groupIDs: cities, loading: false, displayedList: cities});
+                }.bind(this));
+
+
+            });
          
-        
-            
         }
+        componentWillMount() {
+            return unsubscribe;
+          }
         render() {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('JoinGroup', { 'word': item })}>
-                        <Text style={styles.connectOptionsText}>{item}</Text>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('JoinGroup', { id : item.id, name : item.name, label : item.label, desc : item.desc})}>
+                        <Text style={styles.connectOptionsText}>{item.name}</Text>
                     </TouchableOpacity>
 
                 </View>
@@ -50,28 +71,29 @@ export default function HomeScreen({ navigation, route }) {
             const updateSearch = (event) => {
                 const filteredList = this.state.groupIDs.filter(
                     (item) => {
-                        
+
                         console.log(item)
-                      let word = item.toLowerCase();
+                        let word = item.name.toLowerCase();
                         let lowerSearch = event.toLowerCase();
                         return word.indexOf(lowerSearch) > -1;
                     }
                 )
-                this.setState({search:event,displayedList:filteredList})
-                console.log(this.state.displayedList)
+
+                this.setState({ search: event, displayedList: filteredList })
+
             }
             return (
 
                 <View style={{ flex: 1 }}>
-  <SearchBar 
-            placeholder="Search" 
-            onChangeText={(value) => updateSearch(value)} 
-            value={this.state.search.toString()} 
-            lightTheme={true} 
-            round={true} 
-            containerStyle={{backgroundColor:'white', borderTopWidth:0}}
-            inputContainerStyle={{backgroundColor:'#EBEBEB', height: 40, width: '597%', marginLeft:'1%',}}/>
-          
+                    <SearchBar
+                        placeholder="Search"
+                        onChangeText={(value) => updateSearch(value)}
+                        value={this.state.search.toString()}
+                        lightTheme={true}
+                        round={true}
+                        containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
+                        inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
+
                     {
                         this.state.loading ? (
                             <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
@@ -83,7 +105,7 @@ export default function HomeScreen({ navigation, route }) {
                     <FlatList
                         data={this.state.displayedList}
                         renderItem={renderItem}
-                       
+                        keyExtractor={(item, index) => index.toString()}
                         ListEmptyComponent={() => (
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
                                 {

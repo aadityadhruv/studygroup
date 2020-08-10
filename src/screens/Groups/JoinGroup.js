@@ -2,29 +2,86 @@ import * as React from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button, Settings,TextInput } from 'react-native';
 //import firebase from 'firebase';
 
+import firebase from 'firebase'
 function JoinGroup({ navigation, route }) {
+
+
+
+       
+
+
+
+
+function addGroup() {
+    var user = firebase.auth().currentUser;
+            var db = firebase.firestore();
+
+            var userInfoRef = db.collection("Users").doc(user.uid);
+            userInfoRef.update({
+                "groupsList" : firebase.firestore.FieldValue.arrayUnion({id : route.params.id, name : route.params.name})
+            })
+            console.log("add" + request);
+}
+function removeGroup() {
+    console.log(request);
+    var user = firebase.auth().currentUser;
+            var db = firebase.firestore();
+
+            var userInfoRef = db.collection("Users").doc(user.uid);
+            userInfoRef.update({
+                "groupsList" : firebase.firestore.FieldValue.arrayRemove({id : route.params.id, name : route.params.name})
+            })
+}
+
     function login_new() {
-        group.status = "Requested"
-        setText(" ")
+        var user = firebase.auth().currentUser;
+            var db = firebase.firestore();
+            setRequest(false);
+            var userInfoRef = db.collection("Users").doc(user.uid);
+            userInfoRef.get().then(function(doc) {
+                if (doc.exists) {
+                    console.log();
+                    console.log(route.params.id);
+                    doc.data().groupsList.forEach(element => {
+                        if (element.id == route.params.id) {
+                            setRequest(true);
+                        }
+                    });
+                   
+                }
+            })
+        
+        console.log(request);
+        !request ? setText("Leave") : setText("Join " + groupName);
+        !request ? addGroup() : removeGroup();
+        
+        
+        
+
+        
    //     navigation.navigate('HomeScreen')
     }
-    var group = route.params.word
+    var groupID = route.params.id;
+    var groupName = route.params.name;
+    //console.log("ID: " + groupID);
     // get name , classes , optional description , status of the group from database
     var txt2=''
-    const [text, setText] = React.useState(txt2)
+    const [text, setText] = React.useState("Join " + groupName)
     const [text2, setText2] = React.useState(txt2)
     const [text3, setText3] = React.useState(txt2)
-    console.log(group)
+    const [request, setRequest] = React.useState(false)
+    //console.log(groupID);
     return (
         <View>
-            <Text style = {styles.AnswerText}>{group}</Text>
-            <Text style = {styles.AnswerText}>Class = {group.adj}</Text>
-            <Text style = {styles.AnswerText}>Description = {group.desc}</Text>
+            <Text style = {styles.AnswerText}>{groupName}</Text>
+            <Text style = {styles.AnswerText}>Class = {route.params.label}</Text>
+            <Text style = {styles.AnswerText}>Description = {route.params.desc}</Text>
+            
 
             <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { login_new() }}>
-        <Text style={styles.LoginText}>{group.status}</Text>
+        <Text style={styles.LoginText}>{text}</Text>
       </TouchableOpacity>     
-      <Text style={styles.LoginText}>{text}</Text>
+      
        
         </View>
     )

@@ -12,33 +12,63 @@ export default function Chats({ navigation, route }) {
 
 
   class FirebaseInfo extends React.Component {
-    state = { chats: [], loading: true, displayedList: [], search: "",text2:"" };
-
+    state = { chats: [], loading: false ,text2:"" };
+  
     componentDidMount() {
       var user = firebase.auth().currentUser;
       var db = firebase.firestore();
 
-      var userInfoRef = db.collection("Users").doc(user.uid);
-      unsubscribe = userInfoRef.onSnapshot((doc) => {
-
-
-        this.setState({ chats: doc.data().groupsList, loading: false, displayedList: doc.data().groupsList });
-     //   console.log(this.state.chats);
-
-      });
+      
+      
+      const id = route.params.id;
+      //const { itemId } = route.params.id;
+      //console.log("id" + itemId);
+      
+      var msgRef = db.collection("Groups").doc(id).collection("messages");
+      unsubscribe =msgRef
+      .onSnapshot(function(querySnapshot) {
+          var cities = [];
+          querySnapshot.forEach(function(doc) {
+            if (doc.exists) {
+              cities.push(doc.data().text);
+            }
+              
+          });
+          console.log(cities);
+          this.setState({ chats: cities, loading: false});
+      }.bind(this));
+      
 
       //   console.log(this.state.groupIDs);
     }
+    componentWillMount() {
+      return unsubscribe;
+    }
     render() {
+      
       const entered = () => {
+
+        var user = firebase.auth().currentUser;
+        var db = firebase.firestore();
+  
+        var msgRef = db.collection("Groups").doc(route.params.id).collection("messages");
+       
+        var hashString = (+new Date).toString(36);
         if (!this.state.text2 == ""){
-        this.setState({ chats: [...this.state.chats, {sender :"me",name:this.state.text2}],text2:"" })
+         
+          msgRef.doc(hashString).set(
+            {
+            from : user.uid,
+            text : this.state.text2
+          });
+          
+        
       }
     }
       const renderItem = ({ item }) => (
         <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
           <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8}>
-      <Text style={styles.connectOptionsText}>{item.name}</Text>
+      <Text style={styles.connectOptionsText}>{item}</Text>
           </TouchableOpacity>
 
         </View>

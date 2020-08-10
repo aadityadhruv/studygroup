@@ -28,8 +28,92 @@ class FirebaseInfo extends React.Component {
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
           if (!this.state.classes.includes(item)) {
 
-            this.setState({ classes: [...this.state.classes, item] })
-          }
+
+  let unsubscribe;
+  class FirebaseInfo extends React.Component {
+
+      state = { groupIDs: [], loading: true, displayedList: [], search: ""};
+
+
+
+      componentDidMount() {
+          var user = firebase.auth().currentUser;
+          var db = firebase.firestore();
+
+          var userInfoRef = db.collection("Users").doc(user.uid);
+          userInfoRef.onSnapshot((doc) => {
+          var a = doc.data().classes;
+          setclasses(a);
+          
+          
+          });
+       
+      }
+      componentWillMount() {
+          return unsubscribe;
+        }
+      render() {
+          
+          return (<View></View>);
+      }
+
+
+  }
+
+
+
+
+
+  function entered() {
+    if(!itm4 == "") {
+    setclasses([...classes, itm4]);
+    setliss3([...liss3,{ label: itm4, value: itm2 }]);
+    updateDB();
+
+  }
+  }
+  function arrayRemove(arr, value) {
+     return arr.filter(
+       function(ele){
+
+          return ele != value; 
+        }
+       );
+       
+      }
+  function entered2() {
+    if(!itm5 == "") {
+      setliss3([...arrayRemove(liss3,itm6)])
+      setclasses([...arrayRemove(classes,itm6)])
+      updateDB();
+  }
+  }
+
+  function updateDB() {
+    var user = firebase.auth().currentUser;
+    var db = firebase.firestore();
+    var userInfoRef = db.collection("Users").doc(user.uid);
+    userInfoRef.update({
+      classes : classes
+    })
+
+  }
+  const txt2 = ""
+  const [text2, setText2] = React.useState(txt2)
+  const [itm, setitm] = React.useState("")
+  const [itm2, setitm2] = React.useState("")
+  const [itm3, setitm3] = React.useState("")
+  const [itm4, setitm4] = React.useState("")
+  const [itm5, setitm5] = React.useState("")
+  const [itm6, setitm6] = React.useState("")
+  
+  const [liss3, setliss3] = React.useState([])
+  const [classes, setclasses] = React.useState([])
+  var liss = []
+  for (var i = 0; i < 190; i++) {
+    liss.push({ label: Classes['SUBJECT CODE'][i], value: Classes['SUBJECT'][i] })
+  }
+
 
         }}>
           <Text style={styles.connectOptionsText}>{item}</Text>
@@ -123,7 +207,7 @@ function Profile({ navigation, route }) {
   const [name, setName] = React.useState("")
   var user = firebase.auth().currentUser;
 
-  var user = firebase.auth().currentUser;
+
 
 
 
@@ -139,7 +223,9 @@ function Profile({ navigation, route }) {
       // doc.data() will be undefined in this case
       console.log("No such document!");
     }
+
   })
+
 
 
   return (
