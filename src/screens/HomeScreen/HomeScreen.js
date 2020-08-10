@@ -110,7 +110,7 @@ export default function HomeScreen({ navigation, route }) {
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
                                 {
                                     this.state.loading ? null : (
-                                        <Text style={{ fontSize: 15 }} >No such word found... try something else</Text>
+                                        <Text style={{ fontSize: 15 }} >No such Group found... try something else</Text>
                                     )
                                 }
                             </View>
@@ -138,21 +138,20 @@ export default function HomeScreen({ navigation, route }) {
             backgroundColor: '#fff',
         }}>
 
-            <FirebaseInfo></FirebaseInfo>
-
+         
             <View style={styles.head}>
 
-                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Login')}>
-                    <Text>Log Out </Text>
-
+            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Login')}>
+                    <Text style={styles.connectOptionsText}>Log Out</Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CreateGroup')}>
-                    <Text>Add </Text>
-
+                
+                <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('CreateGroup')}>
+                    <Text style={styles.connectOptionsText}>Add</Text>
                 </TouchableOpacity>
-
+                
             </View>
+            <FirebaseInfo></FirebaseInfo>
+
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
                     <Text style={styles.connectOptionsText}>Our Groups</Text>
