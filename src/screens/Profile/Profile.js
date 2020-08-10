@@ -12,22 +12,75 @@ import firebase from 'firebase'
 
 function Profile({ navigation, route }) {
 
+
+  let unsubscribe;
+  class FirebaseInfo extends React.Component {
+
+      state = { groupIDs: [], loading: true, displayedList: [], search: ""};
+
+
+
+      componentDidMount() {
+          var user = firebase.auth().currentUser;
+          var db = firebase.firestore();
+
+          var userInfoRef = db.collection("Users").doc(user.uid);
+          userInfoRef.onSnapshot((doc) => {
+          var a = doc.data().classes;
+          setclasses(a);
+          
+          
+          });
+       
+      }
+      componentWillMount() {
+          return unsubscribe;
+        }
+      render() {
+          
+          return (<View></View>);
+      }
+
+
+  }
+
+
+
+
+
   function entered() {
     if(!itm4 == "") {
-    setclasses([...classes, itm4])
-    setliss3([...liss3,{ label: itm4, value: itm2 }])
+    setclasses([...classes, itm4]);
+    setliss3([...liss3,{ label: itm4, value: itm2 }]);
+    updateDB();
+
   }
   }
   function arrayRemove(arr, value) {
      return arr.filter(
-       function(ele){ return ele != value; }
+       function(ele){
+
+          return ele != value; 
+        }
        );
+       
       }
   function entered2() {
     if(!itm5 == "") {
       setliss3([...arrayRemove(liss3,itm6)])
       setclasses([...arrayRemove(classes,itm6)])
+      updateDB();
   }
+  }
+
+  function updateDB() {
+    var user = firebase.auth().currentUser;
+    var db = firebase.firestore();
+    var userInfoRef = db.collection("Users").doc(user.uid);
+    userInfoRef.update({
+      classes : classes
+    })
+
   }
   const txt2 = ""
   const [text2, setText2] = React.useState(txt2)
@@ -67,7 +120,7 @@ function Profile({ navigation, route }) {
   const [name, setName] = React.useState("")
   var user = firebase.auth().currentUser;
 
-  var user = firebase.auth().currentUser;
+
 
 
 
@@ -88,6 +141,7 @@ userInfoRef.get().then(function (doc) {
 
 console.log(classes)
   return (
+    
     <View>
       <Text style={styles.connectOptions2}>
         Classes = {classes}
@@ -113,6 +167,7 @@ console.log(classes)
         }
         }
       />
+      <FirebaseInfo></FirebaseInfo>
       <DropDownPicker
         items={liss2}
         defaultValue={itm2}

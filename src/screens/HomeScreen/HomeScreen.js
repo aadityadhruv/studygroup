@@ -14,7 +14,7 @@ let unsubscribe;
     class FirebaseInfo extends React.Component {
 
         state = { groupIDs: [], loading: true, displayedList: [], search: ""};
-
+        
 
 
         componentDidMount() {
