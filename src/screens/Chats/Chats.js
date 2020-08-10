@@ -64,6 +64,7 @@ export default function Chats({ navigation, route }) {
           
         
       }
+      this.setState({text2:""})
     }
       const renderItem = ({ item }) => (
         <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
