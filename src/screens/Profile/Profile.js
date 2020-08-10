@@ -72,11 +72,9 @@ class FirebaseInfo extends React.Component {
         </TouchableOpacity>
       </View>
     );
-
     const updateSearch = (event) => {
       const filteredList = this.state.groupIDs.filter(
         (item) => {
-
           //      console.log(item)
           let word = item.toLowerCase();
           let lowerSearch = event.toLowerCase();
