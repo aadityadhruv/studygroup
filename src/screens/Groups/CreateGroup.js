@@ -19,7 +19,7 @@ function CreateGroup({ navigation, route }) {
     class FirebaseInfo extends React.Component {
 
 
-        state = { groupIDs: data2, loading: false, displayedList: data2, search: "", classes: [], groupname: "" };
+        state = { groupIDs: data2, loading: false, displayedList: data2, search: "", classes: [], groupname: "",description:"" };
         render() {
             //            console.log(this.state.groupIDs)
             const makeGroup = () => {
@@ -31,7 +31,7 @@ function CreateGroup({ navigation, route }) {
                     var user = firebase.auth().currentUser;
                     var memberList = [];
                     memberList.push(user.uid);
-									var data = {name : this.state.groupname, id : hashString, owner : user.displayName, members : memberList, label : this.state.classes, desc : "sampleDescription"};
+									var data = {name : this.state.groupname, id : hashString, owner : user.displayName, members : memberList, label : this.state.classes, desc : this.state.description};
                     
                     dataBaseRef.set(data);
 
@@ -100,9 +100,18 @@ function CreateGroup({ navigation, route }) {
                         paddingTop={10}
                         style={{ height: 40 }}
                         placeholder="Name"
+                        onChangeText={text => this.setState({ description: text })}
+                        defaultValue={this.state.description}
+                    />
+                        <Text style={styles.AnswerText}>Group Description(Optional)</Text>
+                    <TextInput
+                        paddingTop={10}
+                        style={{ height: 40 }}
+                        placeholder="Description"
                         onChangeText={text => this.setState({ groupname: text })}
                         defaultValue={this.state.groupname}
                     />
+                
                     <View style={styles.liss}>
                     <FlatList
                         data={this.state.classes}
