@@ -117,12 +117,26 @@ export default function Chats({ navigation, route }) {
     }
 
   }
-console.log(route.params.word)
+console.log(route.params.id)
+function leave(a,b){
+  var user = firebase.auth().currentUser;
+  var db = firebase.firestore();
+
+  var userInfoRef = db.collection("Users").doc(user.uid);
+  userInfoRef.update({
+      "groupsList" : firebase.firestore.FieldValue.arrayRemove({id :route.params.id , name :route.params.name})
+  })
+
+  navigation.navigate("Groups")
+}
   return (
     <View style={styles.buttonContainer2}>
       <View styles={styles.buttonContainer}>
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
           <Text style={styles.connectOptionsText}>Back</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() =>{ leave()}}>
+          <Text style={styles.connectOptionsText}>Leave Group</Text>
         </TouchableOpacity>
         <Text style={styles.connectOptionsText2}>{route.params.word}</Text>
 

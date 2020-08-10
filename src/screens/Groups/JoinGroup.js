@@ -4,14 +4,6 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button, Sett
 
 import firebase from 'firebase'
 function JoinGroup({ navigation, route }) {
-
-
-
-       
-
-
-
-
 function addGroup() {
     var user = firebase.auth().currentUser;
             var db = firebase.firestore();
@@ -20,10 +12,8 @@ function addGroup() {
             userInfoRef.update({
                 "groupsList" : firebase.firestore.FieldValue.arrayUnion({id : route.params.id, name : route.params.name})
             })
-            console.log("add" + request);
-}
+  }
 function removeGroup() {
-    console.log(request);
     var user = firebase.auth().currentUser;
             var db = firebase.firestore();
 
@@ -40,8 +30,6 @@ function removeGroup() {
             var userInfoRef = db.collection("Users").doc(user.uid);
             userInfoRef.get().then(function(doc) {
                 if (doc.exists) {
-                    console.log();
-                    console.log(route.params.id);
                     doc.data().groupsList.forEach(element => {
                         if (element.id == route.params.id) {
                             setRequest(true);
@@ -51,26 +39,18 @@ function removeGroup() {
                 }
             })
         
-        console.log(request);
         !request ? setText("Leave") : setText("Join " + groupName);
         !request ? addGroup() : removeGroup();
-        
-        
-        
-
-        
-   //     navigation.navigate('HomeScreen')
-    }
+          }
     var groupID = route.params.id;
     var groupName = route.params.name;
-    //console.log("ID: " + groupID);
     // get name , classes , optional description , status of the group from database
     var txt2=''
     const [text, setText] = React.useState("Join " + groupName)
     const [text2, setText2] = React.useState(txt2)
     const [text3, setText3] = React.useState(txt2)
     const [request, setRequest] = React.useState(false)
-    //console.log(groupID);
+    console.log("Hi");
     return (
         <View>
             <Text style = {styles.AnswerText}>{groupName}</Text>
