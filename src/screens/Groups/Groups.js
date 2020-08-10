@@ -33,6 +33,9 @@ export default function Groups({ navigation, route }) {
 
          //   console.log(this.state.groupIDs);
         }
+        componentWillMount() {
+            return unsubscribe;
+          }
         render() {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>

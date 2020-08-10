@@ -10,7 +10,7 @@ import firebase from 'firebase'
 
 export default function HomeScreen({ navigation, route }) {
 
-
+let unsubscribe;
     class FirebaseInfo extends React.Component {
 
         state = { groupIDs: [], loading: true, displayedList: [], search: ""};
@@ -32,7 +32,7 @@ export default function HomeScreen({ navigation, route }) {
             var user = firebase.auth().currentUser;
             var db = firebase.firestore();
             var groupsRef = db.collection("Groups");
-            groupsRef
+            unsubscribe = groupsRef
                 .onSnapshot(function namae(querySnapshot) {
 
                     var cities = [];
@@ -53,16 +53,11 @@ export default function HomeScreen({ navigation, route }) {
 
 
             });
-            
-
-
-            
-
-
-
-
-
+         
         }
+        componentWillMount() {
+            return unsubscribe;
+          }
         render() {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
