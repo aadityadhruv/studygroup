@@ -19,7 +19,7 @@ function CreateGroup({ navigation, route }) {
     class FirebaseInfo extends React.Component {
 
 
-        state = { groupIDs: data2, loading: false, displayedList: data2, search: "", classes: [], groupname: "",description:"" };
+        state = { groupIDs: data2, loading: false, displayedList: data2, search: "", classes: [], groupname: "", description: "" };
         render() {
             //            console.log(this.state.groupIDs)
             const makeGroup = () => {
@@ -31,8 +31,8 @@ function CreateGroup({ navigation, route }) {
                     var user = firebase.auth().currentUser;
                     var memberList = [];
                     memberList.push(user.uid);
-									var data = {name : this.state.groupname, id : hashString, owner : user.displayName, members : memberList, label : this.state.classes, desc : this.state.description};
-                    
+                    var data = { name: this.state.groupname, id: hashString, owner: user.displayName, members: memberList, label: this.state.classes, desc: this.state.description };
+
                     dataBaseRef.set(data);
 
                     var userRef = db.collection("Users").doc(user.uid);
@@ -57,9 +57,9 @@ function CreateGroup({ navigation, route }) {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
-                        if(!this.state.classes.includes(item)) {
+                        if (!this.state.classes.includes(item)) {
 
-                        this.setState({ classes: [...this.state.classes, item] })
+                            this.setState({ classes: [...this.state.classes, item] })
                         }
 
                     }}>
@@ -68,7 +68,7 @@ function CreateGroup({ navigation, route }) {
                 </View>
             );
             const renderItem2 = ({ item }) => (
-                <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
+                <View style={{ minHeight: 50, padding: 0, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
                         this.setState({ classes: removeItemOnce(this.state.classes, item) })
 
@@ -94,7 +94,8 @@ function CreateGroup({ navigation, route }) {
             }
             return (
 
-                <View>
+                <View style = {{flex:1}}>
+                    
                     <Text style={styles.AnswerText}>Create New Group</Text>
                     <TextInput
                         paddingTop={10}
@@ -103,7 +104,7 @@ function CreateGroup({ navigation, route }) {
                         onChangeText={text => this.setState({ description: text })}
                         defaultValue={this.state.description}
                     />
-                        <Text style={styles.AnswerText}>Group Description(Optional)</Text>
+                    <Text style={styles.AnswerText}>Group Description(Optional)</Text>
                     <TextInput
                         paddingTop={10}
                         style={{ height: 40 }}
@@ -111,22 +112,22 @@ function CreateGroup({ navigation, route }) {
                         onChangeText={text => this.setState({ groupname: text })}
                         defaultValue={this.state.groupname}
                     />
-                
                     <View style={styles.liss}>
-                    <FlatList
-                        data={this.state.classes}
-                        renderItem={renderItem2}
+                        <FlatList
+                            data={this.state.classes}
+                            numColumns={4}
+                            renderItem={renderItem2}
 
-                        ListEmptyComponent={() => (
-                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
-                                {
-                                    this.state.loading ? null : (
-                                        <Text style={{ fontSize: 15 }} ></Text>
-                                    )
-                                }
-                            </View>
-                        )}
-                    />
+                            ListEmptyComponent={() => (
+                                <View style={{ flex: 0, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
+                                    {
+                                        this.state.loading ? null : (
+                                            <Text style={{ fontSize: 15 }} ></Text>
+                                        )
+                                    }
+                                </View>
+                            )}
+                        />
                         <SearchBar
                             placeholder="Search"
                             onChangeText={(value) => updateSearch(value)}
@@ -146,6 +147,8 @@ function CreateGroup({ navigation, route }) {
 
                         <FlatList
                             data={this.state.displayedList}
+                            numColumns={4}
+
                             renderItem={renderItem}
 
                             ListEmptyComponent={() => (
@@ -159,36 +162,14 @@ function CreateGroup({ navigation, route }) {
                             )}
                         />
                     </View>
-                    <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { makeGroup() }}>
-                        <Text style={styles.LoginText}>Enter</Text>
-                    </TouchableOpacity>
+                    <View styles = {styles.second}>
+                        <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { makeGroup() }}>
+                            <Text style={styles.LoginText}>Enter</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>);
         }
-
-
     }
-
-
-    /*
-    function entered() {
-        if (!itm4 == "") {
-            setclasses([...classes, itm4])
-            setliss3([...liss3, { label: itm4, value: itm2 }])
-        }
-    }
-    function arrayRemove(arr, value) {
-        return arr.filter(
-            function (ele) { return ele != value; }
-        );
-    }
-    function entered2() {
-        if (!itm5 == "") {
-            setliss3([...arrayRemove(liss3, itm6)])
-            setclasses([...arrayRemove(classes, itm6)])
-        }
-    }
-    */
-
     const [loading, setloading] = React.useState(false)
     const [memory, setmemory] = React.useState([...data2])
     const [search, setsearch] = React.useState("")
@@ -199,9 +180,6 @@ function CreateGroup({ navigation, route }) {
     return (
         <View>
             <FirebaseInfo></FirebaseInfo>
-
-
-
         </View >
     )
 }
@@ -210,7 +188,16 @@ CreateGroup.navigationOptions = {
 };
 
 const styles = StyleSheet.create({
+    
+  second: {
+    paddingTop: 10,
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
+  },
     liss: {
+        height:450,
         flex: 0,
         marginBottom: 20
     },
@@ -300,23 +287,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     connectOptions: {
-        width: 200,
-        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 100,
+        height: 60,
         marginTop: 1,
         alignContent: "center",
         padding: 15,
-        paddingBottom: 0,
-        marginLeft: 0,
-        marginRight: 0,
         backgroundColor: '#0099FF',
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#fff'
     },
     connectOptionsText: {
-        fontSize: 30,
+        fontSize: 20,
         color: '#FFFFFF',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     connectOptions2: {
         marginTop: 20,

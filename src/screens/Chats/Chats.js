@@ -14,63 +14,63 @@ export default function Chats({ navigation, route }) {
 
 
   class FirebaseInfo extends React.Component {
-    state = { chats: [], loading: false ,text2:"",usersName:"" };
-  
+    state = { chats: [], loading: false, text2: "", usersName: "" };
+
     componentDidMount() {
       var user = firebase.auth().currentUser;
       var db = firebase.firestore();
 
-      
-      
+
+
       const id = route.params.id;
       //const { itemId } = route.params.id;
       //console.log("id" + itemId);
-      
+
       var msgRef = db.collection("Groups").doc(id).collection("messages");
-      unsubscribe =msgRef
-      .onSnapshot(function(querySnapshot) {
+      unsubscribe = msgRef
+        .onSnapshot(function (querySnapshot) {
           var cities = [];
-          querySnapshot.forEach(function(doc) {
+          querySnapshot.forEach(function (doc) {
             if (doc.exists) {
-              cities.push({text:doc.data().text,from:doc.data().from});
+              cities.push({ text: doc.data().text, from: doc.data().from });
             }
-              
+
           });
-          this.setState({ chats: cities, loading: false});
-      }.bind(this));
-      
-     
+          this.setState({ chats: cities, loading: false });
+        }.bind(this));
+
+
     }
     componentWillMount() {
       return unsubscribe;
     }
     render() {
-      
+
       const entered = () => {
-      
+
         var user = firebase.auth().currentUser;
         var db = firebase.firestore();
-        
+
         var msgRef = db.collection("Groups").doc(route.params.id).collection("messages");
-       
+
         var hashString = (+new Date).toString(36);
-        if (!this.state.text2 == ""){
-         console.log(user)
+        if (!this.state.text2 == "") {
+          console.log(user)
           msgRef.doc(hashString).set(
             {
-            from : user.displayName,
-            text : this.state.text2
-          });
-          
-        
+              from: user.displayName,
+              text: this.state.text2
+            });
+
+
+        }
+        this.setState({ text2: "" })
       }
-      this.setState({text2:""})
-    }
       const renderItem = ({ item }) => (
         <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
           <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8}>
-          <Text style={styles.connectOptionsText}>{item.from}</Text>
-      <Text style={styles.connectOptionsText}>{item.text}</Text>
+            <Text style={styles.connectOptionsText}>{item.from}</Text>
+            <Text style={styles.connectOptionsText}>{item.text}</Text>
           </TouchableOpacity>
 
         </View>
@@ -91,6 +91,7 @@ export default function Chats({ navigation, route }) {
           <FlatList
             data={this.state.chats}
             renderItem={renderItem}
+
             keyExtractor={(item, index) => index.toString()}
             ListEmptyComponent={() => (
               <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
@@ -102,51 +103,68 @@ export default function Chats({ navigation, route }) {
               </View>
             )}
           />
-          <TextInput
-            style={{ height: 40, fontSize: 40 }}
-            placeholder="Type here!"
-            onChangeText={text2 => this.setState({ text2: text2 })}
-            defaultValue={this.state.text2}
-          />
-          <TouchableOpacity style={styles.connectOptions4} activeOpacity={0.8} onPress={() => entered()}>
-            <Text style={styles.connectOptionsText}>Enter</Text>
-          </TouchableOpacity>
-
+          <View style={styles.second}>
+            <TextInput
+              style={styles.connectOptions2}
+              placeholder="Type here!"
+              onChangeText={text2 => this.setState({ text2: text2 })}
+              defaultValue={this.state.text2}
+            />
+            <TouchableOpacity style={styles.connectOptions3} activeOpacity={0.8} onPress={() => entered()}>
+              <Text style={styles.connectOptionsText}>Enter</Text>
+            </TouchableOpacity>
+          </View>
 
         </View>);
     }
 
   }
-console.log(route.params.id)
-function leave(a,b){
-  var user = firebase.auth().currentUser;
-  var db = firebase.firestore();
+  console.log(route.params.id)
+  function leave() {
+    var user = firebase.auth().currentUser;
+    var db = firebase.firestore();
 
-  var userInfoRef = db.collection("Users").doc(user.uid);
-  userInfoRef.update({
-      "groupsList" : firebase.firestore.FieldValue.arrayRemove({id :route.params.id , name :route.params.name})
-  })
+    var userInfoRef = db.collection("Users").doc(user.uid);
+    userInfoRef.update({
+      "groupsList": firebase.firestore.FieldValue.arrayRemove({ id: route.params.id, name: route.params.name })
+    })
 
-  navigation.navigate("Groups")
-}
+    navigation.navigate("Groups")
+  }
   return (
     <View style={styles.buttonContainer2}>
-      <View styles={styles.buttonContainer}>
+      <View style={styles.second}>
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
           <Text style={styles.connectOptionsText}>Back</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() =>{ leave()}}>
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8}>
+          <Text style={styles.connectOptionsText}>{route.params.name}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => { leave() }}>
           <Text style={styles.connectOptionsText}>Leave Group</Text>
         </TouchableOpacity>
-        <Text style={styles.connectOptionsText2}>{route.params.word}</Text>
 
       </View>
+
       <FirebaseInfo></FirebaseInfo>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  second2: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+
+  second: {
+    paddingTop: 10,
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
+  },
   buttonContainer: {
     alignItems: 'center',
     alignSelf: 'center',
@@ -179,9 +197,37 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff'
   },
+  connectOptions2: {
+    width: 350,
+    marginTop: 10,
+    alignContent: "center",
+    padding: 15,
+    paddingBottom: 15,
+    marginLeft: 0,
+    marginRight: 0,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+
+  connectOptions3: {
+    width: 50,
+    marginTop: 10,
+    alignContent: "center",
+    padding: 15,
+    paddingBottom: 15,
+    marginLeft: 0,
+    marginRight: 0,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+
   connectOptionsText: {
     fontSize: 24,
-    color: '#FFFFFF',
+    color: 'black',
     textAlign: 'center'
   },
   connectOptionsText2: {

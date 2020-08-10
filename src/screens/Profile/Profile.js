@@ -3,7 +3,7 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity, ActivityIndicator,
 import DropDownPicker from 'react-native-dropdown-picker';
 import Classes from './Data/Classes.json'
 import data from './Data/data.json'
-
+import { ScrollView } from 'react-native-gesture-handler';
 import data2 from './Data/data2.json'
 import { SearchBar } from 'react-native-elements'
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -21,8 +21,10 @@ class FirebaseInfo extends React.Component {
     var userInfoRef = db.collection("Users").doc(user.uid);
     userInfoRef.onSnapshot((doc) => {
       var a = doc.data().classes;
-      console.log(a)
-      this.setState({ classes: a });
+      if (a == undefined) {
+        a =[]
+      }
+      this.setState({ classes: a });      
     });
   }
   componentWillMount() {
@@ -86,12 +88,15 @@ class FirebaseInfo extends React.Component {
     }
     return (
 
-      <View style={{ flex: 1 }}>
-        <FlatList
+      <View style={styles.hello}>
+        <View style = {styles.hi4}>
+         <FlatList
           data={this.state.classes}
+          numColumns={4}
           renderItem={renderItem2}
           keyExtractor={(item, index) => index.toString()}
         />
+        </View>
         <SearchBar
           placeholder="Search"
           onChangeText={(value) => updateSearch(value)}
@@ -111,6 +116,7 @@ class FirebaseInfo extends React.Component {
 
         <FlatList
           data={this.state.displayedList}
+          numColumns={4}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={() => (
@@ -148,12 +154,8 @@ function Profile({ navigation, route }) {
       flexDirection: 'column',
       backgroundColor: '#fff',
     }}>
-
-
-
       <View style={styles.head}>
         <Text style={styles.connectOptions2}>
-          Your user info:
           Name : {name}
         </Text>
       </View>
@@ -179,6 +181,10 @@ Profile.navigationOptions = {
 };
 
 const styles = StyleSheet.create({
+  hello:{
+flex:0,
+height:500
+  },
   liss: {
     flex: 1
   },
@@ -201,30 +207,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
-    height: 10,
+    height: 20,
     marginBottom: 0,
     flex: 1,
     flexDirection: 'row',
   },
   connectOptions: {
-    width: 150,
-    marginTop: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 100,
+    height: 60,
+    marginTop: 1,
     alignContent: "center",
     padding: 15,
-    paddingBottom: 0,
-    marginLeft: 0,
-    marginRight: 0,
     backgroundColor: '#0099FF',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#fff'
-  },
-  connectOptionsText: {
-    fontSize: 30,
+},
+connectOptionsText: {
+    fontSize: 20,
     color: '#FFFFFF',
-    textAlign: 'center'
-  },
-  connectOptions2: {
+    textAlign: 'center',
+},
+connectOptions2: {
     marginTop: 20,
     alignContent: "center",
     padding: 15,
