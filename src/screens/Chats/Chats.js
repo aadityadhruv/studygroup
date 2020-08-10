@@ -9,10 +9,12 @@ import firebase from 'firebase'
 
 export default function Chats({ navigation, route }) {
   let unsubscribe;
+  let unsubscribe2;
+
 
 
   class FirebaseInfo extends React.Component {
-    state = { chats: [], loading: false ,text2:"" };
+    state = { chats: [], loading: false ,text2:"",usersName:"" };
   
     componentDidMount() {
       var user = firebase.auth().currentUser;
@@ -30,16 +32,14 @@ export default function Chats({ navigation, route }) {
           var cities = [];
           querySnapshot.forEach(function(doc) {
             if (doc.exists) {
-              cities.push(doc.data().text);
+              cities.push({text:doc.data().text,from:doc.data().from});
             }
               
           });
-          console.log(cities);
           this.setState({ chats: cities, loading: false});
       }.bind(this));
       
-
-      //   console.log(this.state.groupIDs);
+     
     }
     componentWillMount() {
       return unsubscribe;
@@ -47,18 +47,18 @@ export default function Chats({ navigation, route }) {
     render() {
       
       const entered = () => {
-
+      
         var user = firebase.auth().currentUser;
         var db = firebase.firestore();
-  
+        
         var msgRef = db.collection("Groups").doc(route.params.id).collection("messages");
        
         var hashString = (+new Date).toString(36);
         if (!this.state.text2 == ""){
-         
+         console.log(user)
           msgRef.doc(hashString).set(
             {
-            from : user.uid,
+            from : user.displayName,
             text : this.state.text2
           });
           
@@ -69,7 +69,8 @@ export default function Chats({ navigation, route }) {
       const renderItem = ({ item }) => (
         <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
           <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8}>
-      <Text style={styles.connectOptionsText}>{item}</Text>
+          <Text style={styles.connectOptionsText}>{item.from}</Text>
+      <Text style={styles.connectOptionsText}>{item.text}</Text>
           </TouchableOpacity>
 
         </View>
