@@ -10,11 +10,11 @@ import firebase from 'firebase'
 
 export default function HomeScreen({ navigation, route }) {
 
-let unsubscribe;
+    let unsubscribe;
     class FirebaseInfo extends React.Component {
 
-        state = { groupIDs: [], loading: true, displayedList: [], search: ""};
-        
+        state = { groupIDs: [], loading: true, displayedList: [], search: "" };
+
 
 
         componentDidMount() {
@@ -23,46 +23,46 @@ let unsubscribe;
 
             var userInfoRef = db.collection("Users").doc(user.uid);
             userInfoRef.onSnapshot((doc) => {
-            var a = doc.data().groupsList;
-            var userGroupsArray = [];
-            a.forEach(element => {
-                console.log(element.id);
-                userGroupsArray.push(element.id);
+                var a = doc.data().groupsList;
+                var userGroupsArray = [];
+                a.forEach(element => {
+                    console.log(element.id);
+                    userGroupsArray.push(element.id);
+                });
+                var user = firebase.auth().currentUser;
+                var db = firebase.firestore();
+                var groupsRef = db.collection("Groups");
+                unsubscribe = groupsRef
+                    .onSnapshot(function namae(querySnapshot) {
+
+                        var cities = [];
+
+
+
+                        querySnapshot.forEach(function (doc) {
+                            if (!userGroupsArray.includes(doc.data().id)) {
+
+                                cities.push({ id: doc.data().id, name: doc.data().name, label: doc.data().label, desc: doc.data().desc });
+                                console.log(doc.data().labels);
+                            }
+
+                        });
+                        //     console.log("Current cities in CA: ", cities.join(", "));
+                        //     console.log(this);
+                        this.setState({ groupIDs: cities, loading: false, displayedList: cities });
+                    }.bind(this));
+
+
             });
-            var user = firebase.auth().currentUser;
-            var db = firebase.firestore();
-            var groupsRef = db.collection("Groups");
-            unsubscribe = groupsRef
-                .onSnapshot(function namae(querySnapshot) {
 
-                    var cities = [];
-
-
-
-                    querySnapshot.forEach(function (doc) {
-                        if (!userGroupsArray.includes(doc.data().id)) {
-
-                            cities.push({id : doc.data().id, name : doc.data().name, label : doc.data().label, desc : doc.data().desc});
-                            console.log(doc.data().labels);
-                        }
-
-                    });
-                    //     console.log("Current cities in CA: ", cities.join(", "));
-                    //     console.log(this);
-                    this.setState({ groupIDs: cities, loading: false, displayedList: cities});
-                }.bind(this));
-
-
-            });
-         
         }
         componentWillMount() {
             return unsubscribe;
-          }
+        }
         render() {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('JoinGroup', { id : item.id, name : item.name, label : item.label, desc : item.desc})}>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('JoinGroup', { id: item.id, name: item.name, label: item.label, desc: item.desc })}>
                         <Text style={styles.connectOptionsText}>{item.name}</Text>
                     </TouchableOpacity>
 
@@ -142,6 +142,10 @@ let unsubscribe;
 
             <View style={styles.head}>
 
+                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Login')}>
+                    <Text>Log Out </Text>
+
+                </TouchableOpacity>
 
                 <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CreateGroup')}>
                     <Text>Add </Text>

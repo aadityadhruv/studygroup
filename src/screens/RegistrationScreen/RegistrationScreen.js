@@ -26,6 +26,13 @@ export default function RegistrationScreen({navigation}) {
             .createUserWithEmailAndPassword(email, password)
             .then((response) => {
                 const uid = response.user.uid
+                firebase.auth().currentUser.updateProfile({
+                    displayName: fullName
+                }).then(function () {
+                    console.log("Updated");
+                }, function (error) {
+                    console.log("Error happened");
+                });
                 const data = {
                     id: uid,
                     email,
@@ -34,7 +41,6 @@ export default function RegistrationScreen({navigation}) {
                 };
                 
                 const usersRef = firebase.firestore().collection('Users')
-                
                 usersRef
                     .doc(uid)
                     .set(data)
