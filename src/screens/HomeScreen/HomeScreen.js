@@ -78,7 +78,9 @@ let unsubscribe;
                         return word.indexOf(lowerSearch) > -1;
                     }
                 )
+
                 this.setState({ search: event, displayedList: filteredList })
+
             }
             return (
 
