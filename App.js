@@ -11,6 +11,7 @@ import Groups from './src/screens/Groups/Groups.js';
 import Profile from './src/screens/Profile/Profile';
 import Chats from './src/screens/Chats/Chats';
 import CreateGroup from './src/screens/Groups/CreateGroup.js';
+import GroupInfo from './src/screens/Groups/GroupInfo.js';
 import JoinGroup from './src/screens/Groups/JoinGroup.js';
 import { YellowBox } from 'react-native';
 import _ from 'lodash';
@@ -118,6 +119,8 @@ class App extends React.Component {
             <Stack.Screen name="Chats" component={Chats} />
             <Stack.Screen name="CreateGroup" component={CreateGroup} />
             <Stack.Screen name="JoinGroup" component={JoinGroup} />
+            <Stack.Screen name="GroupInfo" component={GroupInfo} />
+
           </>
           ) : (
               <>
@@ -129,6 +132,8 @@ class App extends React.Component {
                 <Stack.Screen name="Chats" component={Chats} />
                 <Stack.Screen name="CreateGroup" component={CreateGroup} />
                 <Stack.Screen name="JoinGroup" component={JoinGroup} />
+                <Stack.Screen name="GroupInfo" component={GroupInfo} />
+
               </>
             )}
         </Stack.Navigator>
