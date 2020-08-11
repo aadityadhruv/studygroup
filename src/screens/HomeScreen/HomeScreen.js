@@ -12,7 +12,7 @@ export default function HomeScreen({ navigation, route }) {
     let unsubscribe;
     class FirebaseInfo extends React.Component {
 
-        state = { groupIDs: [], loading: true, displayedList: [], search: "" };
+        state = { groupIDs: [], loading: true, displayedList: [], search: "", classes: [] };
 
 
 
@@ -28,27 +28,43 @@ export default function HomeScreen({ navigation, route }) {
                     //         console.log(element.id);
                     userGroupsArray.push(element.id);
                 });
+                var b = doc.data().classes;
+                if (b == undefined) {
+                    b = []
+                }
+                this.setState({ classes: b });
+
+
                 var user = firebase.auth().currentUser;
                 var db = firebase.firestore();
                 var groupsRef = db.collection("Groups");
                 unsubscribe = groupsRef
                     .onSnapshot(function namae(querySnapshot) {
-
                         var cities = [];
-
-
-
                         querySnapshot.forEach(function (doc) {
                             if (!userGroupsArray.includes(doc.data().id)) {
 
                                 cities.push({ id: doc.data().id, name: doc.data().name, label: doc.data().label, desc: doc.data().desc });
-                                //   console.log(doc.data().labels);
                             }
-
                         });
-                        //     console.log("Current cities in CA: ", cities.join(", "));
-                        //     console.log(this);
-                        this.setState({ groupIDs: cities, loading: false, displayedList: cities });
+                        var cities2 = [...cities]
+                        if (this.state.classes && cities && (this.state.classes[0])) {
+                            cities2 = cities2.filter(
+                                (item) => {
+                                    let va = false;
+                                    item.label.forEach(function (clas) {
+                                        this.state.classes.forEach(function (cla) {
+                                            if (cla == clas) {
+                                                va = true
+                                            }
+                                        })
+
+                                    }.bind(this))
+                                    if (va) { return va }
+                                    return false
+                                })
+                        }
+                        this.setState({ groupIDs: cities, loading: false, displayedList: cities2, displayedList2: cities2 });
                     }.bind(this));
 
 
@@ -68,23 +84,30 @@ export default function HomeScreen({ navigation, route }) {
                 </View>
             );
             const updateSearch = (event) => {
-                var filteredList = this.state.groupIDs.filter(
+
+                var filteredList = []
+
+                filteredList = this.state.groupIDs.filter(
                     (item) => {
                         let word = item.name.toLowerCase();
                         let lowerSearch = event.toLowerCase();
                         let upperSearch = event.toUpperCase();
                         let va = false;
-                        item.label.forEach(function(clas) {
-                            console.log(clas)
+                        item.label.forEach(function (clas) {
+                            //     console.log(clas)
                             if (clas.startsWith(upperSearch)) {
                                 va = true
                             }
                         })
-                        if(va) {return va}
+                        if (va) { return va }
                         return (word.startsWith(lowerSearch));
 
                     }
                 )
+                if (event == "" || event == " ") {
+                    filteredList = this.state.displayedList2
+                }
+
 
 
                 this.setState({ search: event, displayedList: filteredList })
