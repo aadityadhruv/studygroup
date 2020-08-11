@@ -53,7 +53,7 @@ export default function Chats({ navigation, route }) {
 
         var hashString = (+new Date).toString(36);
         if (!this.state.text2 == "") {
-          console.log(user)
+         // console.log(user)
           msgRef.doc(hashString).set(
             {
               from: user.displayName,
@@ -71,22 +71,6 @@ export default function Chats({ navigation, route }) {
             <Text style={styles.connectOptionsText}>{item.text}</Text>
           </TouchableOpacity>
 
-        </View>
-      );
-      let pushData = [
-        {
-          title: "First push",
-          message: "First push message"
-        },
-        {
-          title: "Second push",
-          message: "Second push message"
-        }
-      ]
-      const _renderItem = ({ item }) => (
-        <View key={item.title}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.message}>{item.message}</Text>
         </View>
       );
       return (
@@ -129,32 +113,18 @@ export default function Chats({ navigation, route }) {
     }
 
   }
-  console.log(route.params.id)
-  function leave() {
-    var user = firebase.auth().currentUser;
-    var db = firebase.firestore();
-
-    var userInfoRef = db.collection("Users").doc(user.uid);
-    userInfoRef.update({
-      "groupsList": firebase.firestore.FieldValue.arrayRemove({ id: route.params.id, name: route.params.name })
-    })
-
-    navigation.navigate("Groups")
-  }
+//  console.log(route.params.id)
   return (
     <View style={styles.buttonContainer2}>
       <View style={styles.second}>
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
           <Text style={styles.connectOptionsText}>Back</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => console.log("Hi")}>
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('GroupInfo',{ id: route.params.id, name: route.params.name })}>
           <Text style={styles.connectOptionsText}>{route.params.name}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => { leave() }}>
-          <Text style={styles.connectOptionsText}>Leave Group</Text>
-        </TouchableOpacity>
-
+       
       </View>
 
       <FirebaseInfo></FirebaseInfo>
