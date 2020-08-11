@@ -32,8 +32,6 @@ YellowBox.ignoreWarnings(['Setting a timer']);
     }
     (window).Expo = Object.freeze({ ...(window).Expo, SQLite });
 class App extends React.Component {
-  
-
   constructor() {
     super();
     this.state = {
@@ -41,7 +39,6 @@ class App extends React.Component {
       authenticated: false,
     };
   }
-
   componentDidMount() {
 //https://gist.github.com/zwily/e9e97e0f9f523a72c24c7df01d889482
     window.openDatabase = SQLite.openDatabase;
@@ -97,9 +94,6 @@ class App extends React.Component {
       }
   });
 
-
-
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ loading: false, authenticated: true });
@@ -108,12 +102,9 @@ class App extends React.Component {
         this.setState({ loading: false, authenticated: false });
       }
     });
-
-   
   }
   render() {
     if (this.state.loading) return null;
-
     return (
       <NavigationContainer>
         <Stack.Navigator>
@@ -122,7 +113,6 @@ class App extends React.Component {
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Registration" component={RegistrationScreen} />
-            
             <Stack.Screen name="Groups" component={Groups} />
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="Chats" component={Chats} />

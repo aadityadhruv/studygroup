@@ -3,7 +3,6 @@ import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndica
 import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
 
-
 import firebase from 'firebase'
 
 
@@ -13,7 +12,7 @@ export default function HomeScreen({ navigation, route }) {
     let unsubscribe;
     class FirebaseInfo extends React.Component {
 
-        state = { groupIDs: [], loading: true, displayedList: [], search: "" };
+        state = { groupIDs: [], loading: true, displayedList: [], search: "", classes: [] };
 
 
 
@@ -26,32 +25,48 @@ export default function HomeScreen({ navigation, route }) {
                 var a = doc.data().groupsList;
                 var userGroupsArray = [];
                 a.forEach(element => {
-                    console.log(element.id);
+                    //         console.log(element.id);
                     userGroupsArray.push(element.id);
                 });
+                var b = doc.data().classes;
+                if (b == undefined) {
+                    b = []
+                }
+                this.setState({ classes: b });
+
+
                 var user = firebase.auth().currentUser;
                 var db = firebase.firestore();
                 var groupsRef = db.collection("Groups");
                 unsubscribe = groupsRef
                     .onSnapshot(function namae(querySnapshot) {
-
                         var cities = [];
-
-
-
                         querySnapshot.forEach(function (doc) {
                             
                             
                             if (!userGroupsArray.includes(doc.data().id) && doc.data().isGroup) {
                                 
                                 cities.push({ id: doc.data().id, name: doc.data().name, label: doc.data().label, desc: doc.data().desc });
-                                console.log(doc.data().labels);
                             }
-
                         });
-                        //     console.log("Current cities in CA: ", cities.join(", "));
-                        //     console.log(this);
-                        this.setState({ groupIDs: cities, loading: false, displayedList: cities });
+                        var cities2 = [...cities]
+                        if (this.state.classes && cities && (this.state.classes[0])) {
+                            cities2 = cities2.filter(
+                                (item) => {
+                                    let va = false;
+                                    item.label.forEach(function (clas) {
+                                        this.state.classes.forEach(function (cla) {
+                                            if (cla == clas) {
+                                                va = true
+                                            }
+                                        })
+
+                                    }.bind(this))
+                                    if (va) { return va }
+                                    return false
+                                })
+                        }
+                        this.setState({ groupIDs: cities, loading: false, displayedList: cities2, displayedList2: cities2 });
                     }.bind(this));
 
 
@@ -71,15 +86,31 @@ export default function HomeScreen({ navigation, route }) {
                 </View>
             );
             const updateSearch = (event) => {
-                const filteredList = this.state.groupIDs.filter(
-                    (item) => {
 
-                        console.log(item)
+                var filteredList = []
+
+                filteredList = this.state.groupIDs.filter(
+                    (item) => {
                         let word = item.name.toLowerCase();
                         let lowerSearch = event.toLowerCase();
-                        return word.indexOf(lowerSearch) > -1;
+                        let upperSearch = event.toUpperCase();
+                        let va = false;
+                        item.label.forEach(function (clas) {
+                            //     console.log(clas)
+                            if (clas.startsWith(upperSearch)) {
+                                va = true
+                            }
+                        })
+                        if (va) { return va }
+                        return (word.startsWith(lowerSearch));
+
                     }
                 )
+                if (event == "" || event == " ") {
+                    filteredList = this.state.displayedList2
+                }
+
+
 
                 this.setState({ search: event, displayedList: filteredList })
 
@@ -131,7 +162,14 @@ export default function HomeScreen({ navigation, route }) {
 
 
     //load db once at first render
-
+    function logout() {
+        firebase.auth().signOut().then(function () {
+            console.log('Signed Out');
+        }, function (error) {
+            console.error('Sign Out Error', error);
+        });
+        navigation.navigate('LoginScreen')
+    }
 
     return (
         <View style={{
@@ -140,17 +178,18 @@ export default function HomeScreen({ navigation, route }) {
             backgroundColor: '#fff',
         }}>
 
-         
+
             <View style={styles.head}>
 
-            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Login')}>
+                <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => logout()}>
+
                     <Text style={styles.connectOptionsText}>Log Out</Text>
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('CreateGroup')}>
                     <Text style={styles.connectOptionsText}>Add</Text>
                 </TouchableOpacity>
-                
+
             </View>
             <FirebaseInfo></FirebaseInfo>
 
