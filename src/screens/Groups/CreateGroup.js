@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
     liss: {
-        height:450,
+        height:screenHeight/2.5,
         flex: 0,
         marginBottom: 20
     },
