@@ -3,7 +3,6 @@ import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndica
 import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
 
-
 import firebase from 'firebase'
 
 

@@ -3,6 +3,7 @@ import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndica
 import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
 
+import { LocalNotification } from './src/services/LocalPushController'
 
 import firebase from 'firebase'
 
@@ -138,7 +139,7 @@ export default function Chats({ navigation, route }) {
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
           <Text style={styles.connectOptionsText}>Back</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8}>
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => LocalNotification()}>
           <Text style={styles.connectOptionsText}>{route.params.name}</Text>
         </TouchableOpacity>
 
