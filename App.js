@@ -14,6 +14,9 @@ import CreateGroup from './src/screens/Groups/CreateGroup.js';
 import JoinGroup from './src/screens/Groups/JoinGroup.js';
 import { YellowBox } from 'react-native';
 import _ from 'lodash';
+
+import firebase from 'firebase'
+
 if (!global.btoa) { global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
@@ -21,8 +24,9 @@ if (!global.atob) { global.atob = decode }
 const Stack = createStackNavigator();
 function App() {
   console.disableYellowBox = true;
+  
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(null)
+  const [auth, setAuth] = useState(false)
   
 
 YellowBox.ignoreWarnings(['Setting a timer']);
@@ -32,14 +36,22 @@ console.warn = message => {
     _console.warn(message);
   }
 };
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    setAuth(true);
+  } else {
+    setAuth(false);
+  }
+});
+
 
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {user ? (
+        {auth ? (
           <Stack.Screen name="HomeScreen">
-            {props => <HomeScreen {...props} extraData={user} />}
+            {props => <HomeScreen {...props} extraData={auth} />}
           </Stack.Screen>
         ) : (
             <>
