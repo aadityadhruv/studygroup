@@ -31,7 +31,7 @@ function CreateGroup({ navigation, route }) {
                     var user = firebase.auth().currentUser;
                     var memberList = [];
                     memberList.push(user.uid);
-                    var data = { name: this.state.groupname, id: hashString, owner: user.displayName, members: memberList, label: this.state.classes, desc: this.state.description };
+                    var data = { name: this.state.groupname, id: hashString, owner: user.displayName, members: memberList, label: this.state.classes, desc: this.state.description, isGroup : true};
 
                     dataBaseRef.set(data);
 

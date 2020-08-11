@@ -40,8 +40,10 @@ export default function HomeScreen({ navigation, route }) {
 
 
                         querySnapshot.forEach(function (doc) {
-                            if (!userGroupsArray.includes(doc.data().id)) {
-
+                            
+                            
+                            if (!userGroupsArray.includes(doc.data().id) && doc.data().isGroup) {
+                                
                                 cities.push({ id: doc.data().id, name: doc.data().name, label: doc.data().label, desc: doc.data().desc });
                                 console.log(doc.data().labels);
                             }
