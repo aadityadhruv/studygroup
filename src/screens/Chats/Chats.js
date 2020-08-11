@@ -32,10 +32,10 @@ export default function Chats({ navigation, route }) {
           var cities = [];
           querySnapshot.forEach(function (doc) {
             if (doc.exists) {
-              cities.push({ text: doc.data().text, from: doc.data().from });
+              cities.unshift({ text: doc.data().text, from: doc.data().from });
             }
-
           });
+
           this.setState({ chats: cities, loading: false });
         }.bind(this));
 
@@ -91,6 +91,7 @@ export default function Chats({ navigation, route }) {
           <FlatList
             data={this.state.chats}
             renderItem={renderItem}
+            inverted={true}
 
             keyExtractor={(item, index) => index.toString()}
             ListEmptyComponent={() => (
