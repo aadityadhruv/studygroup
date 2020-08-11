@@ -25,7 +25,7 @@ export default function HomeScreen({ navigation, route }) {
                 var a = doc.data().groupsList;
                 var userGroupsArray = [];
                 a.forEach(element => {
-                    console.log(element.id);
+                    //         console.log(element.id);
                     userGroupsArray.push(element.id);
                 });
                 var user = firebase.auth().currentUser;
@@ -42,7 +42,7 @@ export default function HomeScreen({ navigation, route }) {
                             if (!userGroupsArray.includes(doc.data().id)) {
 
                                 cities.push({ id: doc.data().id, name: doc.data().name, label: doc.data().label, desc: doc.data().desc });
-                                console.log(doc.data().labels);
+                                //   console.log(doc.data().labels);
                             }
 
                         });
@@ -68,15 +68,24 @@ export default function HomeScreen({ navigation, route }) {
                 </View>
             );
             const updateSearch = (event) => {
-                const filteredList = this.state.groupIDs.filter(
+                var filteredList = this.state.groupIDs.filter(
                     (item) => {
-
-                        console.log(item)
                         let word = item.name.toLowerCase();
                         let lowerSearch = event.toLowerCase();
-                        return word.indexOf(lowerSearch) > -1;
+                        let upperSearch = event.toUpperCase();
+                        let va = false;
+                        item.label.forEach(function(clas) {
+                            console.log(clas)
+                            if (clas.startsWith(upperSearch)) {
+                                va = true
+                            }
+                        })
+                        if(va) {return va}
+                        return (word.startsWith(lowerSearch));
+
                     }
                 )
+
 
                 this.setState({ search: event, displayedList: filteredList })
 
@@ -128,7 +137,14 @@ export default function HomeScreen({ navigation, route }) {
 
 
     //load db once at first render
-
+    function logout() {
+        firebase.auth().signOut().then(function () {
+            console.log('Signed Out');
+        }, function (error) {
+            console.error('Sign Out Error', error);
+        });
+        navigation.navigate('LoginScreen')
+    }
 
     return (
         <View style={{
@@ -137,17 +153,17 @@ export default function HomeScreen({ navigation, route }) {
             backgroundColor: '#fff',
         }}>
 
-         
+
             <View style={styles.head}>
 
-            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('LoginScreen')}>
+                <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => logout()}>
                     <Text style={styles.connectOptionsText}>Log Out</Text>
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('CreateGroup')}>
                     <Text style={styles.connectOptionsText}>Add</Text>
                 </TouchableOpacity>
-                
+
             </View>
             <FirebaseInfo></FirebaseInfo>
 

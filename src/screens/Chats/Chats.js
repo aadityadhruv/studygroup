@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component } from "react-native";
 import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
-
-import { LocalNotification } from './src/services/LocalPushController'
+//import { LocalNotification } from '../../services/LocalPushController'
 
 import firebase from 'firebase'
 
@@ -11,17 +10,11 @@ import firebase from 'firebase'
 export default function Chats({ navigation, route }) {
   let unsubscribe;
   let unsubscribe2;
-
-
-
   class FirebaseInfo extends React.Component {
     state = { chats: [], loading: false, text2: "", usersName: "" };
-
     componentDidMount() {
       var user = firebase.auth().currentUser;
       var db = firebase.firestore();
-
-
 
       const id = route.params.id;
       //const { itemId } = route.params.id;
