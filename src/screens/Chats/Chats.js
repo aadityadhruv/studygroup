@@ -14,6 +14,11 @@ export default function Chats({ navigation, route }) {
 
 
   function createPersonalChat(userID) {
+    if (userID == firebase.auth().currentUser.uid) {
+      return;
+    }
+
+
     var db = firebase.firestore();
                     var hashString = (+new Date).toString(36);
                     var dataBaseRef = db.collection("Groups").doc(hashString);
