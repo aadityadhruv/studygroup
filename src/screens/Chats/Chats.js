@@ -8,10 +8,66 @@ import firebase from 'firebase'
 
 
 export default function Chats({ navigation, route }) {
+
   let unsubscribe;
   let unsubscribe2;
+
+
+  function createPersonalChat(userID) {
+    var db = firebase.firestore();
+                    var hashString = (+new Date).toString(36);
+                    var dataBaseRef = db.collection("Groups").doc(hashString);
+                    var user = firebase.auth().currentUser;
+                    var memberList = [];
+                    memberList.push(user.uid);
+                    memberList.push(userID);
+                    //var data = { name: this.state.groupname, id: hashString, owner: user.displayName, members: memberList, label: this.state.classes, desc: this.state.description, isGroup : true};
+
+
+                    var data = { name: "Personal Chat between ", id: hashString, owner: user.displayName, members: memberList, label : [], desc : "", isGroup : false};
+                    console.log(data);
+                    
+                    dataBaseRef.set(data);
+                    
+                    var userRef = db.collection("Users").doc(user.uid);
+                    var otherUserRef = db.collection("Users").doc(userID);
+                    var otherUserName = "";
+                    otherUserRef.get().then(function(doc) {
+                      if (doc.exists) {
+                          otherUserName = doc.data().fullName;
+                      } else {
+                          // doc.data() will be undefined in this case
+                          console.log("No such document!");
+                      }
+                  }).catch(function(error) {
+                      console.log("Error getting document:", error);
+                  });
+
+                    
+                   
+                     
+                    console.log("reached here");
+                    userRef.update({
+                        //TODO: double name error
+
+                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName})
+
+
+                    });
+                    
+                    
+                    otherUserRef.update({
+                      //TODO: double name error
+
+                      "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.displayName})
+
+
+                  });
+                  
+                    navigation.navigate('Chats', { id : hashString, name: "Personal Chat"});
+  }
   class FirebaseInfo extends React.Component {
-    state = { chats: [], loading: false, text2: "", usersName: "" };
+    state = { chats: [], loading: false, text2: "", usersName: "", id : ""};
     componentDidMount() {
       var user = firebase.auth().currentUser;
       var db = firebase.firestore();
@@ -26,7 +82,7 @@ export default function Chats({ navigation, route }) {
           var cities = [];
           querySnapshot.forEach(function (doc) {
             if (doc.exists) {
-              cities.unshift({ text: doc.data().text, from: doc.data().from });
+              cities.unshift({ text: doc.data().text, from: doc.data().from, id : doc.data().id });
             }
           });
 
@@ -53,16 +109,18 @@ export default function Chats({ navigation, route }) {
           msgRef.doc(hashString).set(
             {
               from: user.displayName,
-              text: this.state.text2
+              text: this.state.text2,
+              id : user.uid
             });
 
 
         }
         this.setState({ text2: "" })
       }
+
       const renderItem = ({ item }) => (
         <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-          <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
             <Text style={styles.connectOptionsText}>{item.from}</Text>
             <Text style={styles.connectOptionsText}>{item.text}</Text>
           </TouchableOpacity>
