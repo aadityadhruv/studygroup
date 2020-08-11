@@ -166,7 +166,7 @@ export default function HomeScreen({ navigation, route }) {
         }, function (error) {
             console.error('Sign Out Error', error);
         });
-        navigation.navigate('LoginScreen')
+        navigation.navigate('Login')
     }
 
     return (
