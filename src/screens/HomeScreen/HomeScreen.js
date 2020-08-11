@@ -42,8 +42,10 @@ export default function HomeScreen({ navigation, route }) {
                     .onSnapshot(function namae(querySnapshot) {
                         var cities = [];
                         querySnapshot.forEach(function (doc) {
-                            if (!userGroupsArray.includes(doc.data().id)) {
-
+                            
+                            
+                            if (!userGroupsArray.includes(doc.data().id) && doc.data().isGroup) {
+                                
                                 cities.push({ id: doc.data().id, name: doc.data().name, label: doc.data().label, desc: doc.data().desc });
                             }
                         });
@@ -180,6 +182,7 @@ export default function HomeScreen({ navigation, route }) {
             <View style={styles.head}>
 
                 <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => logout()}>
+
                     <Text style={styles.connectOptionsText}>Log Out</Text>
                 </TouchableOpacity>
 
