@@ -14,6 +14,8 @@ export default function LoginScreen({navigation}) {
         navigation.navigate('Registration')
     }
 
+   
+
     const onLoginPress = () => {
 
         firebase

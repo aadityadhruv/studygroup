@@ -14,49 +14,91 @@ import CreateGroup from './src/screens/Groups/CreateGroup.js';
 import JoinGroup from './src/screens/Groups/JoinGroup.js';
 import { YellowBox } from 'react-native';
 import _ from 'lodash';
+
+import firebase from 'firebase'
+
 if (!global.btoa) { global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
 
 const Stack = createStackNavigator();
-function App() {
-  console.disableYellowBox = true;
-  const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(null)
-  
 
 YellowBox.ignoreWarnings(['Setting a timer']);
-const _console = _.clone(console);
-console.warn = message => {
-  if (message.indexOf('Setting a timer') <= -1) {
-    _console.warn(message);
+    const _console = _.clone(console);
+    console.warn = message => {
+      if (message.indexOf('Setting a timer') <= -1) {
+        _console.warn(message);
+      }
+    }
+
+class App extends React.Component {
+  
+
+  constructor() {
+    super();
+    this.state = {
+      loading: true,
+      authenticated: false,
+    };
   }
-};
+
+  componentDidMount() {
 
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        {user ? (
-          <Stack.Screen name="HomeScreen">
-            {props => <HomeScreen {...props} extraData={user} />}
-          </Stack.Screen>
-        ) : (
+    
+
+
+
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ loading: false, authenticated: true });
+        console.log(this.state.authenticated);
+      } else {
+        this.setState({ loading: false, authenticated: false });
+      }
+    });
+
+   
+  }
+  render() {
+    if (this.state.loading) return null;
+
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          {this.state.authenticated ? (
             <>
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="Registration" component={RegistrationScreen} />
-              <Stack.Screen name="HomeScreen" component={HomeScreen} />
-              <Stack.Screen name="Groups" component={Groups} />
-              <Stack.Screen name="Profile" component={Profile} />
-              <Stack.Screen name="Chats" component={Chats} />
-              <Stack.Screen name="CreateGroup" component={CreateGroup} />
-              <Stack.Screen name="JoinGroup" component={JoinGroup} />
-            </>
-          )}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+            <Stack.Screen name="HomeScreen" component={HomeScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Registration" component={RegistrationScreen} />
+            
+            <Stack.Screen name="Groups" component={Groups} />
+            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="Chats" component={Chats} />
+            <Stack.Screen name="CreateGroup" component={CreateGroup} />
+            <Stack.Screen name="JoinGroup" component={JoinGroup} />
+          </>
+          ) : (
+              <>
+                <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen name="Registration" component={RegistrationScreen} />
+                <Stack.Screen name="HomeScreen" component={HomeScreen} />
+                <Stack.Screen name="Groups" component={Groups} />
+                <Stack.Screen name="Profile" component={Profile} />
+                <Stack.Screen name="Chats" component={Chats} />
+                <Stack.Screen name="CreateGroup" component={CreateGroup} />
+                <Stack.Screen name="JoinGroup" component={JoinGroup} />
+              </>
+            )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+  
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
