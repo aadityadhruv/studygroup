@@ -141,7 +141,7 @@ export default function HomeScreen({ navigation, route }) {
          
             <View style={styles.head}>
 
-            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('LoginScreen')}>
                     <Text style={styles.connectOptionsText}>Log Out</Text>
                 </TouchableOpacity>
                 
