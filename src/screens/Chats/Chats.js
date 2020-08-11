@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component } from "react-native";
 import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
-//import { LocalNotification } from '../../services/LocalPushController'
+//import { PushController } from '../../services/LocalPushController'
 
 import firebase from 'firebase'
+
+import { SafeAreaView, ScrollView, StatusBar } from 'react-native';
+
+import { Header, LearnMoreLinks, Colors, DebugInstructions, ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
 
 
 export default function Chats({ navigation, route }) {
@@ -69,11 +73,24 @@ export default function Chats({ navigation, route }) {
 
         </View>
       );
-
+      let pushData = [
+        {
+          title: "First push",
+          message: "First push message"
+        },
+        {
+          title: "Second push",
+          message: "Second push message"
+        }
+      ]
+      const _renderItem = ({ item }) => (
+        <View key={item.title}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.message}>{item.message}</Text>
+        </View>
+      );
       return (
-
         <View style={{ flex: 1 }}>
-
           {
             this.state.loading ? (
               <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
@@ -81,7 +98,6 @@ export default function Chats({ navigation, route }) {
               </View>
             ) : null
           }
-
           <FlatList
             data={this.state.chats}
             renderItem={renderItem}
@@ -109,8 +125,7 @@ export default function Chats({ navigation, route }) {
               <Text style={styles.connectOptionsText}>Enter</Text>
             </TouchableOpacity>
           </View>
-
-        </View>);
+        </View >);
     }
 
   }
@@ -132,7 +147,7 @@ export default function Chats({ navigation, route }) {
         <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
           <Text style={styles.connectOptionsText}>Back</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => LocalNotification()}>
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => console.log("Hi")}>
           <Text style={styles.connectOptionsText}>{route.params.name}</Text>
         </TouchableOpacity>
 
@@ -148,6 +163,18 @@ export default function Chats({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+  scrollView: { backgroundColor: Colors.lighter, },
+  listHeader: { backgroundColor: '#eee', color: "#222", height: 44, padding: 12 },
+  title: { fontSize: 18, fontWeight: 'bold', paddingTop: 10 },
+  message: { fontSize: 14, paddingBottom: 15, borderBottomColor: "#ccc", borderBottomWidth: 1 },
+  engine: { position: 'absolute', right: 0, },
+  body: { backgroundColor: Colors.white, paddingHorizontal: 20, paddingVertical: 10, },
+  sectionContainer: { marginTop: 32, paddingHorizontal: 24, },
+  sectionTitle: { fontSize: 24, fontWeight: '600', color: Colors.black },
+  sectionDescription: { marginTop: 8, fontSize: 18, fontWeight: '400', color: Colors.dark, },
+  highlight: { fontWeight: '700' },
+  footer: { color: Colors.dark, fontSize: 12, fontWeight: '600', padding: 4, paddingRight: 12, textAlign: 'right', },
+
   second2: {
     flex: 1,
     flexDirection: 'row'
