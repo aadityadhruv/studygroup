@@ -77,14 +77,10 @@ console.log(memb)
         <View>
             <Text style={styles.AnswerText}>{groupName}</Text>
             <Text style={styles.AnswerText}>Class = {route.params.label}</Text>
-            <Text style={styles.AnswerText}>Description = {route.params.desc}</Text>
-
-
+            {route.params.desc?<Text style={styles.AnswerText}>Description = {route.params.desc}</Text>:<Text></Text>}
             <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { login_new() }}>
                 <Text style={styles.LoginText}>{text}</Text>
             </TouchableOpacity>
-
-
         </View>
     )
 }
