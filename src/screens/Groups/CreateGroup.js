@@ -29,8 +29,8 @@ function CreateGroup({ navigation, route }) {
                     var hashString = (+new Date).toString(36);
                     var dataBaseRef = db.collection("Groups").doc(hashString);
                     var user = firebase.auth().currentUser;
-                    var memberList = [];
-                    memberList.push(user.uid);
+                    var memberList = [user.uid];
+                    
                     var data = { name: this.state.groupname, id: hashString, owner: user.displayName, members: memberList, label: this.state.classes, desc: this.state.description, isGroup : true, pcGroupRefHash : ""};
 
                     dataBaseRef.set(data);
@@ -39,10 +39,12 @@ function CreateGroup({ navigation, route }) {
                     userRef.update({
                         //TODO: double name error
 
-                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": this.state.groupname,members: memberList,   isGroup : true, pcGroupRefHash : ""})
+                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": this.state.groupname})
 
 
                     })
+
+
                     navigation.navigate('HomeScreen')
                 }
             }
@@ -101,16 +103,16 @@ function CreateGroup({ navigation, route }) {
                         paddingTop={10}
                         style={{ height: 40 }}
                         placeholder="Name"
-                        onChangeText={text => this.setState({ description: text })}
-                        defaultValue={this.state.description}
+                        onChangeText={text => this.setState({ groupname: text })}
+                        defaultValue={this.state.groupname}
                     />
                     <Text style={styles.AnswerText}>Group Description(Optional)</Text>
                     <TextInput
                         paddingTop={10}
                         style={{ height: 40 }}
                         placeholder="Description"
-                        onChangeText={text => this.setState({ groupname: text })}
-                        defaultValue={this.state.groupname}
+                        onChangeText={text => this.setState({ description: text })}
+                        defaultValue={this.state.description}
                     />
                     <View style={styles.liss}>
                         <FlatList

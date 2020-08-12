@@ -135,7 +135,6 @@ class FirebaseInfo extends React.Component {
 function Profile({ navigation, route }) {
   const [name, setName] = React.useState("")
   var user = firebase.auth().currentUser;
-  var user = firebase.auth().currentUser;
   var db = firebase.firestore();
   var userInfoRef = db.collection("Users").doc(user.uid);
   console.log("New frame");

@@ -24,7 +24,7 @@ export default function Groups({ navigation, route }) {
 
             var userInfoRef = db.collection("Users").doc(user.uid);
             unsubscribe = userInfoRef.onSnapshot((doc) => {
-                
+                console.log(doc.data().groupsList)
 
                 this.setState({ groupIDs: doc.data().groupsList, loading : false, displayedList: doc.data().groupsList});
       //          console.log(this.state.groupIDs);

@@ -14,8 +14,6 @@ export default function HomeScreen({ navigation, route }) {
 
         state = { groupIDs: [], loading: true, displayedList: [], search: "", classes: [] };
 
-
-
         componentDidMount() {
             var user = firebase.auth().currentUser;
             var db = firebase.firestore();
@@ -34,7 +32,6 @@ export default function HomeScreen({ navigation, route }) {
                 }
                 this.setState({ classes: b });
 
-
                 var user = firebase.auth().currentUser;
                 var db = firebase.firestore();
                 var groupsRef = db.collection("Groups");
@@ -42,11 +39,11 @@ export default function HomeScreen({ navigation, route }) {
                     .onSnapshot(function namae(querySnapshot) {
                         var cities = [];
                         querySnapshot.forEach(function (doc) {
-                            
-                            
+
+
                             if (doc.data().isGroup && !userGroupsArray.includes(doc.data().id)) {
-                                
-                                cities.push({ id: doc.data().id, name: doc.data().name, label: doc.data().label, desc: doc.data().desc });
+
+                                cities.push({ id: doc.data().id, name: doc.data().name, label: doc.data().label, desc: doc.data().desc, members: doc.data().members });
                             }
                         });
                         var cities2 = [...cities]
@@ -79,7 +76,7 @@ export default function HomeScreen({ navigation, route }) {
         render() {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('JoinGroup', { id: item.id, name: item.name, label: item.label, desc: item.desc })}>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('JoinGroup', { id: item.id, name: item.name, label: item.label, desc: item.desc, members: item.members })}>
                         <Text style={styles.connectOptionsText}>{item.name}</Text>
                     </TouchableOpacity>
 
