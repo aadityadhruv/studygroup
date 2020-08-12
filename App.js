@@ -108,7 +108,9 @@ class App extends React.Component {
     if (this.state.loading) return null;
     return (
       <NavigationContainer>
-        <Stack.Navigator>
+<Stack.Navigator screenOptions={{
+        headerShown: false
+      }}>
           {this.state.authenticated ? (
             <>
             <Stack.Screen name="HomeScreen" component={HomeScreen} />

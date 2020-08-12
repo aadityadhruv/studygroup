@@ -10,6 +10,7 @@ export default function RegistrationScreen({navigation}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [UserName, setUserName] = useState('')
 
     const onFooterLinkPress = () => {
         navigation.navigate('Login')
@@ -35,6 +36,7 @@ export default function RegistrationScreen({navigation}) {
                 });
                 const data = {
                     id: uid,
+                    UserName,
                     email,
                     fullName,
                     groupsList : []  
@@ -71,6 +73,16 @@ export default function RegistrationScreen({navigation}) {
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
+                        <TextInput
+                    style={styles.input}
+                    placeholder='UserName'
+                    placeholderTextColor="#aaaaaa"
+                    onChangeText={(text) => setUserName(text)}
+                    value={UserName}
+                    underlineColorAndroid="transparent"
+                    autoCapitalize="none"
+                />
+        
                 <TextInput
                     style={styles.input}
                     placeholder='E-mail'
