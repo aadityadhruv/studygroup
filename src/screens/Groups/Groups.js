@@ -87,7 +87,7 @@ export default function Groups({ navigation, route }) {
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
                         {
                             this.state.loading ? null : (
-                                <Text style={{ fontSize: 15 }} >No such word found... try something else</Text>
+                                <Text style={{ fontSize: 15 }} >No Groups found. Join A Group</Text>
                             )
                         }
                     </View>
