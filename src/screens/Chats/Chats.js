@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component } from "react-native";
 import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
-//import { LocalNotification } from '../../services/LocalPushController'
+//import { PushController } from '../../services/LocalPushController'
 
 import firebase from 'firebase'
 
+import { SafeAreaView, ScrollView, StatusBar } from 'react-native';
+
+import { Header, LearnMoreLinks, Colors, DebugInstructions, ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
+
 
 export default function Chats({ navigation, route }) {
+
 
 	let unsubscribe;
 	let unsubscribe2;
