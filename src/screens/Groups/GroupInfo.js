@@ -67,8 +67,9 @@ function GroupInfo({ navigation, route }) {
             }
             return (
                 <View>
-                    <Text style={styles.AnswerText}>Class = {this.state.classes}</Text>
-                    <Text style={styles.AnswerText}>Description = {this.state.description}</Text>
+                    {this.state.classes[0]?<Text style={styles.AnswerText}>Class = {this.state.classes}</Text>:<Text></Text>}
+    
+                    {this.state.description?<Text style={styles.AnswerText}>Description = {this.state.description}</Text>:<Text></Text>}
                     <Text style={styles.AnswerText}>Members = {this.state.members}</Text>
                     <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { leave() }}>
                         <Text style={styles.LoginText}>Leave {this.state.groupName}</Text>
