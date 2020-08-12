@@ -146,7 +146,7 @@ function Profile({ navigation, route }) {
   var userInfoRef = db.collection("Users").doc(user.uid);
   console.log("New frame");
   if (!edit) {
-  userInfoRef.get().then(function (doc) {
+  userInfoRef.onSnapshot(function (doc) {
     if (doc.exists) {
       var person = doc.data();
       setName(person.fullName);
