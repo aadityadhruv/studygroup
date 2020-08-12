@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component } from "react-native";
-import IconBack from 'react-native-vector-icons/EvilIcons';
-import { SearchBar } from 'react-native-elements'
+import { SearchBar } from 'react-native-elements';
 
-import firebase from 'firebase'
-
-
+import firebase from 'firebase';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+const screenWidth = Math.round(Dimensions.get('window').width);
+const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default function HomeScreen({ navigation, route }) {
-
     let unsubscribe;
     class FirebaseInfo extends React.Component {
-
         state = { groupIDs: [], loading: true, displayedList: [], search: "", classes: [] };
-
         componentDidMount() {
             var user = firebase.auth().currentUser;
             var db = firebase.firestore();
@@ -170,39 +167,27 @@ export default function HomeScreen({ navigation, route }) {
 
     return (
         <View style={{
+            height:screenHeight,
+            width:screenWidth,
+      
             flex: 1,
             flexDirection: 'column',
             backgroundColor: '#fff',
         }}>
-
-
             <View style={styles.head}>
-
                 <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => logout()}>
-
                     <Text style={styles.connectOptionsText}>Log Out</Text>
                 </TouchableOpacity>
-
                 <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('CreateGroup')}>
                     <Text style={styles.connectOptionsText}>Add</Text>
                 </TouchableOpacity>
-
             </View>
             <FirebaseInfo></FirebaseInfo>
-
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
-                    <Text style={styles.connectOptionsText}>Our Groups</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('HomeScreen')}>
-                    <Text style={styles.connectOptionsText}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Profile')}>
-                    <Text style={styles.connectOptionsText}>Profile</Text>
-                </TouchableOpacity>
-
+                <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
+                <Ionicon name="ios-home" size={50} onPress={() => navigation.navigate('HomeScreen')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
+                <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, paddingBottom: screenHeight / 20 }} />
             </View>
-
         </View>
     )
 }
@@ -212,7 +197,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'center',
-        height: 10,
+        height: 50,
         marginBottom: 0,
         flex: 1,
         flexDirection: 'row',

@@ -267,13 +267,22 @@ export default function Chats({ navigation, route }) {
 
 		navigation.navigate("Groups")
 	}
+	function groupinfo(){
+		var db = firebase.firestore();
+
+		var groupRef = db.collection("Groups").doc(route.params.id)
+		if(groupRef.isGroup){
+
+		navigation.navigate('GroupInfo',{ id: route.params.id, name: route.params.name })
+		}
+	}
 	return (
 		<View style={styles.buttonContainer2}>
 			<View style={styles.second}>
 				<TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
 					<Text style={styles.connectOptionsText}>Back</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() =>navigation.navigate('GroupInfo',{ id: route.params.id, name: route.params.name })}>
+				<TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() =>groupinfo()}>
 					<Text style={styles.connectOptionsText}>{route.params.name}</Text>
 				</TouchableOpacity>
 
