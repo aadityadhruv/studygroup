@@ -31,7 +31,7 @@ function CreateGroup({ navigation, route }) {
                     var user = firebase.auth().currentUser;
                     var memberList = [];
                     memberList.push(user.uid);
-                    var data = { name: this.state.groupname, id: hashString, owner: user.displayName, members: memberList, label: this.state.classes, desc: this.state.description, isGroup : true};
+                    var data = { name: this.state.groupname, id: hashString, owner: user.displayName, members: memberList, label: this.state.classes, desc: this.state.description, isGroup : true, pcGroupRefHash : ""};
 
                     dataBaseRef.set(data);
 
@@ -39,7 +39,7 @@ function CreateGroup({ navigation, route }) {
                     userRef.update({
                         //TODO: double name error
 
-                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": this.state.groupname })
+                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": this.state.groupname,members: memberList,   isGroup : true, pcGroupRefHash : ""})
 
 
                     })
