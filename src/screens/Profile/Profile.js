@@ -164,7 +164,8 @@ function Profile({ navigation, route }) {
       flexDirection: 'column',
       backgroundColor: '#fff',
     }}>
-      <View style={styles.head}>
+      <View style={styles.liss}>
+        
         <TouchableOpacity style={styles.connectOptions2}>
           {edit ? <TextInput
                         onChangeText={text => setName(text)}
@@ -173,7 +174,7 @@ function Profile({ navigation, route }) {
           
           
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connectOptions2} onPress={() => {
+        <TouchableOpacity style={styles.connectOptionsEdit} onPress={() => {
 
           console.log(name);
           setEdit(!edit);
@@ -245,6 +246,16 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
   },
+  headerContainer: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginBottom :  0,
+    height: 40,
+    marginTop: 0,
+    flex: 1,
+    flexDirection: 'row',
+  },
   connectOptions: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -264,11 +275,28 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   connectOptions2: {
+    width : screenWidth - 120, 
     marginTop: 20,
     alignContent: "center",
     padding: 15,
     paddingBottom: 15,
     marginLeft: 0,
+    marginRight: screenWidth - 120,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  connectOptionsEdit: {
+    marginTop: 0,
+    alignContent: "center",
+    alignSelf : "center",
+    marginTop : 0,
+    marginBottom: 0, 
+    padding: 15,
+    paddingBottom: 0,
+    marginLeft : screenWidth - 100,
+    marginBottom : screenHeight, 
     marginRight: 0,
     backgroundColor: '#0099FF',
     borderRadius: 10,
