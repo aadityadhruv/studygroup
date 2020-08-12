@@ -11,20 +11,20 @@ function GroupInfo({ navigation, route }) {
             var db = firebase.firestore();
             var groupInfoRef = db.collection("Groups").doc(route.params.id);
             var userInfoRef = db.collection("Users")
-           // console.log("hell"+user.uid)
+            // console.log("hell"+user.uid)
             var mem = []
             groupInfoRef.onSnapshot((doc) => {
-                doc.data().members.forEach(function(abc){
+                doc.data().members.forEach(function (abc) {
                     userInfoRef.doc(abc).onSnapshot((doc2) => {
                         var a = doc2.data().fullName
-                        this.setState({members:[...this.state.members,a]})
-           
-                })
-            }.bind(this))
-           
+                        this.setState({ members: [...this.state.members, a] })
+
+                    })
+                }.bind(this))
+
                 this.setState({ classes: doc.data().label, description: doc.data().desc });
             });
-         //   console.log(mem)               
+            //   console.log(mem)               
             mem.forEach(function (doc) {
                 console.log("gg")
                 console.log(doc)
