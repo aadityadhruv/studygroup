@@ -112,14 +112,17 @@ export default function HomeScreen({ navigation, route }) {
             return (
 
                 <View style={{ flex: 1 }}>
-                    <SearchBar
-                        placeholder="Search"
-                        onChangeText={(value) => updateSearch(value)}
-                        value={this.state.search.toString()}
-                        lightTheme={true}
-                        round={true}
-                        containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
-                        inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
+                    <View style={styles.buttonContainer2}>
+                        <SearchBar
+                            placeholder="Search"
+                            onChangeText={(value) => updateSearch(value)}
+                            value={this.state.search.toString()}
+                            lightTheme={true}
+                            round={true}
+                            containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
+                            inputContainerStyle={{ backgroundColor: '#EBEBEB', height: screenHeight / 20, width: screenWidth*0.85, marginLeft: '0.1%', }} />
+                        <Ionicon name="ios-add" size={50} onPress={() => navigation.navigate('CreateGroup')} style={{ alignSelf: 'center', paddingTop: screenHeight / 20, marginBottom: screenHeight / 20 }} />
+                    </View>
 
                     {
                         this.state.loading ? (
@@ -156,37 +159,20 @@ export default function HomeScreen({ navigation, route }) {
 
 
     //load db once at first render
-    function logout() {
-        firebase.auth().signOut().then(function () {
-            console.log('Signed Out');
-        }, function (error) {
-            console.error('Sign Out Error', error);
-        });
-        navigation.navigate('Login')
-    }
 
     return (
         <View style={{
-            height:screenHeight,
-            width:screenWidth,
-      
+            height: screenHeight,
+            width: screenWidth,
             flex: 1,
             flexDirection: 'column',
             backgroundColor: '#fff',
         }}>
-            <View style={styles.head}>
-                <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => logout()}>
-                    <Text style={styles.connectOptionsText}>Log Out</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('CreateGroup')}>
-                    <Text style={styles.connectOptionsText}>Add</Text>
-                </TouchableOpacity>
-            </View>
             <FirebaseInfo></FirebaseInfo>
             <View style={styles.buttonContainer}>
-                <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
-                <Ionicon name="ios-home" size={50} onPress={() => navigation.navigate('HomeScreen')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
-                <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, paddingBottom: screenHeight / 20 }} />
+                <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
+                <Ionicon name="ios-home" size={50} onPress={() => navigation.navigate('HomeScreen')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
+                <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, paddingBottom: screenHeight / 20 }} />
             </View>
         </View>
     )
@@ -202,6 +188,18 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
     },
+    buttonContainer2: {
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        height: 5,
+        paddingTop:0,
+        marginTop: 0,
+        paddingBottom:10,
+        flex: 1,
+        flexDirection: 'row',
+    },
+
     connectOptions: {
         marginTop: 0,
         alignContent: "center",

@@ -149,6 +149,14 @@ function Profile({ navigation, route }) {
       console.log("No such document!");
     }
   })
+  function logout() {
+    firebase.auth().signOut().then(function () {
+        console.log('Signed Out');
+    }, function (error) {
+        console.error('Sign Out Error', error);
+    });
+    navigation.navigate('Login')
+}
   return (
     <View style={{
       height:screenHeight,
@@ -161,6 +169,10 @@ function Profile({ navigation, route }) {
         <Text style={styles.connectOptions2}>
           Name : {name}
         </Text>
+        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => logout()}>
+                    <Text style={styles.connectOptionsText}>Log Out</Text>
+                </TouchableOpacity>
+              
       </View>
       <FirebaseInfo></FirebaseInfo>
 
