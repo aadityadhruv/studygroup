@@ -12,23 +12,19 @@ export default function Chats({ navigation, route }) {
   let unsubscribe;
   let unsubscribe2;
 
-function personalChatHelper(otherUserID) {
+function personalChatHelper() {
 	return new Promise((resolve, reject) => {
 
-		var pcAlreadyExists = false;
+		var listOfIDs = []
 		var db = firebase.firestore();
     	var user = firebase.auth().currentUser;
 		var userRef = db.collection("Users").doc(user.uid);
 		userRef.onSnapshot(function(doc) {
 
 			doc.data().groupsList.forEach(element => {
-				
-				if (element.id == otherUserID) {
-				  
-				 pcAlreadyExists = true;
-				 resolve(pcAlreadyExists);
-				  
-				}
+
+				listOfIDs.push(element.id);
+				resolve(listOfIDs);
 				
 			  });
 		});
@@ -45,11 +41,11 @@ function personalChatHelper(otherUserID) {
 	var otherUserRef = db.collection("Users").doc(otherUserID);
 	
 
-    personalChatHelper(otherUserID).then((result) => {
+    personalChatHelper().then((result) => {
 
 		console.log(result);
-
-		if (!result) {
+		var isGroupExist = result.includes(otherUserID);
+		if (!isGroupExist) {
 			//Make the personal chat as a 1 single group
 			var hashString = (+new Date).toString(36);
 			var dataBaseRef = db.collection("Groups").doc(hashString);
