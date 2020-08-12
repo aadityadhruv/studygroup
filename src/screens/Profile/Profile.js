@@ -134,12 +134,18 @@ class FirebaseInfo extends React.Component {
       </View>);
   }
 }
+
+
+
+
 function Profile({ navigation, route }) {
   const [name, setName] = React.useState("")
+  const [edit, setEdit] = React.useState(false);
   var user = firebase.auth().currentUser;
   var db = firebase.firestore();
   var userInfoRef = db.collection("Users").doc(user.uid);
   console.log("New frame");
+  if (!edit) {
   userInfoRef.get().then(function (doc) {
     if (doc.exists) {
       var person = doc.data();
@@ -149,6 +155,7 @@ function Profile({ navigation, route }) {
       console.log("No such document!");
     }
   })
+}
   return (
     <View style={{
       height:screenHeight,
@@ -158,9 +165,38 @@ function Profile({ navigation, route }) {
       backgroundColor: '#fff',
     }}>
       <View style={styles.head}>
-        <Text style={styles.connectOptions2}>
-          Name : {name}
-        </Text>
+        <TouchableOpacity style={styles.connectOptions2}>
+          {edit ? <TextInput
+                        onChangeText={text => setName(text)}
+                        defaultValue={name}
+                    /> : <Text>Name: {name}</Text>}
+          
+          
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.connectOptions2} onPress={() => {
+
+          console.log(name);
+          setEdit(!edit);
+          var user = firebase.auth().currentUser;
+          user.updateProfile({
+            displayName: name,
+          }).then(function() {
+            var db = firebase.firestore();
+            var userRef = db.collection("Users").doc(user.uid);
+            userRef.update({
+              "fullName" : name
+            })
+          }).catch(function(error) {
+            // An error happened.
+          });
+          
+
+
+          
+        }}>
+          {edit ?  <Text>Save</Text>: <Text>Edit</Text>}
+          
+        </TouchableOpacity>
       </View>
       <FirebaseInfo></FirebaseInfo>
 
