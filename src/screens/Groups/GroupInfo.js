@@ -13,11 +13,12 @@ function GroupInfo({ navigation, route }) {
             var userInfoRef = db.collection("Users")
             // console.log("hell"+user.uid)
             var mem = []
+            
             groupInfoRef.onSnapshot((doc) => {
+                if(doc.exists){
                 console.log("Members= " + doc.data().members)
                 doc.data().members.forEach(function (abc) {
                     if (!this.state.memberIds.includes(abc)) {
-
                         userInfoRef.doc(abc).onSnapshot((doc2) => {
                             var a = doc2.data().fullName
                             this.setState({ members: [...this.state.members, a], memberIds: [...this.state.memberIds, abc] })
@@ -25,11 +26,9 @@ function GroupInfo({ navigation, route }) {
                         })
                     }
                 }.bind(this))
-
-
-
+            
                 this.setState({ groupName: doc.data().name, classes: doc.data().label, description: doc.data().desc, isGroup: doc.data().isGroup, pcGroupRefHash: doc.data().pcGroupRefHash });
-            });
+            }});
             //   console.log(mem)               
         }
         render() {
@@ -49,9 +48,21 @@ function GroupInfo({ navigation, route }) {
                 userInfoRef.update({
                     "groupsList": firebase.firestore.FieldValue.arrayRemove({ id: route.params.id, name: route.params.name })
                 })
-                groupInfoRef.update({
-                    "members": removeItemOnce(this.state.memberIds, user.uid)
-                })
+
+                if (removeItemOnce(this.state.memberIds, user.uid).length == 0) {
+                    console.log("Remove Group")
+                    
+                    groupInfoRef.delete()
+
+                } else {
+
+
+                    groupInfoRef.update({
+                        "members": removeItemOnce(this.state.memberIds, user.uid)
+                    })
+                }
+
+
                 navigation.navigate("Groups")
             }
             return (
