@@ -39,29 +39,22 @@ function GroupInfo({ navigation, route }) {
                 }
                 return arr;
             }
-
             const leave = () => {
                 var user = firebase.auth().currentUser;
                 var db = firebase.firestore();
                 var userInfoRef = db.collection("Users").doc(user.uid);
                 var groupInfoRef = db.collection("Groups").doc(route.params.id)
+
                 userInfoRef.update({
                     "groupsList": firebase.firestore.FieldValue.arrayRemove({ id: route.params.id, name: route.params.name })
                 })
-
                 if (removeItemOnce(this.state.memberIds, user.uid).length == 0) {
-                    console.log("Remove Group")
-                    
                     groupInfoRef.delete()
-
                 } else {
-
-
                     groupInfoRef.update({
                         "members": removeItemOnce(this.state.memberIds, user.uid)
                     })
                 }
-
 
                 navigation.navigate("Groups")
             }

@@ -6,6 +6,8 @@ import data from './Data/data.json'
 import { ScrollView } from 'react-native-gesture-handler';
 import data2 from './Data/data2.json'
 import { SearchBar } from 'react-native-elements'
+
+import Ionicon from 'react-native-vector-icons/Ionicons';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
@@ -22,9 +24,9 @@ class FirebaseInfo extends React.Component {
     userInfoRef.onSnapshot((doc) => {
       var a = doc.data().classes;
       if (a == undefined) {
-        a =[]
+        a = []
       }
-      this.setState({ classes: a });      
+      this.setState({ classes: a });
     });
   }
   componentWillMount() {
@@ -89,13 +91,13 @@ class FirebaseInfo extends React.Component {
     return (
 
       <View style={styles.hello}>
-        <View style = {styles.hi4}>
-         <FlatList
-          data={this.state.classes}
-          numColumns={4}
-          renderItem={renderItem2}
-          keyExtractor={(item, index) => index.toString()}
-        />
+        <View style={styles.hi4}>
+          <FlatList
+            data={this.state.classes}
+            numColumns={4}
+            renderItem={renderItem2}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
         <SearchBar
           placeholder="Search"
@@ -149,6 +151,8 @@ function Profile({ navigation, route }) {
   })
   return (
     <View style={{
+      height:screenHeight,
+      width:screenWidth,
       flex: 1,
       flexDirection: 'column',
       backgroundColor: '#fff',
@@ -161,15 +165,9 @@ function Profile({ navigation, route }) {
       <FirebaseInfo></FirebaseInfo>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
-          <Text style={styles.connectOptionsText}>Our Groups</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('HomeScreen')}>
-          <Text style={styles.connectOptionsText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Profile')}>
-          <Text style={styles.connectOptionsText}>Profile</Text>
-        </TouchableOpacity>
+      <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
+                <Ionicon name="ios-home" size={50} onPress={() => navigation.navigate('HomeScreen')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
+                <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
 
       </View>
     </View>
@@ -180,9 +178,9 @@ Profile.navigationOptions = {
 };
 
 const styles = StyleSheet.create({
-  hello:{
-flex:0,
-height:500
+  hello: {
+    flex: 0,
+    height: 500
   },
   liss: {
     flex: 1
@@ -223,13 +221,13 @@ height:500
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#fff'
-},
-connectOptionsText: {
+  },
+  connectOptionsText: {
     fontSize: 20,
     color: '#FFFFFF',
     textAlign: 'center',
-},
-connectOptions2: {
+  },
+  connectOptions2: {
     marginTop: 20,
     alignContent: "center",
     padding: 15,
