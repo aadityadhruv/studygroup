@@ -165,9 +165,9 @@ function Profile({ navigation, route }) {
       <FirebaseInfo></FirebaseInfo>
 
       <View style={styles.buttonContainer}>
-      <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
-                <Ionicon name="ios-home" size={50} onPress={() => navigation.navigate('HomeScreen')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
-                <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
+      <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 5 }} />
+                <Ionicon name="ios-home" size={50} onPress={() => navigation.navigate('HomeScreen')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 5 }} />
+                <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center',paddingRight:screenWidth/10,paddingLeft:screenWidth/10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 5 }} />
 
       </View>
     </View>
