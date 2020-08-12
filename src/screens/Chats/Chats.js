@@ -5,12 +5,14 @@ import { SearchBar } from 'react-native-elements'
 //import { PushController } from '../../services/LocalPushController'
 
 import firebase from 'firebase'
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
 import { SafeAreaView, ScrollView, StatusBar } from 'react-native';
 
 import { Header, LearnMoreLinks, Colors, DebugInstructions, ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
 
-
+const screenWidth = Math.round(Dimensions.get('window').width);
+const screenHeight = Math.round(Dimensions.get('window').height);
 export default function Chats({ navigation, route }) {
 
 
@@ -246,9 +248,7 @@ export default function Chats({ navigation, route }) {
 							onChangeText={text2 => this.setState({ text2: text2 })}
 							defaultValue={this.state.text2}
 						/>
-						<TouchableOpacity style={styles.connectOptions3} activeOpacity={0.8} onPress={() => entered()}>
-							<Text style={styles.connectOptionsText}>Enter</Text>
-						</TouchableOpacity>
+						<Ionicon name="ios-send" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center',paddingRight:  0 ,paddingLeft: 0, paddingTop : 0, marginBottom: 10, marginRight : 10}} />
 					</View>
 
 				</View>);
@@ -279,9 +279,7 @@ export default function Chats({ navigation, route }) {
 	return (
 		<View style={styles.buttonContainer2}>
 			<View style={styles.second}>
-				<TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Groups')}>
-					<Text style={styles.connectOptionsText}>Back</Text>
-				</TouchableOpacity>
+			<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center',paddingRight:  200,paddingLeft: 0, paddingTop : 0, marginBottom: screenHeight / 20 }} />
 				<TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() =>groupinfo()}>
 					<Text style={styles.connectOptionsText}>{route.params.name}</Text>
 				</TouchableOpacity>
@@ -318,7 +316,7 @@ const styles = StyleSheet.create({
 
 	},
 	buttonContainer2: {
-		alignItems: 'center',
+		alignItems: 'stretch',
 		alignSelf: 'center',
 		justifyContent: 'center',
 		height: 50,
@@ -334,23 +332,38 @@ const styles = StyleSheet.create({
 		paddingBottom: 15,
 		marginLeft: 0,
 		marginRight: 0,
-		backgroundColor: '#0099FF',
+		backgroundColor: '#FFFFFF',
 		borderRadius: 10,
 		borderWidth: 1,
-		borderColor: '#fff'
+		borderColor: '#000000'
 	},
-	connectOptions2: {
-		width: 350,
+	connectOptionsBack: {
 		marginTop: 10,
 		alignContent: "center",
 		padding: 15,
 		paddingBottom: 15,
 		marginLeft: 0,
-		marginRight: 0,
+		marginRight: 200,
 		backgroundColor: '#0099FF',
 		borderRadius: 10,
 		borderWidth: 1,
 		borderColor: '#fff'
+	}, 
+
+	connectOptions2: {
+		width: 350,
+		marginTop: 10,
+		alignContent: "center",
+		padding: 15,
+		paddingBottom: 20,
+		marginBottom: 20,
+		marginLeft: 0,
+		marginRight: 10,
+		backgroundColor: '#dde0dc',
+		borderRadius: 10,
+		borderWidth: 1,
+		borderColor: '#fff',
+		
 	},
 
 	connectOptions3: {
