@@ -269,12 +269,14 @@ export default function Chats({ navigation, route }) {
 	}
 	function groupinfo(){
 		var db = firebase.firestore();
+		var isGroup = true
 
 		var groupRef = db.collection("Groups").doc(route.params.id)
-		if(groupRef.isGroup){
-
-		navigation.navigate('GroupInfo',{ id: route.params.id, name: route.params.name })
-		}
+		groupRef.onSnapshot((doc) => {
+			if(doc.data().isGroup){
+				navigation.navigate('GroupInfo',{ id: route.params.id, name: route.params.name })
+			}
+		})
 	}
 	return (
 		<View style={styles.buttonContainer2}>
