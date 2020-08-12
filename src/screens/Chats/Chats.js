@@ -75,7 +75,7 @@ export default function Chats({ navigation, route }) {
 
 
 		personalChatHelper().then((result) => {
-			
+
 
 			var isGroupExist = result.includes(otherUserID);
 			console.log(isGroupExist);
@@ -116,9 +116,9 @@ export default function Chats({ navigation, route }) {
 				}).catch(function (error) {
 					console.log("Error getting document:", error);
 				});
-				
+
 				//Add the group ref to the current and other user
-				
+
 				console.log("-------------------------------");
 				navigation.navigate('Chats', { id: hashString, name: "Personal Chat" });
 
@@ -127,7 +127,7 @@ export default function Chats({ navigation, route }) {
 				var db = firebase.firestore();
 				var user = firebase.auth().currentUser;
 				var userRef = db.collection("Users").doc(user.uid);
-				
+
 				goToPCHelper(otherUserID).then((groupHash) => {
 
 					navigation.navigate('Chats', { id: groupHash, name: "Personal Chat" });
@@ -202,15 +202,19 @@ export default function Chats({ navigation, route }) {
 				}
 				this.setState({ text2: "" })
 			}
-
+			var user = firebase.auth().currentUser;
 			const renderItem = ({ item }) => (
-				<View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-					<TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
-						<Text style={styles.connectOptionsText}>{item.from}</Text>
-						<Text style={styles.connectOptionsText}>{item.text}</Text>
-					</TouchableOpacity>
-
+				<View style={{ flexDirection: 'row' }}>
+					{
+						(item.from == user.displayName) ?
+							<TouchableOpacity style={styles.connectOptions8} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
+								<Text style={styles.connectOptions7}>{item.text}</Text></TouchableOpacity> :
+							<TouchableOpacity style={styles.connectOptions9} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
+								<Text style={styles.connectOptions10}>{item.text}</Text>
+							</TouchableOpacity>
+					}
 				</View>
+
 			);
 
 			return (
@@ -248,8 +252,9 @@ export default function Chats({ navigation, route }) {
 							onChangeText={text2 => this.setState({ text2: text2 })}
 							defaultValue={this.state.text2}
 						/>
-						<Ionicon name="ios-send" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center',paddingRight:  0 ,paddingLeft: 0, paddingTop : 0, marginBottom: 10, marginRight : 10}} />
+						<Ionicon name="ios-send" size={50} onPress={() => entered()} style={{ alignSelf: 'center', paddingRight: 0, paddingLeft: 0, paddingTop: 0, marginBottom: 10, marginRight: 10 }} />
 					</View>
+
 
 				</View>);
 		}
@@ -267,22 +272,22 @@ export default function Chats({ navigation, route }) {
 
 		navigation.navigate("Groups")
 	}
-	function groupinfo(){
+	function groupinfo() {
 		var db = firebase.firestore();
 		var isGroup = true
 
 		var groupRef = db.collection("Groups").doc(route.params.id)
 		groupRef.onSnapshot((doc) => {
-			if(doc.data().isGroup){
-				navigation.navigate('GroupInfo',{ id: route.params.id, name: route.params.name })
+			if (doc.data().isGroup) {
+				navigation.navigate('GroupInfo', { id: route.params.id, name: route.params.name })
 			}
 		})
 	}
 	return (
 		<View style={styles.buttonContainer2}>
-			<View style={styles.second}>
-			<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center',paddingRight:  200,paddingLeft: 0, paddingTop : 0, marginBottom: screenHeight / 20 }} />
-				<TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() =>groupinfo()}>
+			<View style={styles.buttonContainer3}>
+				<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: 20, paddingLeft: 0, paddingTop: 0, marginBottom: screenHeight / 20 }} />
+				<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => groupinfo()}>
 					<Text style={styles.connectOptionsText}>{route.params.name}</Text>
 				</TouchableOpacity>
 
@@ -296,22 +301,25 @@ export default function Chats({ navigation, route }) {
 
 const styles = StyleSheet.create({
 	second2: {
-		flex: 1,
+
 		flexDirection: 'row'
 	},
 
 	second: {
 		paddingTop: 10,
+		marginBottom: 0,
+		marginTop: 0,
 		alignItems: 'center',
 		alignSelf: 'center',
 		justifyContent: 'center',
-		flexDirection: 'row'
+		flex: 1,
+		flexDirection: 'column'
 	},
 	buttonContainer: {
 		alignItems: 'center',
 		alignSelf: 'center',
 		justifyContent: 'center',
-		height: 50,
+		height: 20,
 		marginTop: 20,
 		flex: 1,
 		flexDirection: 'row',
@@ -327,6 +335,18 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 
 	},
+	buttonContainer3: {
+		alignItems: 'center',
+		alignSelf: 'center',
+		justifyContent: 'center',
+		height: 5,
+		paddingTop: 0,
+		marginTop: 0,
+		paddingBottom: 10,
+		flex: 1,
+		flexDirection: 'row',
+	},
+
 	connectOptions: {
 		marginTop: 10,
 		alignContent: "center",
@@ -339,6 +359,20 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: '#000000'
 	},
+	connectOptions11: {
+		height: screenHeight / 10,
+		marginTop: 10,
+		alignContent: "center",
+		padding: 15,
+		paddingBottom: 15,
+		marginLeft: 0,
+		marginRight: 0,
+		backgroundColor: '#FFFFFF',
+		borderRadius: 10,
+		borderWidth: 1,
+		borderColor: '#000000'
+	},
+
 	connectOptionsBack: {
 		marginTop: 10,
 		alignContent: "center",
@@ -350,7 +384,70 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		borderWidth: 1,
 		borderColor: '#fff'
-	}, 
+	},
+	connectOptions5: {
+		marginTop: 10,
+		alignContent: "stretch",
+		padding: 15,
+		paddingBottom: 15,
+		marginLeft: screenWidth / 1.6,
+		marginRight: 0,
+		backgroundColor: '#FFFFFF',
+		borderRadius: 10,
+		borderWidth: 1,
+		borderColor: '#000000',
+		flexDirection: 'row',
+
+	},
+	connectOptions6: {
+		marginTop: 10,
+		alignContent: "stretch",
+		padding: 15,
+		paddingBottom: 15,
+		marginLeft: 0,
+		marginRight: 0,
+		backgroundColor: '#FFFFFF',
+		borderRadius: 10,
+		borderWidth: 1,
+		borderColor: '#000000',
+		flexDirection: 'row',
+
+	},
+	connectOptions7: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+
+	},
+	connectOptions10: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+	},
+	connectOptions8: {
+		marginLeft: 15,
+		marginTop: 10,
+		padding: 15,
+		paddingBottom: 15,
+		backgroundColor: '#FFFFFF',
+		borderRadius: 10,
+		borderWidth: 1,
+		borderColor: '#000000',
+	},
+	connectOptions9: {
+		marginRight: 0,
+		marginTop: 10,
+		padding: 15,
+		paddingBottom: 15,
+		backgroundColor: '#FFFFFF',
+		borderRadius: 10,
+		borderWidth: 1,
+		borderColor: '#000000',
+	},
+	connectOptionsText: {
+		flex: 1,
+		flexWrap: 'wrap',
+		fontSize: 24,
+		color: 'black',
+	},
 
 	connectOptions2: {
 		width: 350,
@@ -365,7 +462,7 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		borderWidth: 1,
 		borderColor: '#fff',
-		
+
 	},
 
 	connectOptions3: {
@@ -382,15 +479,10 @@ const styles = StyleSheet.create({
 		borderColor: '#fff'
 	},
 
-	connectOptionsText: {
-		fontSize: 24,
-		color: 'black',
-		textAlign: 'center'
-	},
 	connectOptionsText2: {
 		fontSize: 24,
 		color: 'black',
-		textAlign: 'center'
+		textAlign: 'auto'
 	},
 
 	container: {
