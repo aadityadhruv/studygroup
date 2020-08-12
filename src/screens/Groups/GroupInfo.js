@@ -5,37 +5,74 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button, Sett
 import firebase from 'firebase'
 function GroupInfo({ navigation, route }) {
     class FirebaseInfo extends React.Component {
-        state = { members: [], description: "", classes: [] };
+        state = { members: [], description: "", classes: [], groupName: "", memberIds: [] };
         componentDidMount() {
             var user = firebase.auth().currentUser;
             var db = firebase.firestore();
             var groupInfoRef = db.collection("Groups").doc(route.params.id);
             var userInfoRef = db.collection("Users")
-           // console.log("hell"+user.uid)
+            // console.log("hell"+user.uid)
             var mem = []
+            
             groupInfoRef.onSnapshot((doc) => {
-                doc.data().members.forEach(function(abc){
-                    userInfoRef.doc(abc).onSnapshot((doc2) => {
-                        var a = doc2.data().fullName
-                        this.setState({members:[...this.state.members,a]})
-           
-                })
-            }.bind(this))
-           
-                this.setState({ classes: doc.data().label, description: doc.data().desc });
-            });
-         //   console.log(mem)               
-            mem.forEach(function (doc) {
-                console.log("gg")
-                console.log(doc)
-            })
+                if(doc.exists){
+                console.log("Members= " + doc.data().members)
+                doc.data().members.forEach(function (abc) {
+                    if (!this.state.memberIds.includes(abc)) {
+                        userInfoRef.doc(abc).onSnapshot((doc2) => {
+                            var a = doc2.data().fullName
+                            this.setState({ members: [...this.state.members, a], memberIds: [...this.state.memberIds, abc] })
+
+                        })
+                    }
+                }.bind(this))
+            
+                this.setState({ groupName: doc.data().name, classes: doc.data().label, description: doc.data().desc, isGroup: doc.data().isGroup, pcGroupRefHash: doc.data().pcGroupRefHash });
+            }});
+            //   console.log(mem)               
         }
         render() {
+            const removeItemOnce = (arr, value) => {
+                var index = arr.indexOf(value);
+                if (index > -1) {
+                    arr.splice(index, 1);
+                }
+                return arr;
+            }
+
+            const leave = () => {
+                var user = firebase.auth().currentUser;
+                var db = firebase.firestore();
+                var userInfoRef = db.collection("Users").doc(user.uid);
+                var groupInfoRef = db.collection("Groups").doc(route.params.id)
+                userInfoRef.update({
+                    "groupsList": firebase.firestore.FieldValue.arrayRemove({ id: route.params.id, name: route.params.name })
+                })
+
+                if (removeItemOnce(this.state.memberIds, user.uid).length == 0) {
+                    console.log("Remove Group")
+                    
+                    groupInfoRef.delete()
+
+                } else {
+
+
+                    groupInfoRef.update({
+                        "members": removeItemOnce(this.state.memberIds, user.uid)
+                    })
+                }
+
+
+                navigation.navigate("Groups")
+            }
             return (
                 <View>
                     <Text style={styles.AnswerText}>Class = {this.state.classes}</Text>
                     <Text style={styles.AnswerText}>Description = {this.state.description}</Text>
                     <Text style={styles.AnswerText}>Members = {this.state.members}</Text>
+                    <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { leave() }}>
+                        <Text style={styles.LoginText}>Leave {this.state.groupName}</Text>
+                    </TouchableOpacity>
 
                 </View>
             );
@@ -44,17 +81,6 @@ function GroupInfo({ navigation, route }) {
 
 
 
-    function leave() {
-        var user = firebase.auth().currentUser;
-        var db = firebase.firestore();
-
-        var userInfoRef = db.collection("Users").doc(user.uid);
-        userInfoRef.update({
-            "groupsList": firebase.firestore.FieldValue.arrayRemove({ id: route.params.id, name: route.params.name })
-        })
-
-        navigation.navigate("Groups")
-    }
 
     var groupID = route.params.id;
     var groupName = route.params.name;
@@ -68,9 +94,6 @@ function GroupInfo({ navigation, route }) {
         <View>
             <Text style={styles.AnswerText}>{groupName}</Text>
             <FirebaseInfo></FirebaseInfo>
-            <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { leave() }}>
-                <Text style={styles.LoginText}>{text}</Text>
-            </TouchableOpacity>
 
 
         </View>
