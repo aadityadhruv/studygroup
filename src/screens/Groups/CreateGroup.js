@@ -3,25 +3,39 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity, ActivityIndicator,
 //import firebase from 'firebase';
 import { firebase } from '../../firebase/config'
 import { database } from 'firebase';
-import Classes from './Data/Classes.json'
+import Classes2 from './Data/Classes.json'
 import data from './Data/data.json'
 import DropDownPicker from 'react-native-dropdown-picker';
 import data2 from './Data/data2.json'
 import { SearchBar } from 'react-native-elements'
 
-
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
-
 function CreateGroup({ navigation, route }) {
-
+    let unsubscribe
     class FirebaseInfo extends React.Component {
+        state = { groupIDs: data2, loading: false, displayedList: data2, search: "", classes: [], groupname: "", choosingClass: true };
 
+        componentDidMount() {
+            var user = firebase.auth().currentUser;
+            var db = firebase.firestore();
 
-        state = { groupIDs: data2, loading: false, displayedList: data2, search: "", classes: [], groupname: "", description: "" };
+            var userInfoRef = db.collection("Users").doc(user.uid);
+            userInfoRef.onSnapshot((doc) => {
+                var a = doc.data().classes;
+                if (a == undefined) {
+                    a = []
+                }
+                this.setState({ classes: a });
+            });
+            //     console.log(Classes2["SUBJECT CODE"].values())
+            this.setState({ displayedList: Object.values(Classes2['SUBJECT CODE']) })
+        }
+        componentWillMount() {
+            return unsubscribe;
+        }
         render() {
-            //            console.log(this.state.groupIDs)
             const makeGroup = () => {
                 //TODO: double name error
                 if (this.state.classes.length > 0 && this.state.groupname.length > 0) {
@@ -30,24 +44,26 @@ function CreateGroup({ navigation, route }) {
                     var dataBaseRef = db.collection("Groups").doc(hashString);
                     var user = firebase.auth().currentUser;
                     var memberList = [user.uid];
-                    
-                    var data = { name: this.state.groupname, id: hashString, owner: user.displayName, members: memberList, label: this.state.classes, desc: this.state.description, isGroup : true, pcGroupRefHash : ""};
-
+    
+                    var data = { name: this.state.groupname, id: hashString, owner: user.displayName, members: memberList, label: this.state.classes, desc: this.state.description, isGroup: true, pcGroupRefHash: "" };
+    
                     dataBaseRef.set(data);
-
+    
                     var userRef = db.collection("Users").doc(user.uid);
                     userRef.update({
                         //TODO: double name error
-
-                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": this.state.groupname})
-
-
+    
+                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": this.state.groupname })
+    
+    
                     })
-
-
+    
+    
                     navigation.navigate('HomeScreen')
                 }
             }
+         
+            //            console.log(this.state.groupIDs)
             const removeItemOnce = (arr, value) => {
                 var index = arr.indexOf(value);
                 if (index > -1) {
@@ -59,32 +75,57 @@ function CreateGroup({ navigation, route }) {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
-                        if (!this.state.classes.includes(item)) {
+                        if (Object.values(Classes2['SUBJECT CODE']).includes(item)) {
+                            //  console.log("hi")
+                            this.setState({ "choosingClass": false })
+                            console.log(Object.values(data[item + '.json']["COURSE NUMBER"]))
+                            console.log("hiiiii")
+                            if (item) {
+                                this.setState({ "displayedList": Object.values(data[item + '.json']["COURSE NUMBER"]) })
+                            }
+                            console.log("byeee")
 
-                            this.setState({ classes: [...this.state.classes, item] })
                         }
+                        else if (!this.state.classes.includes(item)) {
+                            //   console.log("hi")
+                            this.setState({ "choosingClass": true })
+                            this.setState({ classes: [...this.state.classes, item] })
+                            var db = firebase.firestore();
+                            var user = firebase.auth().currentUser;
+                            var userRef = db.collection("Users").doc(user.uid);
+                            userRef.update({
+                                "classes": [...this.state.classes, item]
+                            })
+                            this.setState({ "displayedList": Object.values(Classes2['SUBJECT CODE']) })
 
+                        }
+                        else {
+                            var k = 0
+                        }
                     }}>
                         <Text style={styles.connectOptionsText}>{item}</Text>
                     </TouchableOpacity>
                 </View>
             );
             const renderItem2 = ({ item }) => (
-                <View style={{ minHeight: 50, padding: 0, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
+                <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
                         this.setState({ classes: removeItemOnce(this.state.classes, item) })
-
-
+                        var db = firebase.firestore();
+                        var user = firebase.auth().currentUser;
+                        var userRef = db.collection("Users").doc(user.uid);
+                        userRef.update({
+                            //TODO: double name error
+                            "classes": removeItemOnce(this.state.classes, item)
+                        })
                     }}>
                         <Text style={styles.connectOptionsText}>{item}</Text>
                     </TouchableOpacity>
                 </View>
             );
-
             const updateSearch = (event) => {
                 const filteredList = this.state.groupIDs.filter(
                     (item) => {
-
                         //      console.log(item)
                         let word = item.toLowerCase();
                         let lowerSearch = event.toLowerCase();
@@ -92,79 +133,59 @@ function CreateGroup({ navigation, route }) {
                     }
                 )
                 this.setState({ search: event, displayedList: filteredList })
-                //        console.log(this.state.displayedList[0])
+                //   console.log(this.state.displayedList)
             }
             return (
 
-                <View style = {{flex:1}}>
-                    
-                    <Text style={styles.AnswerText}>Create New Group</Text>
-                    <TextInput
-                        paddingTop={10}
-                        style={{ height: 40 }}
-                        placeholder="Name"
-                        onChangeText={text => this.setState({ groupname: text })}
-                        defaultValue={this.state.groupname}
-                    />
-                    <Text style={styles.AnswerText}>Group Description(Optional)</Text>
-                    <TextInput
-                        paddingTop={10}
-                        style={{ height: 40 }}
-                        placeholder="Description"
-                        onChangeText={text => this.setState({ description: text })}
-                        defaultValue={this.state.description}
-                    />
-                    <View style={styles.liss}>
+                <View style={styles.hello}>
+                    <View style={styles.hi4}>
                         <FlatList
                             data={this.state.classes}
                             numColumns={4}
                             renderItem={renderItem2}
-
-                            ListEmptyComponent={() => (
-                                <View style={{ flex: 0, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
-                                    {
-                                        this.state.loading ? null : (
-                                            <Text style={{ fontSize: 15 }} ></Text>
-                                        )
-                                    }
-                                </View>
-                            )}
-                        />
-                        <SearchBar
-                            placeholder="Search"
-                            onChangeText={(value) => updateSearch(value)}
-                            value={this.state.search.toString()}
-                            lightTheme={true}
-                            round={true}
-                            containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
-                            inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
-
-                        {
-                            this.state.loading ? (
-                                <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
-                                    <ActivityIndicator size="large" />
-                                </View>
-                            ) : null
-                        }
-
-                        <FlatList
-                            data={this.state.displayedList}
-                            numColumns={4}
-
-                            renderItem={renderItem}
-
-                            ListEmptyComponent={() => (
-                                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
-                                    {
-                                        this.state.loading ? null : (
-                                            <Text style={{ fontSize: 15 }} >No such word found... try something else</Text>
-                                        )
-                                    }
-                                </View>
-                            )}
+                            keyExtractor={(item, index) => index.toString()}
                         />
                     </View>
-                    <View styles = {styles.second}>
+                    <SearchBar
+                        placeholder="Search"
+                        onChangeText={(value) => updateSearch(value)}
+                        value={this.state.search.toString()}
+                        lightTheme={true}
+                        round={true}
+                        containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
+                        inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
+                    {
+                        this.state.loading ? (
+                            <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
+                                <ActivityIndicator size="large" />
+                            </View>
+                        ) : null
+                    }
+
+                    {this.state.choosingClass ? <Text></Text>
+                        : <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
+                            this.setState({ displayedList: Object.values(Classes2['SUBJECT CODE']), "choosingClass": true })
+                        }}>
+                            <Text style={styles.connectOptionsText}>Back</Text>
+                        </TouchableOpacity>
+
+                    }
+                    <FlatList
+                        data={this.state.displayedList}
+                        numColumns={4}
+                        renderItem={renderItem}
+                        keyExtractor={(item, index) => index.toString()}
+                        ListEmptyComponent={() => (
+                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
+                                {
+                                    this.state.loading ? null : (
+                                        <Text style={{ fontSize: 15 }} >No such Group found... try something else</Text>
+                                    )
+                                }
+                            </View>
+                        )}
+                    />
+                    <View styles={styles.second}>
                         <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { makeGroup() }}>
                             <Text style={styles.LoginText}>Enter</Text>
                         </TouchableOpacity>
@@ -172,6 +193,7 @@ function CreateGroup({ navigation, route }) {
                 </View>);
         }
     }
+
     const [loading, setloading] = React.useState(false)
     const [memory, setmemory] = React.useState([...data2])
     const [search, setsearch] = React.useState("")
@@ -190,16 +212,38 @@ CreateGroup.navigationOptions = {
 };
 
 const styles = StyleSheet.create({
+    hello: {
+        flex: 1,
+        height: screenHeight * 0.5
+      },
+      liss: {
+        flex: 1,
+        flexDirection: 'row'
+      },
+      hi: {
+        width: '95%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingTop: 50,
+        flexDirection: 'row'
+      },
+      hi4: {
+        width: '95%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: 30,
+        flexDirection: 'row'
+      },
     
-  second: {
-    paddingTop: 10,
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row'
-  },
+    second: {
+        paddingTop: 10,
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row'
+    },
     liss: {
-        height:screenHeight/2.5,
+        height: screenHeight / 2.5,
         flex: 0,
         marginBottom: 20
     },
