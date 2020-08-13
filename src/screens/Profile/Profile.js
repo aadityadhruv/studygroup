@@ -134,13 +134,19 @@ class FirebaseInfo extends React.Component {
       </View>);
   }
 }
+
+
+
+
 function Profile({ navigation, route }) {
   const [name, setName] = React.useState("")
+  const [edit, setEdit] = React.useState(false);
   var user = firebase.auth().currentUser;
   var db = firebase.firestore();
   var userInfoRef = db.collection("Users").doc(user.uid);
   console.log("New frame");
-  userInfoRef.get().then(function (doc) {
+  if (!edit) {
+  userInfoRef.onSnapshot(function (doc) {
     if (doc.exists) {
       var person = doc.data();
       setName(person.fullName);
@@ -156,6 +162,7 @@ function Profile({ navigation, route }) {
         console.error('Sign Out Error', error);
     });
     navigation.navigate('Login')
+
 }
   return (
     <View style={{
@@ -165,14 +172,41 @@ function Profile({ navigation, route }) {
       flexDirection: 'column',
       backgroundColor: '#fff',
     }}>
-      <View style={styles.head}>
-        <Text style={styles.connectOptions2}>
-          Name : {name}
-        </Text>
-        <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => logout()}>
-                    <Text style={styles.connectOptionsText}>Log Out</Text>
-                </TouchableOpacity>
-              
+      <View style={styles.liss}>
+        
+        <TouchableOpacity style={styles.connectOptions2}>
+          {edit ? <TextInput
+                        onChangeText={text => setName(text)}
+                        defaultValue={name}
+                    /> : <Text>Name: {name}</Text>}
+          
+          
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.connectOptionsEdit} onPress={() => {
+
+          console.log(name);
+          setEdit(!edit);
+          var user = firebase.auth().currentUser;
+          user.updateProfile({
+            displayName: name,
+          }).then(function() {
+            var db = firebase.firestore();
+            var userRef = db.collection("Users").doc(user.uid);
+            userRef.update({
+              "fullName" : name
+            })
+          }).catch(function(error) {
+            // An error happened.
+          });
+          
+
+
+          
+        }}>
+          {edit ?  <Text>Save</Text>: <Text>Edit</Text>}
+          
+        </TouchableOpacity>
+
       </View>
       <FirebaseInfo></FirebaseInfo>
 
@@ -222,6 +256,16 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
   },
+  headerContainer: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginBottom :  0,
+    height: 40,
+    marginTop: 0,
+    flex: 1,
+    flexDirection: 'row',
+  },
   connectOptions: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -241,11 +285,28 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   connectOptions2: {
+    width : screenWidth - 120, 
     marginTop: 20,
     alignContent: "center",
     padding: 15,
     paddingBottom: 15,
     marginLeft: 0,
+    marginRight: screenWidth - 120,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  connectOptionsEdit: {
+    marginTop: 0,
+    alignContent: "center",
+    alignSelf : "center",
+    marginTop : 0,
+    marginBottom: 0, 
+    padding: 15,
+    paddingBottom: 0,
+    marginLeft : screenWidth - 100,
+    marginBottom : screenHeight, 
     marginRight: 0,
     backgroundColor: '#0099FF',
     borderRadius: 10,
