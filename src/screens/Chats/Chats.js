@@ -71,12 +71,7 @@ export default function Chats({ navigation, route }) {
 		if (otherUserID == firebase.auth().currentUser.uid) {
 			return;
 		}
-
-
-
 		personalChatHelper().then((result) => {
-
-
 			var isGroupExist = result.includes(otherUserID);
 			console.log(isGroupExist);
 			if (!isGroupExist) {
@@ -116,51 +111,26 @@ export default function Chats({ navigation, route }) {
 				}).catch(function (error) {
 					console.log("Error getting document:", error);
 				});
-
 				//Add the group ref to the current and other user
-
 				console.log("-------------------------------");
 				navigation.navigate('Chats', { id: hashString, name: "Personal Chat" });
-
 			} else {
 				console.log("Group exists");
 				var db = firebase.firestore();
 				var user = firebase.auth().currentUser;
 				var userRef = db.collection("Users").doc(user.uid);
-
 				goToPCHelper(otherUserID).then((groupHash) => {
-
 					navigation.navigate('Chats', { id: groupHash, name: "Personal Chat" });
-
-
 				})
-
-
-
-
 			}
 		});
-
-
-
-
-
-
-
-
-
-
 	}
 	class FirebaseInfo extends React.Component {
 		state = { chats: [], loading: false, text2: "", usersName: "", id: "" };
 		componentDidMount() {
 			var user = firebase.auth().currentUser;
 			var db = firebase.firestore();
-
 			const id = route.params.id;
-			//const { itemId } = route.params.id;
-			//console.log("id" + itemId);
-
 			var msgRef = db.collection("Groups").doc(id).collection("messages");
 			unsubscribe = msgRef
 				.onSnapshot(function (querySnapshot) {
@@ -170,24 +140,17 @@ export default function Chats({ navigation, route }) {
 							cities.unshift({ text: doc.data().text, from: doc.data().from, id: doc.data().id });
 						}
 					});
-
 					this.setState({ chats: cities, loading: false });
 				}.bind(this));
-
-
 		}
 		componentWillMount() {
 			return unsubscribe;
 		}
 		render() {
-
 			const entered = () => {
-
 				var user = firebase.auth().currentUser;
 				var db = firebase.firestore();
-
 				var msgRef = db.collection("Groups").doc(route.params.id).collection("messages");
-
 				var hashString = (+new Date).toString(36);
 				if (!this.state.text2 == "") {
 					console.log(user)
@@ -197,30 +160,29 @@ export default function Chats({ navigation, route }) {
 							text: this.state.text2,
 							id: user.uid
 						});
-
-
 				}
 				this.setState({ text2: "" })
 			}
 			var user = firebase.auth().currentUser;
 			const renderItem = ({ item }) => (
-				<View style={{ flexDirection: 'row' }}>
+				<View style={{ flexDirection: 'column' }}>
 					{
 						(item.from == user.displayName) ?
-							<TouchableOpacity style={styles.connectOptions8} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
-								<Text style={styles.connectOptions7}>{item.text}</Text></TouchableOpacity> :
-							<TouchableOpacity style={styles.connectOptions9} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
-								<Text style={styles.connectOptions10}>{item.text}</Text>
-							</TouchableOpacity>
+							<View style={{ flexDirection: 'row-reverse' }}>
+								<TouchableOpacity style={styles.connectOptions9} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
+									<Text style={styles.connectOptions7}>{item.text}</Text>
+								</TouchableOpacity>
+							</View> :
+							<View style={{ flexDirection: 'row' }}>
+								<TouchableOpacity style={styles.connectOptions8} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
+									<Text style={styles.connectOptions10}>{item.text}</Text>
+								</TouchableOpacity>
+							</View>
 					}
 				</View>
-
 			);
-
 			return (
-
-				<View style={{ flex: 1 }}>
-
+				<View style={{  height: screenHeight * 0.89, width: screenWidth*0.97,paddingTop:50, }}>
 					{
 						this.state.loading ? (
 							<View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
@@ -274,8 +236,6 @@ export default function Chats({ navigation, route }) {
 	}
 	function groupinfo() {
 		var db = firebase.firestore();
-		var isGroup = true
-
 		var groupRef = db.collection("Groups").doc(route.params.id)
 		groupRef.onSnapshot((doc) => {
 			if (doc.data().isGroup) {
@@ -286,14 +246,11 @@ export default function Chats({ navigation, route }) {
 	return (
 		<View style={styles.buttonContainer2}>
 			<View style={styles.buttonContainer3}>
-				<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: 20, paddingLeft: 0, paddingTop: 0, marginBottom: screenHeight / 20 }} />
+				<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: 20, paddingLeft: 0, paddingTop: 0, marginBottom: screenHeight / 200 }} />
 				<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => groupinfo()}>
 					<Text style={styles.connectOptionsText}>{route.params.name}</Text>
 				</TouchableOpacity>
-
-
 			</View>
-
 			<FirebaseInfo></FirebaseInfo>
 		</View>
 	)
@@ -306,14 +263,12 @@ const styles = StyleSheet.create({
 	},
 
 	second: {
-		paddingTop: 10,
-		marginBottom: 0,
-		marginTop: 0,
+		marginTop:50,
 		alignItems: 'center',
 		alignSelf: 'center',
 		justifyContent: 'center',
 		flex: 1,
-		flexDirection: 'column'
+		flexDirection: 'row'
 	},
 	buttonContainer: {
 		alignItems: 'center',
@@ -326,24 +281,15 @@ const styles = StyleSheet.create({
 
 	},
 	buttonContainer2: {
-		alignItems: 'stretch',
-		alignSelf: 'center',
-		justifyContent: 'center',
-		height: 50,
-		marginTop: 20,
 		flex: 1,
-		flexDirection: 'column',
-
+		
 	},
 	buttonContainer3: {
+		paddingTop:screenHeight/15,
 		alignItems: 'center',
 		alignSelf: 'center',
 		justifyContent: 'center',
 		height: 5,
-		paddingTop: 0,
-		marginTop: 0,
-		paddingBottom: 10,
-		flex: 1,
 		flexDirection: 'row',
 	},
 
@@ -360,13 +306,9 @@ const styles = StyleSheet.create({
 		borderColor: '#000000'
 	},
 	connectOptions11: {
-		height: screenHeight / 10,
-		marginTop: 10,
+		height: screenHeight *0.05,
+		width:screenWidth*0.8,
 		alignContent: "center",
-		padding: 15,
-		paddingBottom: 15,
-		marginLeft: 0,
-		marginRight: 0,
 		backgroundColor: '#FFFFFF',
 		borderRadius: 10,
 		borderWidth: 1,
@@ -433,7 +375,6 @@ const styles = StyleSheet.create({
 		borderColor: '#000000',
 	},
 	connectOptions9: {
-		marginRight: 0,
 		marginTop: 10,
 		padding: 15,
 		paddingBottom: 15,
@@ -451,13 +392,9 @@ const styles = StyleSheet.create({
 
 	connectOptions2: {
 		width: 350,
-		marginTop: 10,
+		height:20,
 		alignContent: "center",
 		padding: 15,
-		paddingBottom: 20,
-		marginBottom: 20,
-		marginLeft: 0,
-		marginRight: 10,
 		backgroundColor: '#dde0dc',
 		borderRadius: 10,
 		borderWidth: 1,
