@@ -47,7 +47,6 @@ function Profile({ navigation, route }) {
       console.error('Sign Out Error', error);
     });
     navigation.navigate('Login')
-
   }
   return (
     <View style={{
