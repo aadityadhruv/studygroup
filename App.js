@@ -115,10 +115,11 @@ class App extends React.Component {
       }}>
           {this.state.authenticated ? (
             <>
+            <Stack.Screen name="Groups" component={Groups} />
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Registration" component={RegistrationScreen} />
-            <Stack.Screen name="Groups" component={Groups} />
+            
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="Chats" component={Chats} />
             <Stack.Screen name="CreateGroup" component={CreateGroup} />
@@ -131,8 +132,9 @@ class App extends React.Component {
               <>
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="Registration" component={RegistrationScreen} />
-                <Stack.Screen name="HomeScreen" component={HomeScreen} />
                 <Stack.Screen name="Groups" component={Groups} />
+                <Stack.Screen name="HomeScreen" component={HomeScreen} />
+                
                 <Stack.Screen name="Profile" component={Profile} />
                 <Stack.Screen name="Chats" component={Chats} />
                 <Stack.Screen name="CreateGroup" component={CreateGroup} />
