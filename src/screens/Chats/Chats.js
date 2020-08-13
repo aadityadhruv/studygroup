@@ -88,7 +88,7 @@ export default function Chats({ navigation, route }) {
 				var memberList = [];
 				memberList.push(user.uid);
 				memberList.push(otherUserID);
-				var data = { name: "Personal Chat", id: hashString, owner: user.displayName, members: memberList, label: [], desc: "", isGroup: false };
+				var data = { name: "Personal Chat", id: hashString, owner: user.displayName, members: memberList, label: [], desc: "", isGroup: false, isBlocked : false};
 				dataBaseRef.set(data);
 				console.log(data);
 				//get the name of the other User.
@@ -98,10 +98,10 @@ export default function Chats({ navigation, route }) {
 						otherUserName = doc.data().fullName;
 						console.log(otherUserName);
 						userRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList })
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList, isBlocked : false})
 						});
 						otherUserRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.displayName, pcGroupRefHash: user.uid, memberList: memberList })
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.displayName, pcGroupRefHash: user.uid, memberList: memberList, isBlocked : false})
 						});
 					} else {
 						// doc.data() will be undefined in this case
@@ -274,12 +274,17 @@ export default function Chats({ navigation, route }) {
 
 		navigation.navigate("Groups")
 	}
+	function blockUser() {
+		console.log("blocking user");
+	}
 	function groupinfo() {
 		var db = firebase.firestore();
 		var groupRef = db.collection("Groups").doc(route.params.id)
 		groupRef.onSnapshot((doc) => {
 			if (doc.data().isGroup) {
 				navigation.navigate('GroupInfo', { id: route.params.id, name: route.params.name })
+			} else {
+				blockUser();
 			}
 		})
 	}
