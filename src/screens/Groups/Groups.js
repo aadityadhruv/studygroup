@@ -42,7 +42,9 @@ export default function Groups({ navigation, route }) {
         render() {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
-                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('Chats', { id: item.id, name: item.name })}>
+                    <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
+                        navigation.navigate('Chats', { id: item.id, name: item.name })
+                        }}>
                         <Text style={styles.connectOptionsText}>{item.name}</Text>
                     </TouchableOpacity>
 
@@ -51,8 +53,6 @@ export default function Groups({ navigation, route }) {
             const updateSearch = (event) => {
                 const filteredList = this.state.groupIDs.filter(
                     (item) => {
-
-                        console.log(item)
                         let word = item.name.toLowerCase();
                         let lowerSearch = event.toLowerCase();
                         return word.indexOf(lowerSearch) > -1;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react'
-import {KeyboardAvoidingView, Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component, KeyboardAvoidingViewBase } from "react-native";
+import { KeyboardAvoidingView, Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component, KeyboardAvoidingViewBase } from "react-native";
 import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
 //import { PushController } from '../../services/LocalPushController'
@@ -112,7 +112,7 @@ export default function Chats({ navigation, route }) {
 				});
 				//Add the group ref to the current and other user
 				console.log("-------------------------------");
-				
+
 				navigation.navigate('Chats', { id: hashString, name: "Personal Chat" });
 			} else {
 				console.log("Group exists");
@@ -131,18 +131,18 @@ export default function Chats({ navigation, route }) {
 		var db = firebase.firestore();
 		var userRef = db.collection("Users").doc(user.uid);
 
-			userRef.onSnapshot(function (doc) {
-				doc.data().groupsList.forEach(element => {
-					if (element.id == groupID) {
-						console.log(element.name);
-						setGroupName(element.name);
-					}
-				});
-				
-			})
+		userRef.onSnapshot(function (doc) {
+			doc.data().groupsList.forEach(element => {
+				if (element.id == groupID) {
+					console.log(element.name);
+					setGroupName(element.name);
+				}
+			});
+
+		})
 	}
 	class FirebaseInfo extends React.Component {
-		state = { chats: [], loading: false, text2: "", usersName: "", id: "" };
+		state = { chats: [], loading: false, text2: "", usersName: "", id: "", isGroup: false };
 		componentDidMount() {
 			var user = firebase.auth().currentUser;
 			var db = firebase.firestore();
@@ -158,6 +158,13 @@ export default function Chats({ navigation, route }) {
 					});
 					this.setState({ chats: cities, loading: false });
 				}.bind(this));
+
+			var groupRef = db.collection("Groups").doc(route.params.id)
+			groupRef.onSnapshot((doc) => {
+				this.setState({ isGroup: doc.data().isGroup })
+			})
+
+
 		}
 		componentWillMount() {
 			return unsubscribe;
@@ -183,22 +190,39 @@ export default function Chats({ navigation, route }) {
 			const renderItem = ({ item }) => (
 				<View style={{ flexDirection: 'column' }}>
 					{
-						(item.from == user.displayName) ?
-							<View style={{ flexDirection: 'row-reverse' }}>
-								<TouchableOpacity style={styles.connectOptions9} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
-									<Text style={styles.connectOptions7}>{item.text}</Text>
-								</TouchableOpacity>
-							</View> :
-							<View style={{ flexDirection: 'row' }}>
-								<TouchableOpacity style={styles.connectOptions8} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
-									<Text style={styles.connectOptions10}>{item.text}</Text>
-								</TouchableOpacity>
-							</View>
+						this.state.isGroup ?
+							(item.from == user.displayName) ?
+								<View style={{ flexDirection: 'row-reverse' }}>
+									<TouchableOpacity style={styles.connectOptions9} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
+										<Text style={styles.connectOptions7}>{item.text}</Text>
+									</TouchableOpacity>
+								</View> :
+								<View style={{ flexDirection: 'row' }}>
+									<TouchableOpacity style={styles.connectOptions8} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
+										<Text style={styles.connectOptions10}>{item.from}</Text>
+
+										<Text style={styles.connectOptions10}>{item.text}</Text>
+									</TouchableOpacity>
+								</View>
+
+
+							:
+							(item.from == user.displayName) ?
+								<View style={{ flexDirection: 'row-reverse' }}>
+									<TouchableOpacity style={styles.connectOptions9} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
+										<Text style={styles.connectOptions7}>{item.text}</Text>
+									</TouchableOpacity>
+								</View> :
+								<View style={{ flexDirection: 'row' }}>
+									<TouchableOpacity style={styles.connectOptions8} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
+										<Text style={styles.connectOptions10}>{item.text}</Text>
+									</TouchableOpacity>
+								</View>
 					}
 				</View>
 			);
 			return (
-				<View style={{  height: screenHeight * 0.89, width: screenWidth*0.97,paddingTop:50, }}>
+				<View style={{ height: screenHeight * 0.89, width: screenWidth * 0.97, paddingTop: 50, }}>
 					{
 						this.state.loading ? (
 							<View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
@@ -261,17 +285,17 @@ export default function Chats({ navigation, route }) {
 	}
 	return (
 		<View style={styles.buttonContainer2}>
-			      <KeyboardAvoidingView
-        behavior="position"
-        style={{ flex: 1, backgroundColor: 'white' }} keyboardVerticalOffset={0}>
+			<KeyboardAvoidingView
+				behavior="position"
+				style={{ flex: 1, backgroundColor: 'white' }} keyboardVerticalOffset={0}>
 
-			<View style={styles.buttonContainer3}>
-				<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: 20, paddingLeft: 0, paddingTop: 0, marginBottom: screenHeight / 200 }} />
-				<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => groupinfo()}>
-					<Text style={styles.connectOptionsText}>{groupName}</Text>
-				</TouchableOpacity>
-			</View>
-			<FirebaseInfo></FirebaseInfo>
+				<View style={styles.buttonContainer3}>
+					<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: 20, paddingLeft: 0, paddingTop: 0, marginBottom: screenHeight / 200 }} />
+					<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => groupinfo()}>
+						<Text style={styles.connectOptionsText}>{groupName}</Text>
+					</TouchableOpacity>
+				</View>
+				<FirebaseInfo></FirebaseInfo>
 			</KeyboardAvoidingView>
 		</View>
 	)
@@ -284,7 +308,7 @@ const styles = StyleSheet.create({
 	},
 
 	second: {
-		marginTop:50,
+		marginTop: 50,
 		alignItems: 'center',
 		alignSelf: 'center',
 		justifyContent: 'center',
@@ -303,10 +327,10 @@ const styles = StyleSheet.create({
 	},
 	buttonContainer2: {
 		flex: 1,
-		
+
 	},
 	buttonContainer3: {
-		paddingTop:screenHeight/15,
+		paddingTop: screenHeight / 15,
 		alignItems: 'center',
 		alignSelf: 'center',
 		justifyContent: 'center',
@@ -327,8 +351,8 @@ const styles = StyleSheet.create({
 		borderColor: '#000000'
 	},
 	connectOptions11: {
-		height: screenHeight *0.05,
-		width:screenWidth*0.8,
+		height: screenHeight * 0.05,
+		width: screenWidth * 0.8,
 		alignContent: "center",
 		backgroundColor: '#FFFFFF',
 		borderRadius: 10,
@@ -412,7 +436,7 @@ const styles = StyleSheet.create({
 	},
 	connectOptions2: {
 		width: 350,
-		height:50,
+		height: 50,
 		alignContent: "center",
 		padding: 15,
 		backgroundColor: '#dde0dc',
