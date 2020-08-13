@@ -155,6 +155,7 @@ function Profile({ navigation, route }) {
       console.log("No such document!");
     }
   })
+}
   function logout() {
     firebase.auth().signOut().then(function () {
         console.log('Signed Out');
@@ -162,7 +163,6 @@ function Profile({ navigation, route }) {
         console.error('Sign Out Error', error);
     });
     navigation.navigate('Login')
-
 }
   return (
     <View style={{
