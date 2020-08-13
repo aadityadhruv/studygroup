@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, ActivityIndicator, View, Button, Settings, TextInput, Dimensions, FlatList, KeyboardAvoidingView } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import Classes from './Data/Classes.json'
+import Classes2 from './Data/Classes.json'
 import data from './Data/data.json'
 import { ScrollView } from 'react-native-gesture-handler';
 import data2 from './Data/data2.json'
@@ -19,13 +19,13 @@ let unsubscribe
 
 function AddClasses({ navigation, route }) {
 
-class FirebaseInfo extends React.Component {
-    state = { groupIDs: data2, loading: false, displayedList: data2, search: "", classes: [], groupname: "" };
-  
+  class FirebaseInfo extends React.Component {
+    state = { groupIDs: data2, loading: false, displayedList: data2, search: "", classes: [], groupname: "", choosingClass: true };
+
     componentDidMount() {
       var user = firebase.auth().currentUser;
       var db = firebase.firestore();
-  
+
       var userInfoRef = db.collection("Users").doc(user.uid);
       userInfoRef.onSnapshot((doc) => {
         var a = doc.data().classes;
@@ -34,6 +34,8 @@ class FirebaseInfo extends React.Component {
         }
         this.setState({ classes: a });
       });
+      //     console.log(Classes2["SUBJECT CODE"].values())
+      this.setState({ displayedList: Object.values(Classes2['SUBJECT CODE']) })
     }
     componentWillMount() {
       return unsubscribe;
@@ -47,12 +49,24 @@ class FirebaseInfo extends React.Component {
         }
         return arr;
       }
-  
+
       const renderItem = ({ item }) => (
         <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
           <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
-            if (!this.state.classes.includes(item)) {
-              console.log("hi")
+            if (Object.values(Classes2['SUBJECT CODE']).includes(item)) {
+              //  console.log("hi")
+              this.setState({ "choosingClass": false })
+              console.log(Object.values(data[item + '.json']["COURSE NUMBER"]))
+              console.log("hiiiii")
+              if (item) {
+                this.setState({ "displayedList": Object.values(data[item + '.json']["COURSE NUMBER"]) })
+              }
+              console.log("byeee")
+
+            }
+            else if (!this.state.classes.includes(item)) {
+              //   console.log("hi")
+              this.setState({ "choosingClass": true })
               this.setState({ classes: [...this.state.classes, item] })
               var db = firebase.firestore();
               var user = firebase.auth().currentUser;
@@ -60,6 +74,11 @@ class FirebaseInfo extends React.Component {
               userRef.update({
                 "classes": [...this.state.classes, item]
               })
+              this.setState({ "displayedList": Object.values(Classes2['SUBJECT CODE']) })
+
+            }
+            else {
+              var k = 0
             }
           }}>
             <Text style={styles.connectOptionsText}>{item}</Text>
@@ -92,10 +111,10 @@ class FirebaseInfo extends React.Component {
           }
         )
         this.setState({ search: event, displayedList: filteredList })
-        console.log(this.state.displayedList)
+        //   console.log(this.state.displayedList)
       }
       return (
-  
+
         <View style={styles.hello}>
           <View style={styles.hi4}>
             <FlatList
@@ -120,7 +139,15 @@ class FirebaseInfo extends React.Component {
               </View>
             ) : null
           }
-  
+
+          {this.state.choosingClass ? <Text></Text>
+            : <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
+              this.setState({ displayedList: Object.values(Classes2['SUBJECT CODE']),"choosingClass":true })
+            }}>
+              <Text style={styles.connectOptionsText}>Back</Text>
+            </TouchableOpacity>
+
+          }
           <FlatList
             data={this.state.displayedList}
             numColumns={4}
@@ -139,126 +166,133 @@ class FirebaseInfo extends React.Component {
         </View>);
     }
   }
-  return(
-      <FirebaseInfo></FirebaseInfo>  
-      )
-  }
-  const styles = StyleSheet.create({
-    hello: {
-      flex: 1,
-      height: screenHeight*0.9
-    },
-    liss: {
-      flex: 1,
-      flexDirection: 'row'
-    },
-    hi: {
-      width: '95%',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingTop: 50,
-      flexDirection: 'row'
-    },
-    inputBox: {
-      alignItems: 'center',
-      alignSelf: 'center',
-      justifyContent: 'center',
-      marginTop: 20,
-      width: screenWidth - 40,
-      borderWidth: 1,
-    },
-    buttonContainer: {
-      marginTop: screenHeight * 0.13,
-      alignItems: 'center',
-      alignSelf: 'center',
-      justifyContent: 'center',
-      height: 20,
-      marginBottom: 0,
-      flex: 1,
-      flexDirection: 'row',
-    },
-    headerContainer: {
-      alignItems: 'center',
-      alignSelf: 'center',
-      justifyContent: 'center',
-      marginBottom: 0,
-      height: 40,
-      marginTop: 0,
-      flex: 1,
-      flexDirection: 'row',
-    },
-    connectOptions: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: 100,
-      height: 60,
-      marginTop: 1,
-      alignContent: "center",
-      padding: 15,
-      backgroundColor: '#0099FF',
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: '#fff'
-    },
-    connectOptionsText: {
-      fontSize: 20,
-      color: '#FFFFFF',
-      textAlign: 'center',
-    },
-    connectOptions2: {
-      width: screenWidth * 0.8,
-      height: screenHeight * 0.06,
-      marginTop: 30,
-      alignContent: "center",
-      padding: 15,
-      backgroundColor: '#0099FF',
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: '#fff'
-    },
-    connectOptionsEdit: {
-      width: screenWidth * 0.15,
-      height: screenHeight * 0.07,
-      alignContent: "center",
-      marginTop: 30,
-      padding: 15,
-      backgroundColor: '#0099FF',
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: '#fff'
-    },
-    connectOptions3: {
-      marginTop: 10,
-      height: 90,
-      alignContent: "center",
-      padding: 15,
-      paddingBottom: 15,
-      marginLeft: 0,
-      marginRight: 0,
-      backgroundColor: '#0099FF',
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: '#fff'
-    },
-    connectOptions4: {
-      marginTop: 10,
-      height: 50,
-      alignContent: "center",
-      padding: 15,
-      paddingBottom: 15,
-      marginLeft: 0,
-      marginRight: 0,
-      backgroundColor: '#0099FF',
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: '#fff'
-    },
-  
-    container: {
-      flex: 1,
-      backgroundColor: '#f5fcfc',
-    },
-  });
+  return (
+    <FirebaseInfo></FirebaseInfo>
+  )
+}
+const styles = StyleSheet.create({
+  hello: {
+    flex: 1,
+    height: screenHeight * 0.9
+  },
+  liss: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  hi: {
+    width: '95%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 50,
+    flexDirection: 'row'
+  },
+  hi4: {
+    width: '95%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 30,
+    flexDirection: 'row'
+  },
 
-  export default AddClasses
-  
+  inputBox: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    width: screenWidth - 40,
+    borderWidth: 1,
+  },
+  buttonContainer: {
+    marginTop: screenHeight * 0.13,
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    height: 20,
+    marginBottom: 0,
+    flex: 1,
+    flexDirection: 'row',
+  },
+  headerContainer: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginBottom: 0,
+    height: 40,
+    marginTop: 0,
+    flex: 1,
+    flexDirection: 'row',
+  },
+  connectOptions: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 100,
+    height: 60,
+    marginTop: 1,
+    alignContent: "center",
+    padding: 15,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  connectOptionsText: {
+    fontSize: 20,
+    color: '#FFFFFF',
+    textAlign: 'center',
+  },
+  connectOptions2: {
+    width: screenWidth * 0.8,
+    height: screenHeight * 0.06,
+    marginTop: 30,
+    alignContent: "center",
+    padding: 15,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  connectOptionsEdit: {
+    width: screenWidth * 0.15,
+    height: screenHeight * 0.07,
+    alignContent: "center",
+    marginTop: 30,
+    padding: 15,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  connectOptions3: {
+    marginTop: 10,
+    height: 90,
+    alignContent: "center",
+    padding: 15,
+    paddingBottom: 15,
+    marginLeft: 0,
+    marginRight: 0,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  connectOptions4: {
+    marginTop: 10,
+    height: 50,
+    alignContent: "center",
+    padding: 15,
+    paddingBottom: 15,
+    marginLeft: 0,
+    marginRight: 0,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+
+  container: {
+    flex: 1,
+    backgroundColor: '#f5fcfc',
+  },
+});
+
+export default AddClasses

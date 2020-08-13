@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, ActivityIndicator, View, Button, Settings, TextInput, Dimensions, FlatList, KeyboardAvoidingView } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import Classes from './Data/Classes.json'
+import Classes2 from './Data/Classes.json'
 import data from './Data/data.json'
 import { ScrollView } from 'react-native-gesture-handler';
 import data2 from './Data/data2.json'
@@ -27,7 +27,7 @@ function Profile({ navigation, route }) {
   var user = firebase.auth().currentUser;
   var db = firebase.firestore();
   var userInfoRef = db.collection("Users").doc(user.uid);
-  console.log("New frame");
+//console.log("New frame");
   if (!edit) {
     userInfoRef.onSnapshot(function (doc) {
       if (doc.exists) {
@@ -36,7 +36,7 @@ function Profile({ navigation, route }) {
         setclasses(person.classes)
       } else {
         // doc.data() will be undefined in this case
-        console.log("No such document!");
+       // console.log("No such document!");
       }
     })
   }
@@ -73,8 +73,8 @@ function Profile({ navigation, route }) {
               defaultValue={name}
             /> : <Text>Name: {name}</Text>}
           </TouchableOpacity>
-          <MaterialIcons name="edit" size={30} onPress={() => {
-            console.log(name);
+          <MaterialIcons name="edit" size={40} onPress={() => {
+           // console.log(name);
             setEdit(!edit);
             var user = firebase.auth().currentUser;
             user.updateProfile({
@@ -89,7 +89,7 @@ function Profile({ navigation, route }) {
               // An error happened.
             });
           }}
-            style={{ alignSelf: 'center', paddingLeft: 5, paddingTop: screenHeight / 6, marginBottom: screenHeight / 5 }} />
+            style={{ alignSelf: 'center', paddingLeft: 15, paddingTop: screenHeight / 8, marginBottom: screenHeight / 5 }} />
 
 
         </View>
@@ -97,10 +97,10 @@ function Profile({ navigation, route }) {
           <TouchableOpacity style={styles.connectOptions2}>
             <Text>Classes: {classes}</Text>
           </TouchableOpacity>
-          <MaterialIcons name="edit" size={30} onPress={() => {
+          <MaterialIcons name="edit" size={40} onPress={() => {
             navigation.navigate("AddClasses")
           }}
-            style={{ alignSelf: 'center', paddingLeft: 5, paddingTop: screenHeight / 7, marginBottom: screenHeight / 5 }} />
+            style={{ alignSelf: 'center', paddingLeft: 20, paddingTop: screenHeight / 8, marginBottom: screenHeight / 5 }} />
         </View>
         <View style={styles.buttonContainer}>
           <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 5 }} />
