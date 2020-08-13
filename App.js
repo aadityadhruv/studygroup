@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react'
 import { decode, encode } from 'base-64'
 import { LoginScreen, HomeScreen, RegistrationScreen} from './src/screens'
 
+import AddClasses from './src/screens/Profile/AddClasses.js';
+
 import Groups from './src/screens/Groups/Groups.js';
 import Profile from './src/screens/Profile/Profile';
 import Chats from './src/screens/Chats/Chats';
@@ -122,6 +124,7 @@ class App extends React.Component {
             <Stack.Screen name="CreateGroup" component={CreateGroup} />
             <Stack.Screen name="JoinGroup" component={JoinGroup} />
             <Stack.Screen name="GroupInfo" component={GroupInfo} />
+            <Stack.Screen name="AddClasses" component={AddClasses} />
 
           </>
           ) : (
@@ -135,6 +138,8 @@ class App extends React.Component {
                 <Stack.Screen name="CreateGroup" component={CreateGroup} />
                 <Stack.Screen name="JoinGroup" component={JoinGroup} />
                 <Stack.Screen name="GroupInfo" component={GroupInfo} />
+                <Stack.Screen name="AddClasses" component={AddClasses} />
+
 
               </>
             )}

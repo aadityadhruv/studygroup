@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component } from "react-native";
+import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component, KeyboardAvoidingView } from "react-native";
 import { SearchBar } from 'react-native-elements';
 
 import firebase from 'firebase';
@@ -165,12 +165,17 @@ export default function HomeScreen({ navigation, route }) {
             flex: 1,
             backgroundColor: '#fff',
         }}>
+      <KeyboardAvoidingView
+        behavior="position"
+        style={{ flex: 1, backgroundColor: 'white' }} keyboardVerticalOffset={-160}>
+
             <FirebaseInfo></FirebaseInfo>
             <View style={styles.buttonContainer}>
                 <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
                 <Ionicon name="ios-home" size={50} onPress={() => navigation.navigate('HomeScreen')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
                 <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, paddingBottom: screenHeight / 20 }} />
             </View>
+                        </KeyboardAvoidingView>
         </View>
     )
 }
