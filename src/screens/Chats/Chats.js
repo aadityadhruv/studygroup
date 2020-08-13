@@ -389,10 +389,9 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		color: 'black',
 	},
-
 	connectOptions2: {
 		width: 350,
-		height:20,
+		height:50,
 		alignContent: "center",
 		padding: 15,
 		backgroundColor: '#dde0dc',
@@ -401,7 +400,6 @@ const styles = StyleSheet.create({
 		borderColor: '#fff',
 
 	},
-
 	connectOptions3: {
 		width: 50,
 		marginTop: 10,

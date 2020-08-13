@@ -63,7 +63,8 @@ export default function Groups({ navigation, route }) {
 
             return (
 
-                <View style={{ flex: 1 }}>
+                <View style={{height:screenHeight*0.75 }}>
+                    <View style = {{height:30}}></View>
                     <SearchBar
                         placeholder="Search"
                         onChangeText={(value) => updateSearch(value)}
@@ -78,6 +79,7 @@ export default function Groups({ navigation, route }) {
                         </View>
                     ) : null}
                     <FlatList
+                    
                         data={this.state.displayedList}
                         renderItem={renderItem}
                         keyExtractor={(item, index) => index.toString()}
@@ -132,7 +134,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         height: 50,
-        marginTop: 20,
+        marginTop: screenHeight*0,
         flex: 1,
         flexDirection: 'row',
 

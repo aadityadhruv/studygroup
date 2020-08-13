@@ -111,7 +111,7 @@ export default function HomeScreen({ navigation, route }) {
             }
             return (
 
-                <View style={{ flex: 1 }}>
+                <View style={{height:screenHeight*0.75 }}>
                     <View style={styles.buttonContainer2}>
                         <SearchBar
                             placeholder="Search"
@@ -162,10 +162,7 @@ export default function HomeScreen({ navigation, route }) {
 
     return (
         <View style={{
-            height: screenHeight,
-            width: screenWidth,
             flex: 1,
-            flexDirection: 'column',
             backgroundColor: '#fff',
         }}>
             <FirebaseInfo></FirebaseInfo>
@@ -183,6 +180,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'center',
+        marginTop:screenHeight*0,
         height: 50,
         marginBottom: 0,
         flex: 1,
@@ -192,14 +190,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'center',
-        height: 5,
-        paddingTop:0,
-        marginTop: 0,
-        paddingBottom:10,
-        flex: 1,
         flexDirection: 'row',
     },
-
     connectOptions: {
         marginTop: 0,
         alignContent: "center",
