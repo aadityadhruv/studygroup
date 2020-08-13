@@ -15,6 +15,7 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 export default function Chats({ navigation, route }) {
 	const [groupName, setGroupName] = React.useState("Loading");
+	const [isBlocked, setIsBlocked] = React.useState(false);
 
 	let unsubscribe;
 	getPCName(route.params.id);
@@ -98,10 +99,10 @@ export default function Chats({ navigation, route }) {
 						otherUserName = doc.data().fullName;
 						console.log(otherUserName);
 						userRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList, isBlocked : false})
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList, hasBlocked : false})
 						});
 						otherUserRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.displayName, pcGroupRefHash: user.uid, memberList: memberList, isBlocked : false})
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.displayName, pcGroupRefHash: user.uid, memberList: memberList, hasBlocked : false})
 						});
 					} else {
 						// doc.data() will be undefined in this case
@@ -276,6 +277,16 @@ export default function Chats({ navigation, route }) {
 	}
 	function blockUser() {
 		console.log("blocking user");
+		var db = firebase.firestore();
+		var groupRef = db.collection("Groups").doc(route.params.id);
+
+
+		groupRef.onSnapshot((doc) => {
+			console.log(doc.data().isBlocked);
+		})
+		
+
+
 	}
 	function groupinfo() {
 		var db = firebase.firestore();
@@ -283,8 +294,6 @@ export default function Chats({ navigation, route }) {
 		groupRef.onSnapshot((doc) => {
 			if (doc.data().isGroup) {
 				navigation.navigate('GroupInfo', { id: route.params.id, name: route.params.name })
-			} else {
-				blockUser();
 			}
 		})
 	}
@@ -298,6 +307,9 @@ export default function Chats({ navigation, route }) {
 					<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: 20, paddingLeft: 0, paddingTop: 0, marginBottom: screenHeight / 200 }} />
 					<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => groupinfo()}>
 						<Text style={styles.connectOptionsText}>{groupName}</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => blockUser()}>
+						<Text style={styles.connectOptionsText}>{"Block"}</Text>
 					</TouchableOpacity>
 				</View>
 				<FirebaseInfo></FirebaseInfo>
