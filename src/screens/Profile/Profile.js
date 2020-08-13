@@ -155,6 +155,14 @@ function Profile({ navigation, route }) {
       console.log("No such document!");
     }
   })
+  function logout() {
+    firebase.auth().signOut().then(function () {
+        console.log('Signed Out');
+    }, function (error) {
+        console.error('Sign Out Error', error);
+    });
+    navigation.navigate('Login')
+
 }
   return (
     <View style={{
@@ -198,6 +206,7 @@ function Profile({ navigation, route }) {
           {edit ?  <Text>Save</Text>: <Text>Edit</Text>}
           
         </TouchableOpacity>
+
       </View>
       <FirebaseInfo></FirebaseInfo>
 
@@ -238,6 +247,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonContainer: {
+    marginTop:screenHeight*0.13,
     alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',

@@ -14,10 +14,10 @@ function JoinGroup({ navigation, route }) {
         userInfoRef.update({
             "groupsList": firebase.firestore.FieldValue.arrayUnion({ id: route.params.id, name: route.params.name })
         })
-var memb = [...route.params.members,user.uid]
-console.log(memb)
+        var memb = [...route.params.members, user.uid]
+        console.log(memb)
         groupInfoRef.update({
-            "members":memb
+            "members": memb
         })
         console.log("2")
 
@@ -77,14 +77,10 @@ console.log(memb)
         <View>
             <Text style={styles.AnswerText}>{groupName}</Text>
             <Text style={styles.AnswerText}>Class = {route.params.label}</Text>
-            <Text style={styles.AnswerText}>Description = {route.params.desc}</Text>
-
-
+            {route.params.desc ? <Text style={styles.AnswerText}>Description = {route.params.desc}</Text> : <Text></Text>}
             <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { login_new() }}>
                 <Text style={styles.LoginText}>{text}</Text>
             </TouchableOpacity>
-
-
         </View>
     )
 }

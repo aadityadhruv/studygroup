@@ -4,8 +4,8 @@ import * as React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { useEffect, useState } from 'react'
-import { LoginScreen, HomeScreen, RegistrationScreen} from './src/screens'
 import { decode, encode } from 'base-64'
+import { LoginScreen, HomeScreen, RegistrationScreen} from './src/screens'
 
 import Groups from './src/screens/Groups/Groups.js';
 import Profile from './src/screens/Profile/Profile';
@@ -108,7 +108,9 @@ class App extends React.Component {
     if (this.state.loading) return null;
     return (
       <NavigationContainer>
-        <Stack.Navigator>
+<Stack.Navigator screenOptions={{
+        headerShown: false
+      }}>
           {this.state.authenticated ? (
             <>
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
