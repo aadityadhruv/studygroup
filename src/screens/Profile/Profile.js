@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonContainer: {
+    marginTop:screenHeight*0.13,
     alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',

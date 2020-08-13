@@ -26,7 +26,8 @@ function GroupInfo({ navigation, route }) {
                         })
                     }
                 }.bind(this))
-            
+                this.setState({"memberIds":this.state.memberIds.filter((item, index) => this.state.memberIds.indexOf(item) === index)});
+                this.setState({"members":this.state.members.filter((item, index) => this.state.members.indexOf(item) === index)});            
                 this.setState({ groupName: doc.data().name, classes: doc.data().label, description: doc.data().desc, isGroup: doc.data().isGroup, pcGroupRefHash: doc.data().pcGroupRefHash });
             }});
             //   console.log(mem)               
@@ -63,7 +64,7 @@ function GroupInfo({ navigation, route }) {
                     {this.state.classes[0]?<Text style={styles.AnswerText}>Class = {this.state.classes}</Text>:<Text></Text>}
     
                     {this.state.description?<Text style={styles.AnswerText}>Description = {this.state.description}</Text>:<Text></Text>}
-                    <Text style={styles.AnswerText}>Members = {this.state.members}</Text>
+                    <Text style={styles.AnswerText}>Members = {this.state.members.toString()}</Text>
                     <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { leave() }}>
                         <Text style={styles.LoginText}>Leave {this.state.groupName}</Text>
                     </TouchableOpacity>
