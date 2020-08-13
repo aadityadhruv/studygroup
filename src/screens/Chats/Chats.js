@@ -14,11 +14,10 @@ import { Header, LearnMoreLinks, Colors, DebugInstructions, ReloadInstructions }
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 export default function Chats({ navigation, route }) {
-
+	const [groupName, setGroupName] = React.useState("Loading");
 
 	let unsubscribe;
-	let unsubscribe2;
-
+	getPCName(route.params.id);
 	function personalChatHelper() {
 		return new Promise((resolve, reject) => {
 
@@ -113,6 +112,7 @@ export default function Chats({ navigation, route }) {
 				});
 				//Add the group ref to the current and other user
 				console.log("-------------------------------");
+				
 				navigation.navigate('Chats', { id: hashString, name: "Personal Chat" });
 			} else {
 				console.log("Group exists");
@@ -124,6 +124,22 @@ export default function Chats({ navigation, route }) {
 				})
 			}
 		});
+	}
+
+	function getPCName(groupID) {
+		var user = firebase.auth().currentUser;
+		var db = firebase.firestore();
+		var userRef = db.collection("Users").doc(user.uid);
+
+			userRef.onSnapshot(function (doc) {
+				doc.data().groupsList.forEach(element => {
+					if (element.id == groupID) {
+						console.log(element.name);
+						setGroupName(element.name);
+					}
+				});
+				
+			})
 	}
 	class FirebaseInfo extends React.Component {
 		state = { chats: [], loading: false, text2: "", usersName: "", id: "" };
@@ -248,7 +264,7 @@ export default function Chats({ navigation, route }) {
 			<View style={styles.buttonContainer3}>
 				<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: 20, paddingLeft: 0, paddingTop: 0, marginBottom: screenHeight / 200 }} />
 				<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => groupinfo()}>
-					<Text style={styles.connectOptionsText}>{route.params.name}</Text>
+					<Text style={styles.connectOptionsText}>{groupName}</Text>
 				</TouchableOpacity>
 			</View>
 			<FirebaseInfo></FirebaseInfo>
