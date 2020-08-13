@@ -15,10 +15,38 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 export default function Chats({ navigation, route }) {
 	const [groupName, setGroupName] = React.useState("Loading");
+	const [group_ID, setGroup_ID] = React.useState("");
+	const [isPersonalChat, setIsPersonalChat] = React.useState(false);
+	const [otherUser, setOtherUser] = React.useState("");
 	const [isBlocked, setIsBlocked] = React.useState(false);
+
+
+	//Update GROUP ISBLOCKED STATUS to BOTH the users BLOCK LIST
+	
+
 
 	let unsubscribe;
 	getPCName(route.params.id);
+	getGroupInfo();
+
+	function getGroupInfo() {
+		var db = firebase.firestore();
+		var user = firebase.auth().currentUser;
+		var groupRef = db.collection("Groups").doc(route.params.id);
+	groupRef.onSnapshot(function(doc) {
+		setGroup_ID(doc.data().id);
+		setIsPersonalChat(!doc.data().isGroup);
+		if (!doc.data().isGroup) {
+		doc.data().members.forEach(element => {
+			if (user.uid != element) {
+				setOtherUser(element);
+			}
+		});
+	}
+	});
+	}
+
+	console.log(otherUser);
 	function personalChatHelper() {
 		return new Promise((resolve, reject) => {
 
@@ -278,12 +306,8 @@ export default function Chats({ navigation, route }) {
 	function blockUser() {
 		console.log("blocking user");
 		var db = firebase.firestore();
-		
-		setIsBlocked(!isBlocked);
-		var groupRef = db.collection("Groups").doc(route.params.id);
-		groupRef.update({
-			"isBlocked" : isBlocked
-		})
+
+		// update CURRENT USER block list ONLY
 		var user = firebase.auth().currentUser;
 		var userRef = db.collection("Users").doc(user.uid);
 		if (isBlocked) {
@@ -295,6 +319,8 @@ export default function Chats({ navigation, route }) {
 			"blockList" : firebase.firestore.FieldValue.arrayRemove(route.params.id)
 		})
 	}
+	
+		
 	}
 	function groupinfo() {
 		var db = firebase.firestore();
