@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react'
-import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component } from "react-native";
+import {KeyboardAvoidingView, Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component, KeyboardAvoidingViewBase } from "react-native";
 import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
 //import { PushController } from '../../services/LocalPushController'
@@ -261,6 +261,10 @@ export default function Chats({ navigation, route }) {
 	}
 	return (
 		<View style={styles.buttonContainer2}>
+			      <KeyboardAvoidingView
+        behavior="position"
+        style={{ flex: 1, backgroundColor: 'white' }} keyboardVerticalOffset={0}>
+
 			<View style={styles.buttonContainer3}>
 				<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: 20, paddingLeft: 0, paddingTop: 0, marginBottom: screenHeight / 200 }} />
 				<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => groupinfo()}>
@@ -268,6 +272,7 @@ export default function Chats({ navigation, route }) {
 				</TouchableOpacity>
 			</View>
 			<FirebaseInfo></FirebaseInfo>
+			</KeyboardAvoidingView>
 		</View>
 	)
 }
