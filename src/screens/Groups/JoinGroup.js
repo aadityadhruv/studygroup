@@ -12,7 +12,7 @@ function JoinGroup({ navigation, route }) {
         var groupInfoRef = db.collection("Groups").doc(route.params.id);
 
         userInfoRef.update({
-            "groupsList": firebase.firestore.FieldValue.arrayUnion({ id: route.params.id, name: route.params.name })
+            "groupsList": firebase.firestore.FieldValue.arrayUnion({ id: route.params.id, name: route.params.name, isGroup : true})
         })
         var memb = [...route.params.members, user.uid]
         console.log(memb)

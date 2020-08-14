@@ -69,7 +69,7 @@ export default function Chats({ navigation, route }) {
 
 			var groupRef = db.collection("Groups").doc(route.params.id)
 			groupRef.update({
-				"isBlocked": !(cUserBlock && oUserBlock)
+				"isBlocked": (!cUserBlock && !oUserBlock)
 			})
 		}
 
@@ -154,14 +154,14 @@ export default function Chats({ navigation, route }) {
 				var otherUserName = "";
 				otherUserRef.get().then(function (doc) {
 					if (doc.exists) {
-						otherUserName = doc.data().id;
+						otherUserName = doc.data().fullName;
 						console.log(otherUserName);
 						userRef.update({
 
 							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList, isGroup : false})
 						});
 						otherUserRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.uid, pcGroupRefHash: user.uid, memberList: memberList, isGroup : false})
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.uid, pcGroupRefHash: user.displayName, memberList: memberList, isGroup : false})
 						});
 					} else {
 						// doc.data() will be undefined in this case
@@ -402,18 +402,11 @@ export default function Chats({ navigation, route }) {
 	var db = firebase.firestore();
 	var groupRef = db.collection("Groups").doc(route.params.id)
 	groupRef.onSnapshot((doc) => {
-		if (doc.data().isGroup) {
-			setisGroup(true)
-		}
+		setisGroup(doc.data().isGroup);
 	})
 	return (
 		<View style={styles.buttonContainer2}>
-<KeyboardAwareScrollView
-        style={{ backgroundColor: '#F0F8FF' }}
-        resetScrollToCoords={{ x: 0, y: 0 }}
-        contentContainerStyle={styles.container}
-        scrollEnabled={false}
-      >
+<KeyboardAvoidingView behavior='position' style = {{backgroundColor: 'white', flex: 1}}>
 
 					{isGroup ?
 					<View style={styles.buttonContainer3}>
@@ -433,7 +426,7 @@ export default function Chats({ navigation, route }) {
 						</View>
 					}
 				<FirebaseInfo></FirebaseInfo>
-			</KeyboardAwareScrollView>
+			</KeyboardAvoidingView>
 		</View>
 	)
 }
