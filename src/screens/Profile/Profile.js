@@ -27,7 +27,7 @@ function Profile({ navigation, route }) {
   var user = firebase.auth().currentUser;
   var db = firebase.firestore();
   var userInfoRef = db.collection("Users").doc(user.uid);
-//console.log("New frame");
+  //console.log("New frame");
   if (!edit) {
     userInfoRef.onSnapshot(function (doc) {
       if (doc.exists) {
@@ -36,7 +36,7 @@ function Profile({ navigation, route }) {
         setclasses(person.classes)
       } else {
         // doc.data() will be undefined in this case
-       // console.log("No such document!");
+        // console.log("No such document!");
       }
     })
   }
@@ -62,10 +62,15 @@ function Profile({ navigation, route }) {
         contentContainerStyle={styles.container}
         scrollEnabled={false}
       >
-         <View style={styles.liss}>
-         <AntDesign name="logout" size={30} onPress={() => logout()} style={{ alignSelf: 'center',paddingLeft:screenWidth*0.8,paddingLeft:screenWidth*0.8, paddingTop: screenHeight / 5, marginBottom: screenHeight / 5 }} />
+        <View style={styles.liss}>
 
-       </View>
+          <TouchableOpacity style={styles.connectOptions13} activeOpacity={0.8} onPress={() => {
+            logout()
+          }}>
+            <Text>LogOut</Text>
+          </TouchableOpacity>
+
+        </View>
         <View style={styles.liss}>
           <TouchableOpacity style={styles.connectOptions2}>
             {edit ? <TextInput
@@ -74,7 +79,7 @@ function Profile({ navigation, route }) {
             /> : <Text>Name: {name}</Text>}
           </TouchableOpacity>
           <MaterialIcons name="edit" size={40} onPress={() => {
-           // console.log(name);
+            // console.log(name);
             setEdit(!edit);
             var user = firebase.auth().currentUser;
             user.updateProfile({
@@ -189,6 +194,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff'
   },
+  connectOptions13: {
+    width: screenWidth * 0.1,
+    height: screenHeight * 0.05,
+    paddingLeft: screenWidth * 0.8,
+    paddingTop: screenHeight / 5,
+    marginBottom: screenHeight / 5,
+    padding: 15,
+    backgroundColor: '#0099FF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+
   connectOptionsEdit: {
     width: screenWidth * 0.15,
     height: screenHeight * 0.07,
