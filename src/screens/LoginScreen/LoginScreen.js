@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import {Dimensions, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from './styles';
 
-
 import { firebase } from '../../firebase/config'
+
+const screenWidth = Math.round(Dimensions.get('window').width);
+const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default function LoginScreen({navigation}) {
     const [email, setEmail] = useState('')
@@ -47,7 +49,7 @@ export default function LoginScreen({navigation}) {
     return (
         <View style={styles.container}>
             <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%' }}
+                style={{ flex: 1, width: '100%',paddingTop:screenHeight*0.2 }}
                 keyboardShouldPersistTaps="always">
                 <TextInput
                     style={styles.input}

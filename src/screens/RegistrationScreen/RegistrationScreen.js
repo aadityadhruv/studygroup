@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import {Dimensions, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from './styles';
 
 import { firebase } from '../../firebase/config'
 
-import {Dropdown,DropdownButton} from 'react-bootstrap'
+const screenWidth = Math.round(Dimensions.get('window').width);
+const screenHeight = Math.round(Dimensions.get('window').height);
 
 
 export default function RegistrationScreen({ navigation }) {
@@ -65,7 +66,7 @@ export default function RegistrationScreen({ navigation }) {
     return (
         <View style={styles.container}>
             <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%' }}
+                style={{ flex: 1, width: '100%',paddingTop:screenHeight*0.2 }}
                 keyboardShouldPersistTaps="always">
 
                 <TextInput
