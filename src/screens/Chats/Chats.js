@@ -20,50 +20,56 @@ export default function Chats({ navigation, route }) {
 	const [otherUser, setOtherUser] = React.useState("");
 	const [cUserBlock, setCUserBlock] = React.useState(false);
 	const [oUserBlock, setOUserBlock] = React.useState(false);
+	const [tempName, setTempName] = React.useState("");
 
 
 	//Update GROUP ISBLOCKED STATUS to BOTH the users BLOCK LIST
-	
+
 
 
 	let unsubscribe;
 	getPCName(route.params.id);
 	getGroupInfo();
 
+
+
+
+
+
 	function getGroupInfo() {
 		var db = firebase.firestore();
 		var user = firebase.auth().currentUser;
 		var groupRef = db.collection("Groups").doc(route.params.id);
-	groupRef.onSnapshot(function(doc) {
-		setGroup_ID(doc.data().id);
-		setIsPersonalChat(!doc.data().isGroup);
-		if (!doc.data().isGroup) {
-			
-		doc.data().members.forEach(element => {
-			if (user.uid != element) {
-				setOtherUser(element);
+		groupRef.onSnapshot(function (doc) {
+			setGroup_ID(doc.data().id);
+			setIsPersonalChat(!doc.data().isGroup);
+			if (!doc.data().isGroup) {
+
+				doc.data().members.forEach(element => {
+					if (user.uid != element) {
+						setOtherUser(element);
+					}
+				});
+
 			}
 		});
-		
-	}
-	});
-	
-	if (isPersonalChat && otherUser != "") {
-		console.log("---------------" + otherUser);
-		var userRef = db.collection("Users").doc(user.uid);
-		var otherUserRef = db.collection("Users").doc(otherUser);
-		userRef.onSnapshot(function (doc3) {
-			setCUserBlock(doc3.data().blockList.includes(route.params.id));
-		});
-		otherUserRef.onSnapshot(function (doc4) {
-			setOUserBlock(doc4.data().blockList.includes(route.params.id));
-		});
 
-		var groupRef = db.collection("Groups").doc(route.params.id)
+		if (isPersonalChat && otherUser != "") {
+			console.log("---------------" + otherUser);
+			var userRef = db.collection("Users").doc(user.uid);
+			var otherUserRef = db.collection("Users").doc(otherUser);
+			userRef.onSnapshot(function (doc3) {
+				setCUserBlock(doc3.data().blockList.includes(route.params.id));
+			});
+			otherUserRef.onSnapshot(function (doc4) {
+				setOUserBlock(doc4.data().blockList.includes(route.params.id));
+			});
+
+			var groupRef = db.collection("Groups").doc(route.params.id)
 			groupRef.update({
-				"isBlocked" : !(cUserBlock && oUserBlock)
+				"isBlocked": !(cUserBlock && oUserBlock)
 			})
-	}
+		}
 
 
 
@@ -77,7 +83,7 @@ export default function Chats({ navigation, route }) {
 
 			var user = firebase.auth().currentUser;
 			var userID = user.uid;
-		
+
 			var userRef = db.collection("Users").doc(userID);
 
 			userRef.onSnapshot(function (doc) {
@@ -89,7 +95,7 @@ export default function Chats({ navigation, route }) {
 
 				});
 			});
-			
+
 		});
 
 	}
@@ -100,7 +106,7 @@ export default function Chats({ navigation, route }) {
 			var db = firebase.firestore();
 			var user = firebase.auth().currentUser;
 			var userRef = db.collection("Users").doc(user.uid);
-	
+
 			userRef.onSnapshot(function (doc) {
 
 				doc.data().groupsList.forEach(element => {
@@ -123,7 +129,7 @@ export default function Chats({ navigation, route }) {
 		}
 		personalChatHelper().then((result) => {
 			var isGroupExist = result.includes(otherUserID);
-		
+
 			if (!isGroupExist) {
 				console.log("-------------------------------");
 				var db = firebase.firestore();
@@ -139,7 +145,7 @@ export default function Chats({ navigation, route }) {
 				var memberList = [];
 				memberList.push(user.uid);
 				memberList.push(otherUserID);
-				var data = { name: "Personal Chat", id: hashString, owner: user.displayName, members: memberList, label: [], desc: "", isGroup: false, isBlocked : false};
+				var data = { name: "Personal Chat", id: hashString, owner: user.displayName, members: memberList, label: [], desc: "", isGroup: false, isBlocked: false };
 				dataBaseRef.set(data);
 				console.log(data);
 				//get the name of the other User.
@@ -149,10 +155,10 @@ export default function Chats({ navigation, route }) {
 						otherUserName = doc.data().fullName;
 						console.log(otherUserName);
 						userRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList})
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList })
 						});
 						otherUserRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.displayName, pcGroupRefHash: user.uid, memberList: memberList})
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.displayName, pcGroupRefHash: user.uid, memberList: memberList })
 						});
 					} else {
 						// doc.data() will be undefined in this case
@@ -166,7 +172,7 @@ export default function Chats({ navigation, route }) {
 
 				navigation.navigate('Chats', { id: hashString, name: "Personal Chat" });
 			} else {
-			
+
 				var db = firebase.firestore();
 				var user = firebase.auth().currentUser;
 				var userRef = db.collection("Users").doc(user.uid);
@@ -177,6 +183,7 @@ export default function Chats({ navigation, route }) {
 		});
 	}
 
+
 	function getPCName(groupID) {
 		var user = firebase.auth().currentUser;
 		var db = firebase.firestore();
@@ -185,7 +192,7 @@ export default function Chats({ navigation, route }) {
 		userRef.onSnapshot(function (doc) {
 			doc.data().groupsList.forEach(element => {
 				if (element.id == groupID) {
-					
+
 					setGroupName(element.name);
 				}
 			});
@@ -204,9 +211,25 @@ export default function Chats({ navigation, route }) {
 					var cities = [];
 					querySnapshot.forEach(function (doc) {
 						if (doc.exists) {
+							
 							cities.unshift({ text: doc.data().text, from: doc.data().from, id: doc.data().id });
+							
 						}
 					});
+					
+
+					cities.forEach(element => {
+						var userRef = db.collection("Users").doc(element.id);
+
+						userRef.onSnapshot(function(doc2) {
+							
+							element.from = doc2.data().fullName;
+						});
+					});
+
+
+					
+					
 					this.setState({ chats: cities, loading: false });
 				}.bind(this));
 
@@ -227,7 +250,7 @@ export default function Chats({ navigation, route }) {
 				var msgRef = db.collection("Groups").doc(route.params.id).collection("messages");
 				var hashString = (+new Date).toString(36);
 				if (!this.state.text2 == "") {
-					
+
 					msgRef.doc(hashString).set(
 						{
 							from: user.displayName,
@@ -242,7 +265,7 @@ export default function Chats({ navigation, route }) {
 				<View style={{ flexDirection: 'column' }}>
 					{
 						this.state.isGroup ?
-							(item.from == user.displayName) ?
+							(item.id == user.uid) ?
 								<View style={{ flexDirection: 'row-reverse' }}>
 									<TouchableOpacity style={styles.connectOptions9} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
 										<Text style={styles.connectOptions7}>{item.text}</Text>
@@ -258,7 +281,7 @@ export default function Chats({ navigation, route }) {
 
 
 							:
-							(item.from == user.displayName) ?
+							(item.id == user.uid) ?
 								<View style={{ flexDirection: 'row-reverse' }}>
 									<TouchableOpacity style={styles.connectOptions9} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
 										<Text style={styles.connectOptions7}>{item.text}</Text>
@@ -299,7 +322,7 @@ export default function Chats({ navigation, route }) {
 						)}
 					/>
 
-					
+
 					<View style={styles.second}>
 						{!cUserBlock ? <TextInput
 							style={styles.connectOptions2}
@@ -308,9 +331,10 @@ export default function Chats({ navigation, route }) {
 							defaultValue={this.state.text2}
 						/> : <View></View>}
 						{!cUserBlock ? <Ionicon name="ios-send" size={50} onPress={() => entered()} style={{
-							 alignSelf: 'center', paddingRight: 0, paddingLeft: 0, paddingTop: 0,
-							  marginBottom: 10, marginRight: 10 }} />  : <View></View>}					
-						
+							alignSelf: 'center', paddingRight: 0, paddingLeft: 0, paddingTop: 0,
+							marginBottom: 10, marginRight: 10
+						}} /> : <View></View>}
+
 
 					</View>
 
@@ -319,7 +343,7 @@ export default function Chats({ navigation, route }) {
 		}
 
 	}
-	
+
 	function leave() {
 		var user = firebase.auth().currentUser;
 		var db = firebase.firestore();
@@ -334,23 +358,23 @@ export default function Chats({ navigation, route }) {
 	function blockUser() {
 		console.log("blocking user");
 		var db = firebase.firestore();
-		
+
 		// update CURRENT USER block list ONLY
 		var user = firebase.auth().currentUser;
 		var userRef = db.collection("Users").doc(user.uid);
-		
+
 
 		if (!cUserBlock) {
-		userRef.update({ 
-			"blockList" : firebase.firestore.FieldValue.arrayUnion(route.params.id)
-		})
-	} else {
-		userRef.update({ 
-			"blockList" : firebase.firestore.FieldValue.arrayRemove(route.params.id)
-		})
-	}
-	getGroupInfo();
-		
+			userRef.update({
+				"blockList": firebase.firestore.FieldValue.arrayUnion(route.params.id)
+			})
+		} else {
+			userRef.update({
+				"blockList": firebase.firestore.FieldValue.arrayRemove(route.params.id)
+			})
+		}
+		getGroupInfo();
+
 	}
 	function groupinfo() {
 		var db = firebase.firestore();
