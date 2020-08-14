@@ -54,10 +54,10 @@ function Profile({ navigation, route }) {
       width: screenWidth,
       flex: 1,
       flexDirection: 'column',
-      backgroundColor: '#fff',
+      backgroundColor: '#F0F8FF',
     }}>
       <KeyboardAwareScrollView
-        style={{ backgroundColor: '#4c69a5' }}
+        style={{ backgroundColor: '#F0F8FF' }}
         resetScrollToCoords={{ x: 0, y: 0 }}
         contentContainerStyle={styles.container}
         scrollEnabled={false}
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#f5fcfc',
+    backgroundColor: '#F0F8FF',
   },
 });
 
