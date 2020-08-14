@@ -62,12 +62,12 @@ function Profile({ navigation, route }) {
         contentContainerStyle={styles.container}
         scrollEnabled={false}
       >
-        <View style={styles.liss}>
+        <View style={styles.list2}>
 
           <TouchableOpacity style={styles.connectOptions13} activeOpacity={0.8} onPress={() => {
             logout()
           }}>
-            <Text>LogOut</Text>
+            <Text styles= {{textAlign : 'center'}}>LogOut</Text>
           </TouchableOpacity>
 
         </View>
@@ -132,6 +132,11 @@ const styles = StyleSheet.create({
   liss: {
     flex: 1,
     flexDirection: 'row'
+  },
+  list2: {
+    flex: 1,
+    flexDirection: 'row',
+    marginTop : screenHeight * 0.1
   },
   hi: {
     width: '95%',
@@ -198,10 +203,14 @@ const styles = StyleSheet.create({
     borderColor: '#fff'
   },
   connectOptions13: {
-    width: screenWidth * 0.1,
+    width: screenWidth * 0.3,
     height: screenHeight * 0.05,
-    paddingLeft: screenWidth * 0.8,
-    paddingTop: screenHeight / 5,
+    position : "absolute", 
+    right : 0,
+    justifyContent: 'center',
+    alignContent : 'center',
+    //paddingRight: screenWidth * 0.8,
+    
     marginBottom: screenHeight / 5,
     padding: 15,
     backgroundColor: '#0099FF',
