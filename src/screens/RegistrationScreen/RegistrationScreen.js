@@ -5,19 +5,22 @@ import styles from './styles';
 
 import { firebase } from '../../firebase/config'
 
-export default function RegistrationScreen({navigation}) {
+import {Dropdown,DropdownButton} from 'react-bootstrap'
+
+
+export default function RegistrationScreen({ navigation }) {
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [UserName, setUserName] = useState('')
+    const [CollegeName, setCollegeName] = useState('')
 
     const onFooterLinkPress = () => {
         navigation.navigate('Login')
     }
 
     const onRegisterPress = () => {
-        
+
         if (password !== confirmPassword) {
             alert("Passwords don't match.")
             return
@@ -36,18 +39,18 @@ export default function RegistrationScreen({navigation}) {
                 });
                 const data = {
                     id: uid,
-                    UserName,
+                    CollegeName,
                     email,
                     fullName,
-                    groupsList : []  
+                    groupsList: []
                 };
-                
+
                 const usersRef = firebase.firestore().collection('Users')
                 usersRef
                     .doc(uid)
                     .set(data)
                     .then(() => {
-                        navigation.navigate('HomeScreen', {user: data})
+                        navigation.navigate('HomeScreen', { user: data })
                     })
                     .catch((error) => {
                         alert(error)
@@ -55,7 +58,7 @@ export default function RegistrationScreen({navigation}) {
             })
             .catch((error) => {
                 alert(error)
-        });
+            });
     }
 
     return (
@@ -63,7 +66,7 @@ export default function RegistrationScreen({navigation}) {
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
-                
+
                 <TextInput
                     style={styles.input}
                     placeholder='Full Name'
@@ -73,16 +76,15 @@ export default function RegistrationScreen({navigation}) {
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
-                        <TextInput
+                <TextInput
                     style={styles.input}
-                    placeholder='UserName'
+                    placeholder='College Name'
                     placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setUserName(text)}
-                    value={UserName}
+                    onChangeText={(text) => setCollegeName(text)}
+                    value={CollegeName}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
-        
                 <TextInput
                     style={styles.input}
                     placeholder='E-mail'
