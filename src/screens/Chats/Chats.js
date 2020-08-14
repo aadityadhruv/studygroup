@@ -372,8 +372,8 @@ export default function Chats({ navigation, route }) {
 					<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => groupinfo()}>
 						<Text style={styles.connectOptionsText}>{groupName}</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => blockUser()}>
-						<Text style={styles.connectOptionsText}>{cUserBlock ? "Unblock" : "Block"}</Text>
+					<TouchableOpacity style={styles.connectOptions12} activeOpacity={0.8} onPress={() => blockUser()}>
+						<Text style={styles.connectOptionsText}>{cUserBlock ? " Unblock" : " Block"}</Text>
 					</TouchableOpacity>
 				</View>
 				<FirebaseInfo></FirebaseInfo>
@@ -433,7 +433,16 @@ const styles = StyleSheet.create({
 	},
 	connectOptions11: {
 		height: screenHeight * 0.05,
-		width: screenWidth * 0.8,
+		width: screenWidth * 0.6,
+		alignContent: "center",
+		backgroundColor: '#FFFFFF',
+		borderRadius: 10,
+		borderWidth: 1,
+		borderColor: '#000000'
+	},
+	connectOptions12: {
+		height: screenHeight * 0.05,
+		width: screenWidth * 0.3,
 		alignContent: "center",
 		backgroundColor: '#FFFFFF',
 		borderRadius: 10,
