@@ -5,7 +5,7 @@ import styles from './styles';
 
 import { firebase } from '../../firebase/config'
 
-import {Dropdown,DropdownButton} from 'react-bootstrap'
+
 
 
 export default function RegistrationScreen({ navigation }) {
