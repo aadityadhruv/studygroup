@@ -93,7 +93,7 @@ function GroupInfo({ navigation, route }) {
     const [text3, setText3] = React.useState(txt2)
     const [request, setRequest] = React.useState(true)
     return (
-        <View>
+        <View style = {{backgroundColor:'#F0F8FF'}}>
             <Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.goBack()} style={{ paddingTop: screenHeight*0.05 }} />
             <Text style={styles.AnswerText}>{groupName}</Text>
             <FirebaseInfo></FirebaseInfo>
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 24,
         paddingTop: 20,
-        color: 'white'
+        color: 'black'
     }
     ,
     pick: {
@@ -128,13 +128,13 @@ const styles = StyleSheet.create({
         paddingTop: 100,
         fontWeight: 'bold',
         fontSize: 40,
-        backgroundColor: 'white',
+        backgroundColor: '#F0F8FF',
 
     },
     AnswerButtonBlue: {
         width: 250,
         height: 55,
-        backgroundColor: '#4455BB',
+        backgroundColor: '#F0F8FF',
         alignItems: 'center',
         justifyContent: 'center',
         marginVertical: 20,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     AnswerButtonBlack: {
         width: 250,
         height: 55,
-        backgroundColor: 'black',
+        backgroundColor: '#F0F8FF',
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     subHeads: {
-        backgroundColor: '#fff',
+        backgroundColor: '#F0F8FF',
         justifyContent: 'flex-start',
         fontSize: 28,
         fontWeight: '700',
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     goalMenu: {
         //flex: 1,
         marginVertical: 20,
-        backgroundColor: '#fff',
+        backgroundColor: '#F0F8FF',
         alignItems: 'center',
         justifyContent: 'center',
     },

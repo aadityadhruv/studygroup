@@ -41,7 +41,7 @@ export default function Groups({ navigation, route }) {
         }
         render() {
             const renderItem = ({ item }) => (
-                <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
+                <View style={{ minHeight: 70, padding: 1 }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
                         navigation.navigate('Chats', { id: item.id, name: item.name })
                         }}>
@@ -71,7 +71,7 @@ export default function Groups({ navigation, route }) {
                         value={this.state.search.toString()}
                         lightTheme={true}
                         round={true}
-                        containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
+                        containerStyle={{ backgroundColor: '#F0F8FF', borderTopWidth: 0,borderBottomWidth: 0 }}
                         inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
                     {this.state.loading ? (
                         <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
@@ -108,13 +108,12 @@ export default function Groups({ navigation, route }) {
 
     return (
         <View style={{
-           
             flex: 1,
             flexDirection: 'column',
-            backgroundColor: '#fff',
+            backgroundColor:'#F0F8FF',
         }}>
                   <KeyboardAwareScrollView
-        style={{ backgroundColor: '#4c69a5' }}
+        style={{ backgroundColor: '#F0F8FF' }}
         resetScrollToCoords={{ x: 0, y: 0 }}
         contentContainerStyle={styles.container}
         scrollEnabled={false}
@@ -167,7 +166,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#f5fcfc',
+        backgroundColor: '#F0F8FF',
     },
     container2: {
         alignItems: 'center',

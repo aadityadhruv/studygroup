@@ -102,7 +102,7 @@ export default function HomeScreen({ navigation, route }) {
                             value={this.state.search.toString()}
                             lightTheme={true}
                             round={true}
-                            containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
+                            containerStyle={{ backgroundColor: '#F0F8FF', borderTopWidth: 0,borderBottomWidth:0 }}
                             inputContainerStyle={{ backgroundColor: '#EBEBEB', height: screenHeight / 20, width: screenWidth*0.85, marginLeft: '0.1%', }} />
                         <Ionicon name="ios-add" size={50} onPress={() => navigation.navigate('CreateGroup')} style={{ alignSelf: 'center', paddingTop: screenHeight / 20, marginBottom: screenHeight / 20 }} />
                     </View>
@@ -134,10 +134,10 @@ export default function HomeScreen({ navigation, route }) {
     return (
         <View style={{
             flex: 1,
-            backgroundColor: '#fff',
+            backgroundColor: '#F0F8FF',
         }}>
  <KeyboardAwareScrollView
-        style={{ backgroundColor: '#4c69a5' }}
+        style={{ backgroundColor: '#F0F8FF' }}
         resetScrollToCoords={{ x: 0, y: 0 }}
         contentContainerStyle={styles.container}
         scrollEnabled={false}
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#f5fcfc',
+        backgroundColor: '#F0F8FF',
     },
 
     header: {
