@@ -39,7 +39,8 @@ export default function RegistrationScreen({navigation}) {
                     UserName,
                     email,
                     fullName,
-                    groupsList : []  
+                    groupsList : [], 
+                    blockList : []
                 };
                 
                 const usersRef = firebase.firestore().collection('Users')
