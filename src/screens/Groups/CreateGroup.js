@@ -10,6 +10,7 @@ import data2 from './Data/data2.json'
 import { SearchBar } from 'react-native-elements'
 
 
+import Ionicon from 'react-native-vector-icons/Ionicons';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
@@ -228,6 +229,8 @@ function CreateGroup({ navigation, route }) {
     console.log(displayedlist)
     return (
         <View>
+                        <Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.goBack()} style={{ paddingTop: screenHeight*0.05 }} />
+
             <FirebaseInfo></FirebaseInfo>
         </View >
     )

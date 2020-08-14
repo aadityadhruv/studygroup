@@ -116,6 +116,8 @@ function AddClasses({ navigation, route }) {
       return (
 
         <View style={styles.hello}>
+          <Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.goBack()} style={{ paddingTop: screenHeight * 0.05 }} />
+
           <View style={styles.hi4}>
             <FlatList
               data={this.state.classes}
@@ -142,7 +144,7 @@ function AddClasses({ navigation, route }) {
 
           {this.state.choosingClass ? <Text></Text>
             : <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
-              this.setState({ displayedList: Object.values(Classes2['SUBJECT CODE']),"choosingClass":true })
+              this.setState({ displayedList: Object.values(Classes2['SUBJECT CODE']), "choosingClass": true })
             }}>
               <Text style={styles.connectOptionsText}>Back</Text>
             </TouchableOpacity>
@@ -167,6 +169,7 @@ function AddClasses({ navigation, route }) {
     }
   }
   return (
+
     <FirebaseInfo></FirebaseInfo>
   )
 }

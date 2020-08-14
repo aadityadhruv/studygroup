@@ -1,8 +1,13 @@
 import * as React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button, Settings, TextInput } from 'react-native';
+import {Dimensions, Image, Platform, StyleSheet, Text, TouchableOpacity, View, Button, Settings, TextInput } from 'react-native';
 //import firebase from 'firebase';
 
+import Ionicon from 'react-native-vector-icons/Ionicons';
 import firebase from 'firebase'
+
+const screenWidth = Math.round(Dimensions.get('window').width);
+const screenHeight = Math.round(Dimensions.get('window').height);
+
 function GroupInfo({ navigation, route }) {
     class FirebaseInfo extends React.Component {
         state = { members: [], description: "", classes: [], groupName: "", memberIds: [] };
@@ -13,23 +18,24 @@ function GroupInfo({ navigation, route }) {
             var userInfoRef = db.collection("Users")
             // console.log("hell"+user.uid)
             var mem = []
-            
-            groupInfoRef.onSnapshot((doc) => {
-                if(doc.exists){
-                console.log("Members= " + doc.data().members)
-                doc.data().members.forEach(function (abc) {
-                    if (!this.state.memberIds.includes(abc)) {
-                        userInfoRef.doc(abc).onSnapshot((doc2) => {
-                            var a = doc2.data().fullName
-                            this.setState({ members: [...this.state.members, a], memberIds: [...this.state.memberIds, abc] })
 
-                        })
-                    }
-                }.bind(this))
-                this.setState({"memberIds":this.state.memberIds.filter((item, index) => this.state.memberIds.indexOf(item) === index)});
-                this.setState({"members":this.state.members.filter((item, index) => this.state.members.indexOf(item) === index)});            
-                this.setState({ groupName: doc.data().name, classes: doc.data().label, description: doc.data().desc, isGroup: doc.data().isGroup, pcGroupRefHash: doc.data().pcGroupRefHash });
-            }});
+            groupInfoRef.onSnapshot((doc) => {
+                if (doc.exists) {
+                    console.log("Members= " + doc.data().members)
+                    doc.data().members.forEach(function (abc) {
+                        if (!this.state.memberIds.includes(abc)) {
+                            userInfoRef.doc(abc).onSnapshot((doc2) => {
+                                var a = doc2.data().fullName
+                                this.setState({ members: [...this.state.members, a], memberIds: [...this.state.memberIds, abc] })
+
+                            })
+                        }
+                    }.bind(this))
+                    this.setState({ "memberIds": this.state.memberIds.filter((item, index) => this.state.memberIds.indexOf(item) === index) });
+                    this.setState({ "members": this.state.members.filter((item, index) => this.state.members.indexOf(item) === index) });
+                    this.setState({ groupName: doc.data().name, classes: doc.data().label, description: doc.data().desc, isGroup: doc.data().isGroup, pcGroupRefHash: doc.data().pcGroupRefHash });
+                }
+            });
             //   console.log(mem)               
         }
         render() {
@@ -61,9 +67,10 @@ function GroupInfo({ navigation, route }) {
             }
             return (
                 <View>
-                    {this.state.classes[0]?<Text style={styles.AnswerText}>Class = {this.state.classes}</Text>:<Text></Text>}
-    
-                    {this.state.description?<Text style={styles.AnswerText}>Description = {this.state.description}</Text>:<Text></Text>}
+                    
+                    {this.state.classes[0] ? <Text style={styles.AnswerText}>Class = {this.state.classes}</Text> : <Text></Text>}
+
+                    {this.state.description ? <Text style={styles.AnswerText}>Description = {this.state.description}</Text> : <Text></Text>}
                     <Text style={styles.AnswerText}>Members = {this.state.members.toString()}</Text>
                     <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { leave() }}>
                         <Text style={styles.LoginText}>Leave {this.state.groupName}</Text>
@@ -87,6 +94,7 @@ function GroupInfo({ navigation, route }) {
     const [request, setRequest] = React.useState(true)
     return (
         <View>
+            <Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.goBack()} style={{ paddingTop: screenHeight*0.05 }} />
             <Text style={styles.AnswerText}>{groupName}</Text>
             <FirebaseInfo></FirebaseInfo>
 

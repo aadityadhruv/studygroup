@@ -65,9 +65,12 @@ export default function RegistrationScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%',paddingTop:screenHeight*0.2 }}
-                keyboardShouldPersistTaps="always">
+ <KeyboardAwareScrollView
+        style={{ backgroundColor: '#4c69a5' }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container2}
+        scrollEnabled={true}
+      >
 
                 <TextInput
                     style={styles.input}
