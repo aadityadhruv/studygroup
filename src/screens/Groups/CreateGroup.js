@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, ActivityIndicator, View, Button, Settings, TextInput, Dimensions, FlatList } from 'react-native';
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, ActivityIndicator, View, Button, Settings, TextInput, Dimensions, FlatList } from 'react-native';
 //import firebase from 'firebase';
 import { firebase } from '../../firebase/config'
 import { database } from 'firebase';
@@ -8,6 +8,7 @@ import data from './Data/data.json'
 import DropDownPicker from 'react-native-dropdown-picker';
 import data2 from './Data/data2.json'
 import { SearchBar } from 'react-native-elements'
+
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
