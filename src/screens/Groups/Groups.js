@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component } from "react-native";
+import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component, KeyboardAvoidingView } from "react-native";
 import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
 
 
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import firebase from 'firebase'
 
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -55,7 +55,7 @@ export default function Groups({ navigation, route }) {
         }
         render() {
             const renderItem = ({ item }) => (
-                <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
+                <View style={{ minHeight: 70, padding: 1 }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
                         navigation.navigate('Chats', { id: item.id, name: item.name })
                     }}>
@@ -85,7 +85,7 @@ export default function Groups({ navigation, route }) {
                         value={this.state.search.toString()}
                         lightTheme={true}
                         round={true}
-                        containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
+                        containerStyle={{ backgroundColor: '#F0F8FF', borderTopWidth: 0,borderBottomWidth: 0 }}
                         inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
                     {this.state.loading ? (
                         <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
@@ -122,21 +122,29 @@ export default function Groups({ navigation, route }) {
 
     return (
         <View style={{
-            height: screenHeight,
-            width: screenWidth,
-
             flex: 1,
             flexDirection: 'column',
-            backgroundColor: '#fff',
+            backgroundColor:'#F0F8FF',
         }}>
+                  <KeyboardAwareScrollView
+        style={{ backgroundColor: '#F0F8FF' }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+        scrollEnabled={false}
+      >
+
             <FirebaseInfo>
             </FirebaseInfo>
             <View style={styles.buttonContainer}>
-                <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
-                <Ionicon name="ios-home" size={50} onPress={() => navigation.navigate('HomeScreen')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
-                <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 20 }} />
+                <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, 
+                      marginBottom: screenHeight / 20,
+        borderRadius: 10,
+        borderWidth: 1,}} />
+                <Ionicon name="ios-home" size={50} onPress={() => navigation.navigate('HomeScreen')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, marginBottom: screenHeight / 20 }} />
+                <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, marginBottom: screenHeight / 20 }} />
 
             </View>
+            </KeyboardAwareScrollView>
         </View>
     )
 
@@ -148,7 +156,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         height: 50,
-        marginTop: screenHeight * 0,
+
+        marginTop: screenHeight*0.1,
+
         flex: 1,
         flexDirection: 'row',
 
@@ -172,7 +182,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#f5fcfc',
+        backgroundColor: '#F0F8FF',
     },
     container2: {
         alignItems: 'center',

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Image, Platform, StyleSheet, Text, TouchableOpacity, ActivityIndicator, View, Button, Settings, TextInput, Dimensions, FlatList } from 'react-native';
+import { Image, Platform, StyleSheet, Text, TouchableOpacity, ActivityIndicator, View, Button, Settings, TextInput, Dimensions, FlatList } from 'react-native';
 //import firebase from 'firebase';
 import { firebase } from '../../firebase/config'
 import { database } from 'firebase';
@@ -10,6 +10,7 @@ import data2 from './Data/data2.json'
 import { SearchBar } from 'react-native-elements'
 
 
+import Ionicon from 'react-native-vector-icons/Ionicons';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
@@ -21,18 +22,6 @@ function CreateGroup({ navigation, route }) {
 
         componentDidMount() {
             val = parseInt(this.state.classes.length / 4) + 1
-            var user = firebase.auth().currentUser;
-            var db = firebase.firestore();
-
-            var userInfoRef = db.collection("Users").doc(user.uid);
-            userInfoRef.onSnapshot((doc) => {
-                var a = doc.data().classes;
-                if (a == undefined) {
-                    a = []
-                }
-                this.setState({ classes: a });
-            });
-            //     console.log(Classes2["SUBJECT CODE"].values())
             this.setState({ displayedList: Object.values(Classes2['SUBJECT CODE']) })
         }
         componentWillMount() {
@@ -47,11 +36,8 @@ function CreateGroup({ navigation, route }) {
                     var dataBaseRef = db.collection("Groups").doc(hashString);
                     var user = firebase.auth().currentUser;
                     var memberList = [user.uid];
-
                     var data = { name: this.state.groupname, id: hashString, owner: user.displayName, members: memberList, label: this.state.classes, desc: this.state.description, isGroup: true, pcGroupRefHash: "" };
-
                     dataBaseRef.set(data);
-
                     var userRef = db.collection("Users").doc(user.uid);
                     userRef.update({
                         //TODO: double name error
@@ -76,13 +62,15 @@ function CreateGroup({ navigation, route }) {
             }
 
             const renderItem = ({ item }) => (
-                <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
+                <View style={{ minHeight: 70, padding: 3 }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
+                        console.log("Classes are "+this.state.classes)
+                        console.log("Item is "+item)
                         if (this.state.classes.length < 8) {
                             if (Object.values(Classes2['SUBJECT CODE']).includes(item)) {
-                                //  console.log("hi")
+                                 console.log("hi")
                                 this.setState({ "choosingClass": false })
-                                console.log(Object.values(data[item + '.json']["COURSE NUMBER"]))
+                                //console.log(Object.values(data[item + '.json']["COURSE NUMBER"]))
                                 if (item) {
                                     this.setState({ "displayedList": Object.values(data[item + '.json']["COURSE NUMBER"]) })
                                 }
@@ -111,7 +99,7 @@ function CreateGroup({ navigation, route }) {
                 </View>
             );
             const renderItem2 = ({ item }) => (
-                <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
+                <View style={{ minHeight: 70, padding: 3 }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
                         this.setState({ classes: removeItemOnce(this.state.classes, item) })
                         var db = firebase.firestore();
@@ -172,7 +160,7 @@ function CreateGroup({ navigation, route }) {
                             value={this.state.search.toString()}
                             lightTheme={true}
                             round={true}
-                            containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
+                            containerStyle={{ backgroundColor: '#F0F8FF', borderTopWidth: 0,borderBottomWidth: 0, }}
                             inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
                         {
                             this.state.loading ? (
@@ -225,9 +213,11 @@ function CreateGroup({ navigation, route }) {
     const [displayedlist, setdisplayedlist] = React.useState([...data2])
     const [classes, setclasses] = React.useState([])
     const [groupname, setgroupname] = React.useState('')
-    console.log(displayedlist)
+   // console.log(displayedlist)
     return (
-        <View>
+        <View style={{ backgroundColor: '#F0F8FF' }}>
+            <Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.goBack()} style={{ paddingTop: screenHeight * 0.05 }} />
+
             <FirebaseInfo></FirebaseInfo>
         </View >
     )
@@ -240,7 +230,8 @@ const styles = StyleSheet.create({
     hello: {
         flex: 0,
         paddingTop: screenHeight * 0,
-        height: screenHeight * (0.5 - 0.1 * (val))
+        height: screenHeight * (0.5 - 0.1 * (val)),
+        backgroundColor: '#F0F8FF'
     },
     liss: {
         flex: 1,
@@ -296,7 +287,7 @@ const styles = StyleSheet.create({
         paddingTop: 100,
         fontWeight: 'bold',
         fontSize: 40,
-        backgroundColor: 'white',
+        backgroundColor: '#F0F8FF',
     },
     AnswerButtonBlue: {
         width: 250,

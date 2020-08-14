@@ -4,6 +4,8 @@ import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
 //import { PushController } from '../../services/LocalPushController'
 
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 import firebase from 'firebase'
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
@@ -155,6 +157,7 @@ export default function Chats({ navigation, route }) {
 						otherUserName = doc.data().id;
 						console.log(otherUserName);
 						userRef.update({
+
 							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList, isGroup : false})
 						});
 						otherUserRef.update({
@@ -192,7 +195,9 @@ export default function Chats({ navigation, route }) {
 		userRef.onSnapshot(function (doc) {
 			doc.data().groupsList.forEach(element => {
 				if (element.id == groupID) {
+
 					if (element.isGroup) {
+
 					setGroupName(element.name);
 				}
 					else {
@@ -304,7 +309,7 @@ export default function Chats({ navigation, route }) {
 				</View>
 			);
 			return (
-				<View style={{ height: screenHeight * 0.89, width: screenWidth * 0.97, paddingTop: 50, }}>
+				<View style={{ height: screenHeight * 0.86, width: screenWidth * 0.97,backgroundColor:'#F0F8FF' }}>
 					{
 						this.state.loading ? (
 							<View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
@@ -393,23 +398,42 @@ export default function Chats({ navigation, route }) {
 			}
 		})
 	}
+	const [isGroup, setisGroup] = React.useState(false)
+	var db = firebase.firestore();
+	var groupRef = db.collection("Groups").doc(route.params.id)
+	groupRef.onSnapshot((doc) => {
+		if (doc.data().isGroup) {
+			setisGroup(true)
+		}
+	})
 	return (
 		<View style={styles.buttonContainer2}>
-			<KeyboardAvoidingView
-				behavior="position"
-				style={{ flex: 1, backgroundColor: 'white' }} keyboardVerticalOffset={0}>
+<KeyboardAwareScrollView
+        style={{ backgroundColor: '#F0F8FF' }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+        scrollEnabled={false}
+      >
 
-				<View style={styles.buttonContainer3}>
-					<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: 20, paddingLeft: 0, paddingTop: 0, marginBottom: screenHeight / 200 }} />
-					<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => groupinfo()}>
+					{isGroup ?
+					<View style={styles.buttonContainer3}>
+						<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center',paddingRight:screenWidth*0.02 }} />
+						<TouchableOpacity style={styles.connectOptions18} activeOpacity={0.8} onPress={() => groupinfo()}>
 						<Text style={styles.connectOptionsText}>{groupName}</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.connectOptions12} activeOpacity={0.8} onPress={() => blockUser()}>
-						<Text style={styles.connectOptionsText}>{cUserBlock ? " Unblock" : " Block"}</Text>
-					</TouchableOpacity>
-				</View>
+						</TouchableOpacity></View>
+						:
+						<View style={styles.buttonContainer3}>
+						<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: 20 }} />
+						<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => groupinfo()}>
+							<Text style={styles.connectOptionsText}>{groupName}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.connectOptions12} activeOpacity={0.8} onPress={() => blockUser()}>
+							<Text style={styles.connectOptionsText}>{cUserBlock ? " Unblock" : " Block"}</Text>
+						</TouchableOpacity>
+						</View>
+					}
 				<FirebaseInfo></FirebaseInfo>
-			</KeyboardAvoidingView>
+			</KeyboardAwareScrollView>
 		</View>
 	)
 }
@@ -443,14 +467,14 @@ const styles = StyleSheet.create({
 
 	},
 	buttonContainer3: {
-		paddingTop: screenHeight / 15,
+marginTop:screenHeight*0.05,
 		alignItems: 'center',
 		alignSelf: 'center',
 		justifyContent: 'center',
-		height: 5,
+		height: screenWidth*0.1,
 		flexDirection: 'row',
+		backgroundColor:'#F0F8FF'
 	},
-
 	connectOptions: {
 		marginTop: 10,
 		alignContent: "center",
@@ -472,6 +496,16 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: '#000000'
 	},
+	connectOptions18: {
+		height: screenHeight * 0.05,
+		width: screenWidth * 0.9,
+		alignContent: "center",
+		backgroundColor: '#FFFFFF',
+		borderRadius: 10,
+		borderWidth: 1,
+		borderColor: '#000000'
+	},
+
 	connectOptions12: {
 		height: screenHeight * 0.05,
 		width: screenWidth * 0.3,

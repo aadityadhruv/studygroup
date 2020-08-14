@@ -54,10 +54,10 @@ function Profile({ navigation, route }) {
       width: screenWidth,
       flex: 1,
       flexDirection: 'column',
-      backgroundColor: '#fff',
+      backgroundColor: '#F0F8FF',
     }}>
       <KeyboardAwareScrollView
-        style={{ backgroundColor: '#4c69a5' }}
+        style={{ backgroundColor: '#F0F8FF' }}
         resetScrollToCoords={{ x: 0, y: 0 }}
         contentContainerStyle={styles.container}
         scrollEnabled={false}
@@ -67,7 +67,7 @@ function Profile({ navigation, route }) {
           <TouchableOpacity style={styles.connectOptions13} activeOpacity={0.8} onPress={() => {
             logout()
           }}>
-            <Text styles= {{textAlign : 'center'}}>LogOut</Text>
+            <Text styles={{ textAlign: 'center' }}>LogOut</Text>
           </TouchableOpacity>
 
         </View>
@@ -94,24 +94,25 @@ function Profile({ navigation, route }) {
               // An error happened.
             });
           }}
-            style={{ alignSelf: 'center', paddingLeft: 15, paddingTop: screenHeight / 8, marginBottom: screenHeight / 5 }} />
-
-
+            style={{ alignSelf: 'center', paddingLeft: 15, paddingTop: screenHeight * 0.04 }} />
         </View>
-        <View style={styles.liss}>
+        <View style={styles.liss4}>
           <TouchableOpacity style={styles.connectOptions2}>
             <Text>Classes: {classes}</Text>
           </TouchableOpacity>
           <MaterialIcons name="edit" size={40} onPress={() => {
             navigation.navigate("AddClasses")
           }}
-            style={{ alignSelf: 'center', paddingLeft: 20, paddingTop: screenHeight / 8, marginBottom: screenHeight / 5 }} />
+            style={{ alignSelf: 'center', paddingLeft: 20, paddingTop: screenHeight * 0.04 }} />
         </View>
         <View style={styles.buttonContainer}>
-          <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 5 }} />
-          <Ionicon name="ios-home" size={50} onPress={() => navigation.navigate('HomeScreen')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 5 }} />
-          <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingTop: screenHeight / 5, marginBottom: screenHeight / 5 }} />
-
+          <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, marginBottom: screenHeight / 5 }} />
+          <Ionicon name="ios-home" size={50} onPress={() => navigation.navigate('HomeScreen')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, marginBottom: screenHeight / 5 }} />
+          <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{
+            alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, marginBottom: screenHeight / 5,
+            borderRadius: 10,
+            borderWidth: 1,
+          }} />
         </View>
       </KeyboardAwareScrollView>
     </View>
@@ -127,13 +128,18 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.6
   },
   liss: {
-    flex: 1,
+    flex: 0,
     flexDirection: 'row'
   },
-  list2: {
-    flex: 1,
+  liss4: {
+    flex: 0,
     flexDirection: 'row',
-    marginTop : screenHeight * 0.1
+  },
+  list2: {
+    flex: 0,
+    height: screenHeight * 0.06,
+    flexDirection: 'row',
+    marginTop: screenHeight * 0.05,
   },
   hi: {
     width: '95%',
@@ -151,15 +157,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonContainer: {
-    marginTop: screenHeight * 0.13,
+    paddingTop: screenHeight * 0.7,
     alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
     height: 20,
-    marginBottom: 0,
     flex: 1,
     flexDirection: 'row',
   },
+
   headerContainer: {
     alignItems: 'center',
     alignSelf: 'center',
@@ -202,12 +208,12 @@ const styles = StyleSheet.create({
   connectOptions13: {
     width: screenWidth * 0.3,
     height: screenHeight * 0.05,
-    position : "absolute", 
-    right : 0,
+    position: "absolute",
+    right: 0,
     justifyContent: 'center',
-    alignContent : 'center',
+    alignContent: 'center',
     //paddingRight: screenWidth * 0.8,
-    
+
     marginBottom: screenHeight / 5,
     padding: 15,
     backgroundColor: '#0099FF',
@@ -256,7 +262,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#f5fcfc',
+    backgroundColor: '#F0F8FF',
   },
 });
 

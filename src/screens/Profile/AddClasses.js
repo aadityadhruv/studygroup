@@ -51,7 +51,7 @@ function AddClasses({ navigation, route }) {
       }
 
       const renderItem = ({ item }) => (
-        <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
+        <View style={{ minHeight: 70, padding: 3 }}>
           <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
             if (Object.values(Classes2['SUBJECT CODE']).includes(item)) {
               //  console.log("hi")
@@ -86,7 +86,7 @@ function AddClasses({ navigation, route }) {
         </View>
       );
       const renderItem2 = ({ item }) => (
-        <View style={{ minHeight: 70, padding: 3, borderBottomWidth: 1, borderBottomColor: 'grey' }}>
+        <View style={{ minHeight: 70, padding: 3 }}>
           <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
             this.setState({ classes: removeItemOnce(this.state.classes, item) })
             var db = firebase.firestore();
@@ -116,6 +116,8 @@ function AddClasses({ navigation, route }) {
       return (
 
         <View style={styles.hello}>
+          <Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.goBack()} style={{ paddingTop: screenHeight * 0.05 }} />
+
           <View style={styles.hi4}>
             <FlatList
               data={this.state.classes}
@@ -130,7 +132,7 @@ function AddClasses({ navigation, route }) {
             value={this.state.search.toString()}
             lightTheme={true}
             round={true}
-            containerStyle={{ backgroundColor: 'white', borderTopWidth: 0 }}
+            containerStyle={{ backgroundColor: '#F0F8FF', borderTopWidth: 0 , borderBottomWidth: 0 }}
             inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
           {
             this.state.loading ? (
@@ -142,7 +144,7 @@ function AddClasses({ navigation, route }) {
 
           {this.state.choosingClass ? <Text></Text>
             : <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
-              this.setState({ displayedList: Object.values(Classes2['SUBJECT CODE']),"choosingClass":true })
+              this.setState({ displayedList: Object.values(Classes2['SUBJECT CODE']), "choosingClass": true })
             }}>
               <Text style={styles.connectOptionsText}>Back</Text>
             </TouchableOpacity>
@@ -167,13 +169,15 @@ function AddClasses({ navigation, route }) {
     }
   }
   return (
+
     <FirebaseInfo></FirebaseInfo>
   )
 }
 const styles = StyleSheet.create({
   hello: {
     flex: 1,
-    height: screenHeight * 0.9
+    height: screenHeight * 0.9,
+    backgroundColor:'#F0F8FF'
   },
   liss: {
     flex: 1,
@@ -190,7 +194,7 @@ const styles = StyleSheet.create({
     width: '95%',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 30,
+    marginTop: 0,
     flexDirection: 'row'
   },
 
@@ -291,7 +295,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#f5fcfc',
+    backgroundColor: '#F0F8FF',
   },
 });
 
