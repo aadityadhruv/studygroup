@@ -1,9 +1,21 @@
 import { StyleSheet } from 'react-native';
+import {Dimensions, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+
+const screenWidth = Math.round(Dimensions.get('window').width);
+const screenHeight = Math.round(Dimensions.get('window').height);
+
 
 export default StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center'
+    },
+    container2: {
+        paddingTop:screenHeight*0.2,
+        width:screenWidth,
+        flex: 1,
+        alignItems: 'stretch',
+        backgroundColor:'#F0F8FF'
     },
     title: {
 
@@ -24,7 +36,7 @@ export default StyleSheet.create({
         marginBottom: 10,
         marginLeft: 30,
         marginRight: 30,
-        paddingLeft: 16
+        paddingLeft: 16,
     },
     button: {
         backgroundColor: '#788eec',
