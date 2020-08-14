@@ -19,6 +19,8 @@ export default function Chats({ navigation, route }) {
 	const [isPersonalChat, setIsPersonalChat] = React.useState(false);
 	const [otherUser, setOtherUser] = React.useState("");
 	const [isBlocked, setIsBlocked] = React.useState(false);
+	const [cUserBlock, setCUserBlock] = React.useState(false);
+	const [oUserBlock, setOUserBlock] = React.useState(false);
 
 
 	//Update GROUP ISBLOCKED STATUS to BOTH the users BLOCK LIST
@@ -42,11 +44,32 @@ export default function Chats({ navigation, route }) {
 				setOtherUser(element);
 			}
 		});
+		
 	}
 	});
+	
+	if (isPersonalChat && otherUser != "") {
+		console.log("---------------" + otherUser);
+		var userRef = db.collection("Users").doc(user.uid);
+		var otherUserRef = db.collection("Users").doc(otherUser);
+		userRef.onSnapshot(function (doc3) {
+			setCUserBlock(doc3.data().blockList.includes(route.params.id));
+		});
+		userRef.onSnapshot(function (doc4) {
+			setCUserBlock(doc4.data().blockList.includes(route.params.id));
+		})
+
+		console.log("-----------");
+		console.log("cUser: " + cUserBlock);
+		console.log("oUser: " + oUserBlock);
+		console.log("-------------");
+
 	}
 
-	console.log(otherUser);
+
+
+	}
+
 	function personalChatHelper() {
 		return new Promise((resolve, reject) => {
 
@@ -55,7 +78,7 @@ export default function Chats({ navigation, route }) {
 
 			var user = firebase.auth().currentUser;
 			var userID = user.uid;
-			console.log(userID);
+		
 			var userRef = db.collection("Users").doc(userID);
 
 			userRef.onSnapshot(function (doc) {
@@ -67,7 +90,7 @@ export default function Chats({ navigation, route }) {
 
 				});
 			});
-			console.log("reacherd");
+			
 		});
 
 	}
@@ -78,7 +101,7 @@ export default function Chats({ navigation, route }) {
 			var db = firebase.firestore();
 			var user = firebase.auth().currentUser;
 			var userRef = db.collection("Users").doc(user.uid);
-			console.log(user.uid);
+	
 			userRef.onSnapshot(function (doc) {
 
 				doc.data().groupsList.forEach(element => {
@@ -101,7 +124,7 @@ export default function Chats({ navigation, route }) {
 		}
 		personalChatHelper().then((result) => {
 			var isGroupExist = result.includes(otherUserID);
-			console.log(isGroupExist);
+		
 			if (!isGroupExist) {
 				console.log("-------------------------------");
 				var db = firebase.firestore();
@@ -144,7 +167,7 @@ export default function Chats({ navigation, route }) {
 
 				navigation.navigate('Chats', { id: hashString, name: "Personal Chat" });
 			} else {
-				console.log("Group exists");
+			
 				var db = firebase.firestore();
 				var user = firebase.auth().currentUser;
 				var userRef = db.collection("Users").doc(user.uid);
@@ -163,7 +186,7 @@ export default function Chats({ navigation, route }) {
 		userRef.onSnapshot(function (doc) {
 			doc.data().groupsList.forEach(element => {
 				if (element.id == groupID) {
-					console.log(element.name);
+					
 					setGroupName(element.name);
 				}
 			});
@@ -205,7 +228,7 @@ export default function Chats({ navigation, route }) {
 				var msgRef = db.collection("Groups").doc(route.params.id).collection("messages");
 				var hashString = (+new Date).toString(36);
 				if (!this.state.text2 == "") {
-					console.log(user)
+					
 					msgRef.doc(hashString).set(
 						{
 							from: user.displayName,
@@ -291,7 +314,7 @@ export default function Chats({ navigation, route }) {
 		}
 
 	}
-	console.log(route.params.id)
+	
 	function leave() {
 		var user = firebase.auth().currentUser;
 		var db = firebase.firestore();
@@ -306,7 +329,7 @@ export default function Chats({ navigation, route }) {
 	function blockUser() {
 		console.log("blocking user");
 		var db = firebase.firestore();
-
+		setIsBlocked(!isBlocked);
 		// update CURRENT USER block list ONLY
 		var user = firebase.auth().currentUser;
 		var userRef = db.collection("Users").doc(user.uid);
@@ -319,7 +342,7 @@ export default function Chats({ navigation, route }) {
 			"blockList" : firebase.firestore.FieldValue.arrayRemove(route.params.id)
 		})
 	}
-	
+	getGroupInfo();
 		
 	}
 	function groupinfo() {
