@@ -18,7 +18,6 @@ export default function Chats({ navigation, route }) {
 	const [group_ID, setGroup_ID] = React.useState("");
 	const [isPersonalChat, setIsPersonalChat] = React.useState(false);
 	const [otherUser, setOtherUser] = React.useState("");
-	const [isBlocked, setIsBlocked] = React.useState(false);
 	const [cUserBlock, setCUserBlock] = React.useState(false);
 	const [oUserBlock, setOUserBlock] = React.useState(false);
 
@@ -39,6 +38,7 @@ export default function Chats({ navigation, route }) {
 		setGroup_ID(doc.data().id);
 		setIsPersonalChat(!doc.data().isGroup);
 		if (!doc.data().isGroup) {
+			
 		doc.data().members.forEach(element => {
 			if (user.uid != element) {
 				setOtherUser(element);
@@ -55,15 +55,14 @@ export default function Chats({ navigation, route }) {
 		userRef.onSnapshot(function (doc3) {
 			setCUserBlock(doc3.data().blockList.includes(route.params.id));
 		});
-		userRef.onSnapshot(function (doc4) {
-			setCUserBlock(doc4.data().blockList.includes(route.params.id));
-		})
+		otherUserRef.onSnapshot(function (doc4) {
+			setOUserBlock(doc4.data().blockList.includes(route.params.id));
+		});
 
-		console.log("-----------");
-		console.log("cUser: " + cUserBlock);
-		console.log("oUser: " + oUserBlock);
-		console.log("-------------");
-
+		var groupRef = db.collection("Groups").doc(route.params.id)
+			groupRef.update({
+				"isBlocked" : !(cUserBlock && oUserBlock)
+			})
 	}
 
 
@@ -329,11 +328,13 @@ export default function Chats({ navigation, route }) {
 	function blockUser() {
 		console.log("blocking user");
 		var db = firebase.firestore();
-		setIsBlocked(!isBlocked);
+		
 		// update CURRENT USER block list ONLY
 		var user = firebase.auth().currentUser;
 		var userRef = db.collection("Users").doc(user.uid);
-		if (isBlocked) {
+		
+
+		if (!cUserBlock) {
 		userRef.update({ 
 			"blockList" : firebase.firestore.FieldValue.arrayUnion(route.params.id)
 		})
@@ -366,7 +367,7 @@ export default function Chats({ navigation, route }) {
 						<Text style={styles.connectOptionsText}>{groupName}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => blockUser()}>
-						<Text style={styles.connectOptionsText}>{isBlocked ? "Unblock" : "Block"}</Text>
+						<Text style={styles.connectOptionsText}>{cUserBlock ? "Unblock" : "Block"}</Text>
 					</TouchableOpacity>
 				</View>
 				<FirebaseInfo></FirebaseInfo>
