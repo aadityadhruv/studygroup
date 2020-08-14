@@ -14,7 +14,7 @@ export default function RegistrationScreen({ navigation }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [CollegeName, setCollegeName] = useState('')
+    
 
     const onFooterLinkPress = () => {
         navigation.navigate('Login')
@@ -40,7 +40,6 @@ export default function RegistrationScreen({ navigation }) {
                 });
                 const data = {
                     id: uid,
-                    CollegeName,
                     email,
                     fullName,
                     groupsList : [], 
@@ -78,15 +77,6 @@ export default function RegistrationScreen({ navigation }) {
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setFullName(text)}
                     value={fullName}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder='College Name'
-                    placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setCollegeName(text)}
-                    value={CollegeName}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />

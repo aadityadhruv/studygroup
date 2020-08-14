@@ -27,12 +27,26 @@ export default function Groups({ navigation, route }) {
 
             var userInfoRef = db.collection("Users").doc(user.uid);
             unsubscribe = userInfoRef.onSnapshot((doc) => {
-                console.log(doc.data().groupsList)
+                console.log(doc.data().groupsList);
+                var arr = doc.data().groupsList;
+                arr.forEach(element => {
+                    if (!element.isGroup) {
+                        var otherUserRef = db.collection("Users").doc(element.pcGroupRefHash);
+                        otherUserRef.onSnapshot(function(doc2) {
+                            console.log(doc2.data().fullName);
+                            element.name = doc2.data().fullName;
 
-                this.setState({ groupIDs: doc.data().groupsList, loading: false, displayedList: doc.data().groupsList });
+                        })
+                        
+                    }
+                });
+
+                this.setState({ groupIDs: arr, loading: false, displayedList: arr });
                 //          console.log(this.state.groupIDs);
 
             });
+
+
 
             //   console.log(this.state.groupIDs);
         }
@@ -44,7 +58,7 @@ export default function Groups({ navigation, route }) {
                 <View style={{ minHeight: 70, padding: 1 }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
                         navigation.navigate('Chats', { id: item.id, name: item.name })
-                        }}>
+                    }}>
                         <Text style={styles.connectOptionsText}>{item.name}</Text>
                     </TouchableOpacity>
 
@@ -63,8 +77,8 @@ export default function Groups({ navigation, route }) {
 
             return (
 
-                <View style={{height:screenHeight*0.75 }}>
-                    <View style = {{height:30}}></View>
+                <View style={{ height: screenHeight * 0.75 }}>
+                    <View style={{ height: 30 }}></View>
                     <SearchBar
                         placeholder="Search"
                         onChangeText={(value) => updateSearch(value)}
@@ -79,7 +93,7 @@ export default function Groups({ navigation, route }) {
                         </View>
                     ) : null}
                     <FlatList
-                    
+
                         data={this.state.displayedList}
                         renderItem={renderItem}
                         keyExtractor={(item, index) => index.toString()}
@@ -142,7 +156,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         height: 50,
+
         marginTop: screenHeight*0.1,
+
         flex: 1,
         flexDirection: 'row',
 

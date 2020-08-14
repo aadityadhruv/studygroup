@@ -22,6 +22,7 @@ export default function Chats({ navigation, route }) {
 	const [otherUser, setOtherUser] = React.useState("");
 	const [cUserBlock, setCUserBlock] = React.useState(false);
 	const [oUserBlock, setOUserBlock] = React.useState(false);
+	const [tempName, setTempName] = React.useState("");
 
 
 	//Update GROUP ISBLOCKED STATUS to BOTH the users BLOCK LIST
@@ -31,6 +32,11 @@ export default function Chats({ navigation, route }) {
 	let unsubscribe;
 	getPCName(route.params.id);
 	getGroupInfo();
+
+
+
+
+
 
 	function getGroupInfo() {
 		var db = firebase.firestore();
@@ -148,13 +154,14 @@ export default function Chats({ navigation, route }) {
 				var otherUserName = "";
 				otherUserRef.get().then(function (doc) {
 					if (doc.exists) {
-						otherUserName = doc.data().fullName;
+						otherUserName = doc.data().id;
 						console.log(otherUserName);
 						userRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList })
+
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList, isGroup : false})
 						});
 						otherUserRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.displayName, pcGroupRefHash: user.uid, memberList: memberList })
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.uid, pcGroupRefHash: user.uid, memberList: memberList, isGroup : false})
 						});
 					} else {
 						// doc.data() will be undefined in this case
@@ -179,6 +186,7 @@ export default function Chats({ navigation, route }) {
 		});
 	}
 
+
 	function getPCName(groupID) {
 		var user = firebase.auth().currentUser;
 		var db = firebase.firestore();
@@ -188,7 +196,17 @@ export default function Chats({ navigation, route }) {
 			doc.data().groupsList.forEach(element => {
 				if (element.id == groupID) {
 
+					if (element.isGroup) {
+
 					setGroupName(element.name);
+				}
+					else {
+						var otherUserRef = db.collection("Users").doc(element.pcGroupRefHash);
+						otherUserRef.onSnapshot(function(doc) {
+							setGroupName(doc.data().fullName);
+						})
+
+					}
 				}
 			});
 
@@ -206,9 +224,25 @@ export default function Chats({ navigation, route }) {
 					var cities = [];
 					querySnapshot.forEach(function (doc) {
 						if (doc.exists) {
+							
 							cities.unshift({ text: doc.data().text, from: doc.data().from, id: doc.data().id });
+							
 						}
 					});
+					
+
+					cities.forEach(element => {
+						var userRef = db.collection("Users").doc(element.id);
+
+						userRef.onSnapshot(function(doc2) {
+							
+							element.from = doc2.data().fullName;
+						});
+					});
+
+
+					
+					
 					this.setState({ chats: cities, loading: false });
 				}.bind(this));
 
@@ -244,7 +278,7 @@ export default function Chats({ navigation, route }) {
 				<View style={{ flexDirection: 'column' }}>
 					{
 						this.state.isGroup ?
-							(item.from == user.displayName) ?
+							(item.id == user.uid) ?
 								<View style={{ flexDirection: 'row-reverse' }}>
 									<TouchableOpacity style={styles.connectOptions9} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
 										<Text style={styles.connectOptions7}>{item.text}</Text>
@@ -260,7 +294,7 @@ export default function Chats({ navigation, route }) {
 
 
 							:
-							(item.from == user.displayName) ?
+							(item.id == user.uid) ?
 								<View style={{ flexDirection: 'row-reverse' }}>
 									<TouchableOpacity style={styles.connectOptions9} activeOpacity={0.8} onPress={() => createPersonalChat(item.id)}>
 										<Text style={styles.connectOptions7}>{item.text}</Text>
