@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component } from "react-native";
+import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component, KeyboardAvoidingView } from "react-native";
 import IconBack from 'react-native-vector-icons/EvilIcons';
 import { SearchBar } from 'react-native-elements'
 
 
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import firebase from 'firebase'
 
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -108,13 +108,18 @@ export default function Groups({ navigation, route }) {
 
     return (
         <View style={{
-            height: screenHeight,
-            width: screenWidth,
-
+           
             flex: 1,
             flexDirection: 'column',
             backgroundColor: '#fff',
         }}>
+                  <KeyboardAwareScrollView
+        style={{ backgroundColor: '#4c69a5' }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+        scrollEnabled={false}
+      >
+
             <FirebaseInfo>
             </FirebaseInfo>
             <View style={styles.buttonContainer}>
@@ -126,6 +131,7 @@ export default function Groups({ navigation, route }) {
                 <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, marginBottom: screenHeight / 20 }} />
 
             </View>
+            </KeyboardAwareScrollView>
         </View>
     )
 
@@ -137,7 +143,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         height: 50,
-        marginTop: screenHeight*0,
+        marginTop: screenHeight*0.1,
         flex: 1,
         flexDirection: 'row',
 
