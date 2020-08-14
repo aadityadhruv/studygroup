@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Dimensions, View, TextInput, StyleSheet, Text, FlatList, ActivityIndicator, TouchableOpacity, Component, KeyboardAvoidingView } from "react-native";
 import { SearchBar } from 'react-native-elements';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import firebase from 'firebase';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -28,7 +28,6 @@ export default function HomeScreen({ navigation, route }) {
                     b = []
                 }
                 this.setState({ classes: b });
-
                 var user = firebase.auth().currentUser;
                 var db = firebase.firestore();
                 var groupsRef = db.collection("Groups");
@@ -36,10 +35,7 @@ export default function HomeScreen({ navigation, route }) {
                     .onSnapshot(function namae(querySnapshot) {
                         var cities = [];
                         querySnapshot.forEach(function (doc) {
-
-
                             if (doc.data().isGroup && !userGroupsArray.includes(doc.data().id)) {
-
                                 cities.push({ id: doc.data().id, name: doc.data().name, label: doc.data().label, desc: doc.data().desc, members: doc.data().members });
                             }
                         });
@@ -54,7 +50,6 @@ export default function HomeScreen({ navigation, route }) {
                                                 va = true
                                             }
                                         })
-
                                     }.bind(this))
                                     if (va) { return va }
                                     return false
@@ -62,10 +57,7 @@ export default function HomeScreen({ navigation, route }) {
                         }
                         this.setState({ groupIDs: cities, loading: false, displayedList: cities2, displayedList2: cities2 });
                     }.bind(this));
-
-
             });
-
         }
         componentWillMount() {
             return unsubscribe;
@@ -76,13 +68,10 @@ export default function HomeScreen({ navigation, route }) {
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => navigation.navigate('JoinGroup', { id: item.id, name: item.name, label: item.label, desc: item.desc, members: item.members })}>
                         <Text style={styles.connectOptionsText}>{item.name}</Text>
                     </TouchableOpacity>
-
                 </View>
             );
             const updateSearch = (event) => {
-
                 var filteredList = []
-
                 filteredList = this.state.groupIDs.filter(
                     (item) => {
                         let word = item.name.toLowerCase();
@@ -97,20 +86,14 @@ export default function HomeScreen({ navigation, route }) {
                         })
                         if (va) { return va }
                         return (word.startsWith(lowerSearch));
-
                     }
                 )
                 if (event == "" || event == " ") {
                     filteredList = this.state.displayedList2
                 }
-
-
-
                 this.setState({ search: event, displayedList: filteredList })
-
             }
             return (
-
                 <View style={{height:screenHeight*0.75 }}>
                     <View style={styles.buttonContainer2}>
                         <SearchBar
@@ -123,7 +106,6 @@ export default function HomeScreen({ navigation, route }) {
                             inputContainerStyle={{ backgroundColor: '#EBEBEB', height: screenHeight / 20, width: screenWidth*0.85, marginLeft: '0.1%', }} />
                         <Ionicon name="ios-add" size={50} onPress={() => navigation.navigate('CreateGroup')} style={{ alignSelf: 'center', paddingTop: screenHeight / 20, marginBottom: screenHeight / 20 }} />
                     </View>
-
                     {
                         this.state.loading ? (
                             <View style={{ ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' }}>
@@ -131,7 +113,6 @@ export default function HomeScreen({ navigation, route }) {
                             </View>
                         ) : null
                     }
-
                     <FlatList
                         data={this.state.displayedList}
                         renderItem={renderItem}
@@ -148,27 +129,20 @@ export default function HomeScreen({ navigation, route }) {
                     />
                 </View>);
         }
-
-
     }
-
-
-
-
-
-
-
     //load db once at first render
-
     return (
         <View style={{
             flex: 1,
             backgroundColor: '#fff',
         }}>
-      <KeyboardAvoidingView
-        behavior="position"
-        style={{ flex: 1, backgroundColor: 'white' }} keyboardVerticalOffset={-160}>
-
+ <KeyboardAwareScrollView
+        style={{ backgroundColor: '#4c69a5' }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+        scrollEnabled={false}
+      >
+     
             <FirebaseInfo></FirebaseInfo>
             <View style={styles.buttonContainer}>
                 <Ionicon name="ios-chatbubbles" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10,  marginBottom: screenHeight / 20 }} />
@@ -180,7 +154,7 @@ export default function HomeScreen({ navigation, route }) {
         }} />
                 <Ionicon name="ios-person" size={50} onPress={() => navigation.navigate('Profile')} style={{ alignSelf: 'center', paddingRight: screenWidth / 10, paddingLeft: screenWidth / 10, paddingBottom: screenHeight / 20 }} />
             </View>
-                        </KeyboardAvoidingView>
+                        </KeyboardAwareScrollView>
         </View>
     )
 }
@@ -190,7 +164,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'center',
-        marginTop:screenHeight*0,
+        marginTop:screenHeight*0.1,
         height: 50,
         marginBottom: 0,
         flex: 1,
