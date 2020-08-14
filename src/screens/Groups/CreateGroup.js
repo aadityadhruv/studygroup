@@ -42,7 +42,7 @@ function CreateGroup({ navigation, route }) {
                     userRef.update({
                         //TODO: double name error
 
-                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": this.state.groupname, isGroup : true})
+                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": this.state.groupname, isGroup: true })
 
 
                     })
@@ -64,11 +64,11 @@ function CreateGroup({ navigation, route }) {
             const renderItem = ({ item }) => (
                 <View style={{ minHeight: 70, padding: 3 }}>
                     <TouchableOpacity style={styles.connectOptions} activeOpacity={0.8} onPress={() => {
-                        console.log("Classes are "+this.state.classes)
-                        console.log("Item is "+item)
+                        console.log("Classes are " + this.state.classes)
+                        console.log("Item is " + item)
                         if (this.state.classes.length < 8) {
                             if (Object.values(Classes2['SUBJECT CODE']).includes(item)) {
-                                 console.log("hi")
+                                console.log("hi")
                                 this.setState({ "choosingClass": false })
                                 //console.log(Object.values(data[item + '.json']["COURSE NUMBER"]))
                                 if (item) {
@@ -154,13 +154,18 @@ function CreateGroup({ navigation, route }) {
                                 keyExtractor={(item, index) => index.toString()}
                             />
                         </View>
+                        <View styles={styles.second}>
+                            <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { makeGroup() }}>
+                                <Text style={styles.LoginText}>Enter</Text>
+                            </TouchableOpacity>
+                        </View>
                         <SearchBar
                             placeholder="Search"
                             onChangeText={(value) => updateSearch(value)}
                             value={this.state.search.toString()}
                             lightTheme={true}
                             round={true}
-                            containerStyle={{ backgroundColor: '#F0F8FF', borderTopWidth: 0,borderBottomWidth: 0, }}
+                            containerStyle={{ backgroundColor: '#F0F8FF', borderTopWidth: 0, borderBottomWidth: 0, }}
                             inputContainerStyle={{ backgroundColor: '#EBEBEB', height: 40, width: '597%', marginLeft: '1%', }} />
                         {
                             this.state.loading ? (
@@ -198,11 +203,6 @@ function CreateGroup({ navigation, route }) {
                             />
                         </View>
                     </View>
-                    <View styles={styles.second}>
-                        <TouchableOpacity style={styles.AnswerButtonBlack} onPress={() => { makeGroup() }}>
-                            <Text style={styles.LoginText}>Enter</Text>
-                        </TouchableOpacity>
-                    </View>
                 </View>);
         }
     }
@@ -213,7 +213,7 @@ function CreateGroup({ navigation, route }) {
     const [displayedlist, setdisplayedlist] = React.useState([...data2])
     const [classes, setclasses] = React.useState([])
     const [groupname, setgroupname] = React.useState('')
-   // console.log(displayedlist)
+    // console.log(displayedlist)
     return (
         <View style={{ backgroundColor: '#F0F8FF' }}>
             <Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.goBack()} style={{ paddingTop: screenHeight * 0.05 }} />
