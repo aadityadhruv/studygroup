@@ -15,9 +15,60 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 export default function Chats({ navigation, route }) {
 	const [groupName, setGroupName] = React.useState("Loading");
+	const [group_ID, setGroup_ID] = React.useState("");
+	const [isPersonalChat, setIsPersonalChat] = React.useState(false);
+	const [otherUser, setOtherUser] = React.useState("");
+	const [cUserBlock, setCUserBlock] = React.useState(false);
+	const [oUserBlock, setOUserBlock] = React.useState(false);
+
+
+	//Update GROUP ISBLOCKED STATUS to BOTH the users BLOCK LIST
+	
+
 
 	let unsubscribe;
 	getPCName(route.params.id);
+	getGroupInfo();
+
+	function getGroupInfo() {
+		var db = firebase.firestore();
+		var user = firebase.auth().currentUser;
+		var groupRef = db.collection("Groups").doc(route.params.id);
+	groupRef.onSnapshot(function(doc) {
+		setGroup_ID(doc.data().id);
+		setIsPersonalChat(!doc.data().isGroup);
+		if (!doc.data().isGroup) {
+			
+		doc.data().members.forEach(element => {
+			if (user.uid != element) {
+				setOtherUser(element);
+			}
+		});
+		
+	}
+	});
+	
+	if (isPersonalChat && otherUser != "") {
+		console.log("---------------" + otherUser);
+		var userRef = db.collection("Users").doc(user.uid);
+		var otherUserRef = db.collection("Users").doc(otherUser);
+		userRef.onSnapshot(function (doc3) {
+			setCUserBlock(doc3.data().blockList.includes(route.params.id));
+		});
+		otherUserRef.onSnapshot(function (doc4) {
+			setOUserBlock(doc4.data().blockList.includes(route.params.id));
+		});
+
+		var groupRef = db.collection("Groups").doc(route.params.id)
+			groupRef.update({
+				"isBlocked" : !(cUserBlock && oUserBlock)
+			})
+	}
+
+
+
+	}
+
 	function personalChatHelper() {
 		return new Promise((resolve, reject) => {
 
@@ -26,7 +77,7 @@ export default function Chats({ navigation, route }) {
 
 			var user = firebase.auth().currentUser;
 			var userID = user.uid;
-			console.log(userID);
+		
 			var userRef = db.collection("Users").doc(userID);
 
 			userRef.onSnapshot(function (doc) {
@@ -38,7 +89,7 @@ export default function Chats({ navigation, route }) {
 
 				});
 			});
-			console.log("reacherd");
+			
 		});
 
 	}
@@ -49,7 +100,7 @@ export default function Chats({ navigation, route }) {
 			var db = firebase.firestore();
 			var user = firebase.auth().currentUser;
 			var userRef = db.collection("Users").doc(user.uid);
-			console.log(user.uid);
+	
 			userRef.onSnapshot(function (doc) {
 
 				doc.data().groupsList.forEach(element => {
@@ -72,7 +123,7 @@ export default function Chats({ navigation, route }) {
 		}
 		personalChatHelper().then((result) => {
 			var isGroupExist = result.includes(otherUserID);
-			console.log(isGroupExist);
+		
 			if (!isGroupExist) {
 				console.log("-------------------------------");
 				var db = firebase.firestore();
@@ -88,7 +139,7 @@ export default function Chats({ navigation, route }) {
 				var memberList = [];
 				memberList.push(user.uid);
 				memberList.push(otherUserID);
-				var data = { name: "Personal Chat", id: hashString, owner: user.displayName, members: memberList, label: [], desc: "", isGroup: false };
+				var data = { name: "Personal Chat", id: hashString, owner: user.displayName, members: memberList, label: [], desc: "", isGroup: false, isBlocked : false};
 				dataBaseRef.set(data);
 				console.log(data);
 				//get the name of the other User.
@@ -98,10 +149,10 @@ export default function Chats({ navigation, route }) {
 						otherUserName = doc.data().fullName;
 						console.log(otherUserName);
 						userRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList })
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList})
 						});
 						otherUserRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.displayName, pcGroupRefHash: user.uid, memberList: memberList })
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.displayName, pcGroupRefHash: user.uid, memberList: memberList})
 						});
 					} else {
 						// doc.data() will be undefined in this case
@@ -115,7 +166,7 @@ export default function Chats({ navigation, route }) {
 
 				navigation.navigate('Chats', { id: hashString, name: "Personal Chat" });
 			} else {
-				console.log("Group exists");
+			
 				var db = firebase.firestore();
 				var user = firebase.auth().currentUser;
 				var userRef = db.collection("Users").doc(user.uid);
@@ -134,7 +185,7 @@ export default function Chats({ navigation, route }) {
 		userRef.onSnapshot(function (doc) {
 			doc.data().groupsList.forEach(element => {
 				if (element.id == groupID) {
-					console.log(element.name);
+					
 					setGroupName(element.name);
 				}
 			});
@@ -176,7 +227,7 @@ export default function Chats({ navigation, route }) {
 				var msgRef = db.collection("Groups").doc(route.params.id).collection("messages");
 				var hashString = (+new Date).toString(36);
 				if (!this.state.text2 == "") {
-					console.log(user)
+					
 					msgRef.doc(hashString).set(
 						{
 							from: user.displayName,
@@ -247,14 +298,20 @@ export default function Chats({ navigation, route }) {
 							</View>
 						)}
 					/>
+
+					
 					<View style={styles.second}>
-						<TextInput
+						{!cUserBlock ? <TextInput
 							style={styles.connectOptions2}
 							placeholder="Type here!"
 							onChangeText={text2 => this.setState({ text2: text2 })}
 							defaultValue={this.state.text2}
-						/>
-						<Ionicon name="ios-send" size={50} onPress={() => entered()} style={{ alignSelf: 'center', paddingRight: 0, paddingLeft: 0, paddingTop: 0, marginBottom: 10, marginRight: 10 }} />
+						/> : <View></View>}
+						{!cUserBlock ? <Ionicon name="ios-send" size={50} onPress={() => entered()} style={{
+							 alignSelf: 'center', paddingRight: 0, paddingLeft: 0, paddingTop: 0,
+							  marginBottom: 10, marginRight: 10 }} />  : <View></View>}					
+						
+
 					</View>
 
 
@@ -262,7 +319,7 @@ export default function Chats({ navigation, route }) {
 		}
 
 	}
-	console.log(route.params.id)
+	
 	function leave() {
 		var user = firebase.auth().currentUser;
 		var db = firebase.firestore();
@@ -273,6 +330,27 @@ export default function Chats({ navigation, route }) {
 		})
 
 		navigation.navigate("Groups")
+	}
+	function blockUser() {
+		console.log("blocking user");
+		var db = firebase.firestore();
+		
+		// update CURRENT USER block list ONLY
+		var user = firebase.auth().currentUser;
+		var userRef = db.collection("Users").doc(user.uid);
+		
+
+		if (!cUserBlock) {
+		userRef.update({ 
+			"blockList" : firebase.firestore.FieldValue.arrayUnion(route.params.id)
+		})
+	} else {
+		userRef.update({ 
+			"blockList" : firebase.firestore.FieldValue.arrayRemove(route.params.id)
+		})
+	}
+	getGroupInfo();
+		
 	}
 	function groupinfo() {
 		var db = firebase.firestore();
@@ -293,6 +371,9 @@ export default function Chats({ navigation, route }) {
 					<Ionicon name="ios-arrow-back" size={50} onPress={() => navigation.navigate('Groups')} style={{ alignSelf: 'center', paddingRight: 20, paddingLeft: 0, paddingTop: 0, marginBottom: screenHeight / 200 }} />
 					<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => groupinfo()}>
 						<Text style={styles.connectOptionsText}>{groupName}</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.connectOptions11} activeOpacity={0.8} onPress={() => blockUser()}>
+						<Text style={styles.connectOptionsText}>{cUserBlock ? "Unblock" : "Block"}</Text>
 					</TouchableOpacity>
 				</View>
 				<FirebaseInfo></FirebaseInfo>

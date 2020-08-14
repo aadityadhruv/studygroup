@@ -42,7 +42,8 @@ export default function RegistrationScreen({ navigation }) {
                     CollegeName,
                     email,
                     fullName,
-                    groupsList: []
+                    groupsList : [], 
+                    blockList : []
                 };
 
                 const usersRef = firebase.firestore().collection('Users')
