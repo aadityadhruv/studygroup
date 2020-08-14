@@ -19,34 +19,56 @@ let unsubscribe
 
 
 
-
+console.log("hello");
 function Profile({ navigation, route }) {
   const [name, setName] = React.useState("")
   const [classes, setclasses] = React.useState([])
   const [edit, setEdit] = React.useState(false);
-  var user = firebase.auth().currentUser;
+  
+
+
+
+
+
+
+
+  React.useEffect (() => {
+    var user = firebase.auth().currentUser;
   var db = firebase.firestore();
   var userInfoRef = db.collection("Users").doc(user.uid);
+   const unsubscribe = userInfoRef.onSnapshot(function (doc) {
+      console.log("h");
+          if (doc.exists) {
+            var person = doc.data();
+            setName(person.fullName);
+            setclasses(person.classes)
+          } else {
+            console.log("No such document!");
+          }
+        });
+        return unsubscribe;
+  }, [])
+  
   //console.log("New frame");
-  if (!edit) {
-    userInfoRef.onSnapshot(function (doc) {
-      if (doc.exists) {
-        var person = doc.data();
-        setName(person.fullName);
-        setclasses(person.classes)
-      } else {
-        // doc.data() will be undefined in this case
-        // console.log("No such document!");
-      }
-    })
-  }
+  // if (!edit) {
+  //   userInfoRef.onSnapshot(function (doc) {
+  //     if (doc.exists) {
+  //       var person = doc.data();
+  //       setName(person.fullName);
+  //       setclasses(person.classes)
+  //     } else {
+  //       // doc.data() will be undefined in this case
+  //       // console.log("No such document!");
+  //     }
+  //   })
+  // }
   function logout() {
     firebase.auth().signOut().then(function () {
       console.log('Signed Out');
     }, function (error) {
       console.error('Sign Out Error', error);
     });
-    navigation.navigate('Login')
+    navigation.navigate('Login');
   }
   return (
     <View style={{
@@ -78,7 +100,7 @@ function Profile({ navigation, route }) {
               defaultValue={name}
             /> : <Text>Name: {name}</Text>}
           </TouchableOpacity>
-          <MaterialIcons name="edit" size={40} onPress={() => {
+          {/* <MaterialIcons name="edit" size={40} onPress={() => {
             // console.log(name);
             setEdit(!edit);
             var user = firebase.auth().currentUser;
@@ -94,7 +116,7 @@ function Profile({ navigation, route }) {
               // An error happened.
             });
           }}
-            style={{ alignSelf: 'center', paddingLeft: 15, paddingTop: screenHeight * 0.04 }} />
+            style={{ alignSelf: 'center', paddingLeft: 15, paddingTop: screenHeight * 0.04 }} /> */}
         </View>
         <View style={styles.liss4}>
           <TouchableOpacity style={styles.connectOptions2}>
