@@ -152,13 +152,13 @@ export default function Chats({ navigation, route }) {
 				var otherUserName = "";
 				otherUserRef.get().then(function (doc) {
 					if (doc.exists) {
-						otherUserName = doc.data().fullName;
+						otherUserName = doc.data().id;
 						console.log(otherUserName);
 						userRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList })
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": otherUserName, pcGroupRefHash: otherUserID, memberList: memberList, isGroup : false})
 						});
 						otherUserRef.update({
-							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.displayName, pcGroupRefHash: user.uid, memberList: memberList })
+							"groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": user.uid, pcGroupRefHash: user.uid, memberList: memberList, isGroup : false})
 						});
 					} else {
 						// doc.data() will be undefined in this case
@@ -192,8 +192,16 @@ export default function Chats({ navigation, route }) {
 		userRef.onSnapshot(function (doc) {
 			doc.data().groupsList.forEach(element => {
 				if (element.id == groupID) {
-
+					if (element.isGroup) {
 					setGroupName(element.name);
+				}
+					else {
+						var otherUserRef = db.collection("Users").doc(element.pcGroupRefHash);
+						otherUserRef.onSnapshot(function(doc) {
+							setGroupName(doc.data().fullName);
+						})
+
+					}
 				}
 			});
 

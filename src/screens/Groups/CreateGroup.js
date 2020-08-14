@@ -56,7 +56,7 @@ function CreateGroup({ navigation, route }) {
                     userRef.update({
                         //TODO: double name error
 
-                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": this.state.groupname })
+                        "groupsList": firebase.firestore.FieldValue.arrayUnion({ "id": hashString, "name": this.state.groupname, isGroup : true})
 
 
                     })
