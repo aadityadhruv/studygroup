@@ -10,12 +10,12 @@ With this app, you can find and create study groups based on the classes you are
 All your chats and messages will be stored offline too.
 
 
-#### Screen shots from the game:
-![title_screen](https://github.com/CS126SP20/final-project-asdhruv2/blob/master/readme_imgs/title_screen.png)
-![game_screen](https://github.com/CS126SP20/final-project-asdhruv2/blob/master/readme_imgs/game_screen.png)
-![game_in_action](https://github.com/CS126SP20/final-project-asdhruv2/blob/master/readme_imgs/game_in_action.png)
-![player_won](https://github.com/CS126SP20/final-project-asdhruv2/blob/master/readme_imgs/player_won.png)
-![player_lost](https://github.com/CS126SP20/final-project-asdhruv2/blob/master/readme_imgs/player_lost.png)
+#### Screenshots:
+![chat](https://github.com/aadityadhruv/studygroup/blob/master/images/chat1.jpg)
+![chat_grp](https://github.com/aadityadhruv/studygroup/blob/master/images/chat2.jpg)
+![chats](https://github.com/aadityadhruv/studygroup/blob/master/images/chats.jpg)
+![join](https://github.com/aadityadhruv/studygroup/blob/master/images/join1.jpg)
+![profile](https://github.com/aadityadhruv/studygroup/blob/master/images/profile.jpg)
 
 #### Features
 
