@@ -298,14 +298,20 @@ export default function Chats({ navigation, route }) {
 							</View>
 						)}
 					/>
+
+					
 					<View style={styles.second}>
-						<TextInput
+						{!cUserBlock ? <TextInput
 							style={styles.connectOptions2}
 							placeholder="Type here!"
 							onChangeText={text2 => this.setState({ text2: text2 })}
 							defaultValue={this.state.text2}
-						/>
-						<Ionicon name="ios-send" size={50} onPress={() => entered()} style={{ alignSelf: 'center', paddingRight: 0, paddingLeft: 0, paddingTop: 0, marginBottom: 10, marginRight: 10 }} />
+						/> : <View></View>}
+						{!cUserBlock ? <Ionicon name="ios-send" size={50} onPress={() => entered()} style={{
+							 alignSelf: 'center', paddingRight: 0, paddingLeft: 0, paddingTop: 0,
+							  marginBottom: 10, marginRight: 10 }} />  : <View></View>}					
+						
+
 					</View>
 
 
