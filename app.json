@@ -25,6 +25,12 @@
     "ios": {
       "supportsTablet": true
     },
+    "android":{
+      "package":"com.aadityadhruv.StudyMates",
+      "versionCode": 1 // Notice the versionCode added under android.
+    },
+  
+
     "web": {
       "favicon": "./assets/images/favicon.png"
     }
