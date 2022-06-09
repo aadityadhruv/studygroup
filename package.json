@@ -22,15 +22,15 @@
     "@react-navigation/stack": "^5.2.16",
     "base-64": "^0.1.0",
     "core-js-bundle": "^3.6.5",
-    "expo": "^38.0.0",
+    "expo": "^45.0.5",
     "expo-asset": "~8.1.7",
-    "expo-constants": "~9.1.1",
+    "expo-constants": "^13.1.1",
     "expo-font": "~8.2.1",
     "expo-linking": "^1.0.1",
     "expo-splash-screen": "^0.15.1",
     "expo-sqlite": "~8.2.1",
     "expo-web-browser": "~8.3.1",
-    "firebase": "7.9.0",
+    "firebase": "^9.8.2",
     "indexeddbshim": "^6.6.0",
     "install": "^0.13.0",
     "logkitty": "^0.7.1",
@@ -57,7 +57,7 @@
   "devDependencies": {
     "@babel/core": "^7.8.6",
     "babel-preset-expo": "^8.2.3",
-    "jest-expo": "^38.0.0"
+    "jest-expo": "^45.0.1"
   },
   "private": true
 }
